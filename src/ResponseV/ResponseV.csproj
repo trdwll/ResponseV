@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,8 +47,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ambient\Call.cs" />
+    <Compile Include="Ambient\Patrol.cs" />
+    <Compile Include="Ambient\Pullover.cs" />
+    <Compile Include="Callouts\Any\AnimalAttack.cs" />
+    <Compile Include="Callouts\Any\AttemptedMurder.cs" />
+    <Compile Include="Callouts\Any\AttemptedSuicide.cs" />
+    <Compile Include="Callouts\Any\BarFight.cs" />
+    <Compile Include="Callouts\Any\DeadBody.cs" />
+    <Compile Include="Callouts\Any\DrugBust.cs" />
+    <Compile Include="Callouts\Any\Fight.cs" />
+    <Compile Include="Callouts\Any\Kidnapping.cs" />
+    <Compile Include="Callouts\Any\Littering.cs" />
+    <Compile Include="Callouts\Any\Loitering.cs" />
+    <Compile Include="Callouts\Any\MissingPerson.cs" />
+    <Compile Include="Callouts\Any\MVA.cs" />
+    <Compile Include="Callouts\Any\OfficerDown.cs" />
+    <Compile Include="Callouts\Any\ParkingViolation.cs" />
+    <Compile Include="Callouts\Any\PedHitByVehicle.cs" />
+    <Compile Include="Callouts\Any\PersonWithWeapon.cs" />
+    <Compile Include="Callouts\Any\Pursuit.cs" />
+    <Compile Include="Callouts\Any\Robbery.cs" />
+    <Compile Include="Callouts\Any\SexOffender.cs" />
+    <Compile Include="Callouts\Any\SuspiciousItem.cs" />
+    <Compile Include="Callouts\Any\Vandalism.cs" />
+    <Compile Include="Callouts\Any\VehicleFire.cs" />
+    <Compile Include="Callouts\Fed\Forgery.cs" />
+    <Compile Include="Callouts\Fed\IllegalDeal.cs" />
+    <Compile Include="Callouts\Fed\Importing.cs" />
+    <Compile Include="Callouts\Fed\TerroristAttack.cs" />
+    <Compile Include="Callouts\Fed\TerroristPlot.cs" />
+    <Compile Include="Callouts\LSPD\GangActivity.cs" />
+    <Compile Include="Callouts\LSSD\PrisonBreak.cs" />
+    <Compile Include="Callouts\LSSD\PrisonRiot.cs" />
+    <Compile Include="Callouts\Nature\AnimalVsVehicle.cs" />
+    <Compile Include="Callouts\Nature\IllegalHunting.cs" />
+    <Compile Include="Callouts\Nature\OverKillLimit.cs" />
+    <Compile Include="Callouts\Nature\Poaching.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
