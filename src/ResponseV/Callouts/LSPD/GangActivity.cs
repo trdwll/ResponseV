@@ -15,34 +15,50 @@ namespace ResponseV.Callouts.LSPD
     public class GangActivity : Callout
     {
         private Vector3 SpawnPoint;
+ 
         private List<Ped> members = new List<Ped>();
         private List<Blip> blips = new List<Blip>();
-        private Model[] pedList = new Model[] { "csb_ballasog", "g_f_y_ballas_01", "g_m_y_ballasout_01" };
-        private WeaponHash[] weaponList = new WeaponHash[] { WeaponHash.AssaultRifle, WeaponHash.Pistol, WeaponHash.SawnOffShotgun,
-            WeaponHash.Golfclub, WeaponHash.Crowbar, WeaponHash.Hammer };
+    
+        private Model[] models = { "csb_ballasog", "g_f_y_ballas_01", "g_m_y_ballasout_01" };
+        private WeaponHash[] weaponList = { WeaponHash.AssaultRifle, WeaponHash.Pistol, WeaponHash.SawnOffShotgun, WeaponHash.Crowbar };
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(/*Utils.getRandInt(300, 350)*/25f));
+            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(/*Utils.getRandInt(300, 350)*/150f));
 
             ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
 
-            CalloutMessage = "Reports of gang activity";
+            CalloutMessage = "Reports of Gang Activity";
             CalloutPosition = SpawnPoint;
+            
+            Functions.PlayScannerAudioUsingPosition(
+                $"{Utils.Radio.getRandomSound(Utils.Radio.WE_HAVE)} " +
+                $"{Utils.Radio.getRandomSound(Utils.Radio.GANG)} IN_OR_ON_POSITION", SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            Game.DisplaySubtitle("Spawned Peds!!!");
+            Utils.RequestBackup(SpawnPoint, Utils.getRandInt(2, 3), LSPD_First_Response.EBackupResponseType.Code3, LSPD_First_Response.EBackupUnitType.LocalUnit);
+
             for (int i = 0; i < Utils.getRandInt(4, 10); i++)
             {
-                members.Add(new Ped(pedList[new Random().Next(0, pedList.Length)], SpawnPoint, Utils.getRandInt(1, 100)));
-                blips.Add(members[i].AttachBlip());
-                members[i].IsPersistent = true;
-                members[i].RelationshipGroup = RelationshipGroup.AmbientGangBallas;
-                members[i].Inventory.GiveNewWeapon(weaponList[new Random().Next(0, weaponList.Length)], (short)Utils.getRandInt(10, 60), true);
+                Ped ped = new Ped(Utils.getRandValue(models), SpawnPoint, Utils.getRandInt(1, 360));
+                Blip blip = new Blip(ped)
+                {
+                    IsFriendly = false
+                };
+
+                members.Add(ped);
+                blips.Add(blip);
+                ped.Tasks.Wander();
+
+                ped.IsPersistent = true;
+                ped.RelationshipGroup = RelationshipGroup.AmbientGangBallas;
+                ped.CanAttackFriendlies = true;
+
+                ped.Inventory.GiveNewWeapon(Utils.getRandValue(weaponList), (short)Utils.getRandInt(10, 60), true);
             }
 
             return base.OnCalloutAccepted();
@@ -56,20 +72,26 @@ namespace ResponseV.Callouts.LSPD
         public override void Process()
         {
             base.Process();
-            
-            if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) <= 15)
+
+            // ped == null for some reason...
+            members.ForEach(ped =>
             {
-                // init call here
+                if (ped && ped.GetAttachedBlip() && (ped.IsDead || Functions.IsPedArrested(ped)))
+                {
+                    ped.GetAttachedBlip().Delete();
+                }
+            });
+
+            if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 50)
+            {
+
             }
         }
 
         public override void End()
         {
-            if (members.Count() > 0)
-                foreach (Ped ped in members) ped.Dismiss();
-
-            if (blips.Count() > 0)
-                foreach (Blip blip in blips) blip.Delete();
+            members.ForEach(ped => ped.Dismiss());
+            blips.ForEach(blip => blip.Delete());
 
             base.End();
         }

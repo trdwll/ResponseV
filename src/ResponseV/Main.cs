@@ -12,7 +12,7 @@ namespace ResponseV
     {
         public override void Initialize()
         {
-            Functions.OnOnDutyStateChanged += this.OnDutyStateChangedEvent;
+            Functions.OnOnDutyStateChanged += OnDutyStateChangedEvent;
             
         }
 
@@ -39,7 +39,7 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedSuicide));
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedMurder));
             //Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack));
-            //Functions.RegisterCallout(typeof(Callouts.Any.Fight));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Assault));
             //Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
             //Functions.RegisterCallout(typeof(Callouts.Any.MVA));
             //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
@@ -58,15 +58,25 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.Littering));
             //Functions.RegisterCallout(typeof(Callouts.Any.DrugBust));
 
-
-            // FD
-            // maintain a fire scene etc
+            //Functions.RegisterCallout(typeof(Callouts.Any.DUI));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Arson));
+            //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
+            //Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Explosion));
+            //Functions.RegisterCallout(typeof(Callouts.Any.DriveBy));
+            //Functions.RegisterCallout(typeof(Callouts.Any.StolenVehicle));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Theft));
+            //Functions.RegisterCallout(typeof(Callouts.Any.PublicIntoxication));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Racing));
+            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
 
             // Nature
             //Functions.RegisterCallout(typeof(Callouts.Nature.IllegalHunting));
             //Functions.RegisterCallout(typeof(Callouts.Nature.Poaching));
             //Functions.RegisterCallout(typeof(Callouts.Nature.AnimalVsVehicle));
             //Functions.RegisterCallout(typeof(Callouts.Nature.OverKillLimit));
+            //Functions.RegisterCallout(typeof(Callouts.Nature.AnimalCruelty));
+            //Functions.RegisterCallout(typeof(Callouts.Nature.EndangeredSpecies));
 
         }
 

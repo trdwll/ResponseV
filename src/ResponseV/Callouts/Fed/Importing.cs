@@ -26,14 +26,24 @@ namespace ResponseV.Callouts.Fed
                 new Vector3(136.82f, -3092.64f, 5.26f), // Port 2
                 new Vector3(-971.35f, -3000.64f, 14.59f) // Airport 1
             };
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.getRandInt(400, 600)));
+
+            SpawnPoint = points[new Random().Next(0, points.Length)];
 
             ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 40f);
 
-            CalloutMessage = "Reports of illegal importing of cannabis"; // Add _<type>_
+            var types = Enum.GetValues(typeof(EType));
+
+            CalloutMessage = $"Reports of illegal importing of {(EType)types.GetValue(new Random().Next(0, types.Length))}";
             CalloutPosition = SpawnPoint;
 
             return base.OnBeforeCalloutDisplayed();
+        }
+
+        private enum EType
+        {
+            Drugs,
+            Weapons,
+            Humans
         }
     }
 }
