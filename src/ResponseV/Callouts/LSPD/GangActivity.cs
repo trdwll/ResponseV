@@ -32,19 +32,19 @@ namespace ResponseV.Callouts.LSPD
             CalloutPosition = SpawnPoint;
             
             Functions.PlayScannerAudioUsingPosition(
-                $"{Utils.Radio.getRandomSound(Utils.Radio.WE_HAVE)} " +
-                $"{Utils.Radio.getRandomSound(Utils.Radio.GANG)} IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.WE_HAVE)} " +
+                $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.GANG)} IN_OR_ON_POSITION", SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            Utils.RequestBackup(SpawnPoint, Utils.getRandInt(2, 3), LSPD_First_Response.EBackupResponseType.Code3, LSPD_First_Response.EBackupUnitType.LocalUnit);
+            LSPDFR.RequestBackup(SpawnPoint, Utils.GetRandInt(2, 3), LSPD_First_Response.EBackupResponseType.Code3, LSPD_First_Response.EBackupUnitType.LocalUnit);
 
-            for (int i = 0; i < Utils.getRandInt(4, 10); i++)
+            for (int i = 0; i < Utils.GetRandInt(4, 10); i++)
             {
-                Ped ped = new Ped(Utils.getRandValue(models), SpawnPoint, Utils.getRandInt(1, 360));
+                Ped ped = new Ped(Utils.GetRandValue(models), SpawnPoint, Utils.GetRandInt(1, 360));
                 Blip blip = new Blip(ped)
                 {
                     IsFriendly = false
@@ -58,7 +58,7 @@ namespace ResponseV.Callouts.LSPD
                 ped.RelationshipGroup = RelationshipGroup.AmbientGangBallas;
                 ped.CanAttackFriendlies = true;
 
-                ped.Inventory.GiveNewWeapon(Utils.getRandValue(weaponList), (short)Utils.getRandInt(10, 60), true);
+                ped.Inventory.GiveNewWeapon(Utils.GetRandValue(weaponList), (short)Utils.GetRandInt(10, 60), true);
             }
 
             return base.OnCalloutAccepted();
