@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LSPD_First_Response.Mod.API;
-using Rage;
 using System.Reflection;
 
 namespace ResponseV
@@ -59,7 +54,6 @@ namespace ResponseV
 
             //Functions.RegisterCallout(typeof(Callouts.Any.Arson));
             //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
-            //Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.Explosion));
             //Functions.RegisterCallout(typeof(Callouts.Any.DriveBy));
             //Functions.RegisterCallout(typeof(Callouts.Any.StolenVehicle));
@@ -78,11 +72,15 @@ namespace ResponseV
             // In Progress
             // Functions.RegisterCallout(typeof(Callouts.Any.DUI));
             // Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash));
-           // Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
 
-            // Finished/RFC
-            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
-            //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
+
+
+             // Finished/RFC
+             //Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
+             //Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
+             //Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
+             //Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
+             //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
         }
 
         public override void Finally() { }

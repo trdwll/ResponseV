@@ -4,10 +4,19 @@
     {
         public enum Callout
         {
+            InPursuit,
             EnRoute,
             OnScene,
             Done
         };
+
+        // used for when we have multiple outcomes for a callout like Officer Down
+        public enum CalloutType
+        {
+            Stabbing,
+            Shooting,
+            Unknown
+        }
 
         public enum Response
         {

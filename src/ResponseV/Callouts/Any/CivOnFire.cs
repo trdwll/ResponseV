@@ -5,56 +5,54 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Rage;
-using LSPD_First_Response;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 using LSPD_First_Response.Engine.Scripting;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("Overdose", CalloutProbability.Medium)]
-    public class Overdose : Callout
+    [CalloutInfo("CivOnFire", CalloutProbability.VeryLow)]
+    public class CivOnFire : Callout
     {
         private Vector3 SpawnPoint;
         private Ped vic;
         private Blip blip;
 
-        private Model[] models = Model.PedModels;
-
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 700)));
+            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)));
 
             ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
 
-            CalloutMessage = $"Reports of " + (Utils.GetRandInt(0, 2) == 1 ? "an" : "a Possible") + " Overdose";
+            CalloutMessage = "Reports of a Civilian on Fire";
             CalloutPosition = SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.OVERDOSE)} IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_CIV_ON_FIRE IN_OR_ON_POSITION", SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            vic = new Ped(Utils.GetRandValue(models), SpawnPoint, Utils.GetRandInt(1, 360));
-
-            if (Native.GetSafeCoordForPed(SpawnPoint, out Vector3 pos))
+            vic = new Ped(SpawnPoint)
             {
-                vic.Position = pos;
-            }
+                IsOnFire = true
+            };
+            // vic.Kill();
 
             blip = new Blip(SpawnPoint)
             {
                 IsRouteEnabled = true
             };
-            blip.EnableRoute(System.Drawing.Color.Orange);
+            blip.EnableRoute(System.Drawing.Color.Yellow);
 
-            vic.Kill();
+            DamagePack.ApplyDamagePack(vic, Utils.GetRandValue(
+                DamagePack.Burnt_Ped_0, DamagePack.Burnt_Ped_Head_Torso,
+                DamagePack.Burnt_Ped_Left_Arm, DamagePack.Burnt_Ped_Limbs,
+                DamagePack.Burnt_Ped_Right_Arm), 100, 1);
 
-            BetterEMS.API.EMSFunctions.OverridePedDeathDetails(vic, "", "Overdose", Game.GameTime, (float)Utils.GetRandDouble()+.1f);
+            BetterEMS.API.EMSFunctions.OverridePedDeathDetails(vic, "", "Fire", Game.GameTime, (float)Utils.GetRandDouble() + .1f);
 
             LSPDFR.RequestEMS(vic.Position);
 
@@ -63,8 +61,6 @@ namespace ResponseV.Callouts.Any
 
         public override void Process()
         {
-            base.Process();
-
             if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 20)
             {
                 blip.IsRouteEnabled = false;
@@ -85,7 +81,6 @@ namespace ResponseV.Callouts.Any
         {
             blip.Delete();
             vic.Dismiss();
-
             base.End();
         }
     }

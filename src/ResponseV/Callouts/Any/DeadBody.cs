@@ -40,6 +40,12 @@ namespace ResponseV.Callouts.Any
         public override bool OnCalloutAccepted()
         {
             vic = new Ped(Utils.GetRandValue(models), SpawnPoint, Utils.GetRandInt(1, 360));
+
+            if (Native.GetSafeCoordForPed(SpawnPoint, out Vector3 pos))
+            {
+                vic.Position = pos;
+            }
+
             blip = new Blip(SpawnPoint)
             {
                 IsRouteEnabled = true
@@ -72,6 +78,7 @@ namespace ResponseV.Callouts.Any
             
             if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 20)
             {
+                blip.IsRouteEnabled = false;
                 Game.DisplaySubtitle("Call for a coroner");
                 End();
             }

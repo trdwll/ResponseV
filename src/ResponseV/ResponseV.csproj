@@ -62,6 +62,7 @@
     <Compile Include="Callouts\Any\AttemptedMurder.cs" />
     <Compile Include="Callouts\Any\AttemptedSuicide.cs" />
     <Compile Include="Callouts\Any\BarFight.cs" />
+    <Compile Include="Callouts\Any\CivOnFire.cs" />
     <Compile Include="Callouts\Any\DeadBody.cs" />
     <Compile Include="Callouts\Any\DrugBust.cs" />
     <Compile Include="Callouts\Any\Assault.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Callouts\Any\Pursuit.cs" />
     <Compile Include="Callouts\Any\Robbery.cs" />
     <Compile Include="Callouts\Any\SexOffender.cs" />
+    <Compile Include="Callouts\Any\Speeding.cs" />
     <Compile Include="Callouts\Any\SuspiciousItem.cs" />
     <Compile Include="Callouts\Any\Vandalism.cs" />
     <Compile Include="Callouts\Any\VehicleFire.cs" />

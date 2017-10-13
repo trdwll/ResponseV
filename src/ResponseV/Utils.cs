@@ -20,6 +20,16 @@ namespace ResponseV
         {
             return args[GetRandInt(0, args.Length)];
         }
+
+        public static bool GetRandomBool()
+        {
+            return RANDOM.Next(100) % 2 == 0;
+        }
+
+        public static double GetRandDouble()
+        {
+            return RANDOM.NextDouble();
+        }
     }
 
     public class LSPDFR
@@ -48,6 +58,9 @@ namespace ResponseV
             public static readonly string[] AIRCRAFT_CRASH = { "CRIME_AIRCRAFT_CRASH_01", "CRIME_AIRCRAFT_CRASH_02", "CRIME_AIRCRAFT_CRASH_03", "CRIME_HELICOPTER_DOWN_01", "CRIME_HELICOPTER_DOWN_02" };
             public static readonly string[] DEADBODY = { "DECEASED_PERSON_01", "DECEASED_PERSON_02" };
             public static readonly string[] OFFICER_DOWN = { "CRIME_OFFICER_DOWN_01", "CRIME_OFFICER_DOWN_02", "CRIME_OFFICER_DOWN_03", "CRIME_OFFICER_DOWN_04" };
+            public static readonly string[] OFFICERS_DOWN = { "CRIME_MULTIPLE_OFFICERS_DOWN_01", "CRIME_MULTIPLE_OFFICERS_DOWN_02" };
+            public static readonly string[] OFFICER_SHOT = { "CRIME_OFFICER_HOMICIDE", "CRIME_OFFICER_HOMICIDE_02", "CRIME_OFFICER_FATALITY", "CRIME_OFFICER_SHOT", "CRIME_OFFICER_UNDER_FIRE", "CRIME_SHOTS_FIRED_OFFICER_01", "CRIME_SHOTS_FIRED_OFFICER_02", "CRIME_SHOTS_FIRED_OFFICER_03" };
+            public static readonly string[] SPEEDING = { "CRIME_SPEEDING_01", "CRIME_SPEEDING_02", "CRIME_SPEEDING_03" };
 
             public static string getRandomSound(string[] sounds)
             {
