@@ -32,8 +32,8 @@ namespace ResponseV.Callouts.LSPD
             CalloutPosition = SpawnPoint;
             
             Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.GANG)} IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.GANG)} IN_OR_ON_POSITION", SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

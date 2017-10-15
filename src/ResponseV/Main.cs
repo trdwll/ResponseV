@@ -37,16 +37,12 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack));
             //Functions.RegisterCallout(typeof(Callouts.Any.Assault));
             //Functions.RegisterCallout(typeof(Callouts.Any.MVA));
-            //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.PedHitByVehicle));
-            //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
             //Functions.RegisterCallout(typeof(Callouts.Any.Pursuit));
-            //Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
             //Functions.RegisterCallout(typeof(Callouts.Any.Kidnapping));
             //Functions.RegisterCallout(typeof(Callouts.Any.SexOffender));
             //Functions.RegisterCallout(typeof(Callouts.Any.SuspiciousItem));
             //Functions.RegisterCallout(typeof(Callouts.Any.Vandalism));
-            //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
             //Functions.RegisterCallout(typeof(Callouts.Any.MissingPerson));
             //Functions.RegisterCallout(typeof(Callouts.Any.Loitering));
             //Functions.RegisterCallout(typeof(Callouts.Any.Littering));
@@ -74,13 +70,17 @@ namespace ResponseV
             // Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash));
 
 
-
-             // Finished/RFC
-             //Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
-             //Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
-             //Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
-             //Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
-             //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
+            // Finished/RFC
+            Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
+            
+            //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
+            //Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
+            //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
+            //Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
+            //Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
+            //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
         }
 
         public override void Finally() { }

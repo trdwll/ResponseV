@@ -30,7 +30,7 @@ namespace ResponseV.Callouts.Any
 
             ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
 
-            multiple = Utils.GetRandomBool();
+            multiple = Utils.GetRandBool();
 
             CalloutMessage = "Reports of " + (multiple ? "Multiple Officers": "an Officer") + " Down";
             CalloutPosition = SpawnPoint;
@@ -44,17 +44,17 @@ namespace ResponseV.Callouts.Any
                     default:
                     case Enums.CalloutType.Unknown:
                         Functions.PlayScannerAudioUsingPosition(
-                            $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                            $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.OFFICER_DOWN)} IN_OR_ON_POSITION", SpawnPoint);
+                            $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
+                            $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_DOWN)} IN_OR_ON_POSITION", SpawnPoint);
                         break;
                     case Enums.CalloutType.Shooting:
                         Functions.PlayScannerAudioUsingPosition(
-                            $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                            $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.OFFICER_SHOT)} IN_OR_ON_POSITION", SpawnPoint);
+                            $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
+                            $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_SHOT)} IN_OR_ON_POSITION", SpawnPoint);
                         break;
                     case Enums.CalloutType.Stabbing:
                         Functions.PlayScannerAudioUsingPosition(
-                            $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_OFFICER_STABBED IN_OR_ON_POSITION", SpawnPoint);
+                            $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_OFFICER_STABBED IN_OR_ON_POSITION", SpawnPoint);
                         break;
                 }
             }
@@ -62,8 +62,8 @@ namespace ResponseV.Callouts.Any
             {
                 type = Enums.CalloutType.Shooting;
                 Functions.PlayScannerAudioUsingPosition(
-                    $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                    $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.OFFICERS_DOWN)} IN_OR_ON_POSITION", SpawnPoint);
+                    $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
+                    $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICERS_DOWN)} IN_OR_ON_POSITION", SpawnPoint);
             }
             
             return base.OnBeforeCalloutDisplayed();

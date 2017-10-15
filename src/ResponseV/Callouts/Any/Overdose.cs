@@ -31,8 +31,8 @@ namespace ResponseV.Callouts.Any
             CalloutPosition = SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.OVERDOSE)} IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OVERDOSE)} IN_OR_ON_POSITION", SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -75,7 +75,7 @@ namespace ResponseV.Callouts.Any
 
                 if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(vic) == false)
                 {
-                    Game.DisplaySubtitle("coroner();");
+                    Game.DisplaySubtitle("Request a coroner");
                     End();
                 }
             }

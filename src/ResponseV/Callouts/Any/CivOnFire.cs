@@ -28,7 +28,7 @@ namespace ResponseV.Callouts.Any
             CalloutPosition = SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.getRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_CIV_ON_FIRE IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_CIV_ON_FIRE IN_OR_ON_POSITION", SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

@@ -21,7 +21,7 @@ namespace ResponseV
             return args[GetRandInt(0, args.Length)];
         }
 
-        public static bool GetRandomBool()
+        public static bool GetRandBool()
         {
             return RANDOM.Next(100) % 2 == 0;
         }
@@ -61,10 +61,49 @@ namespace ResponseV
             public static readonly string[] OFFICERS_DOWN = { "CRIME_MULTIPLE_OFFICERS_DOWN_01", "CRIME_MULTIPLE_OFFICERS_DOWN_02" };
             public static readonly string[] OFFICER_SHOT = { "CRIME_OFFICER_HOMICIDE", "CRIME_OFFICER_HOMICIDE_02", "CRIME_OFFICER_FATALITY", "CRIME_OFFICER_SHOT", "CRIME_OFFICER_UNDER_FIRE", "CRIME_SHOTS_FIRED_OFFICER_01", "CRIME_SHOTS_FIRED_OFFICER_02", "CRIME_SHOTS_FIRED_OFFICER_03" };
             public static readonly string[] SPEEDING = { "CRIME_SPEEDING_01", "CRIME_SPEEDING_02", "CRIME_SPEEDING_03" };
+            public static readonly string[] PARKING = { "CRIME_ILLEGAL_PARKING_01", "CRIME_ILLEGAL_PARKING_02", "PARKING_VIOLATION" };
+            public static readonly string[] VEHICLE_FIRE = { "CRIME_CAR_FIRE_01", "CRIME_CAR_FIRE_02", "CRIME_CAR_FIRE_03" };
+            public static readonly string[] ARMED_CAR_ROBBERY = { "CRIME_ARMED_ROBBERY", "" };
 
-            public static string getRandomSound(string[] sounds)
+            public static string GetRandomSound(string[] sounds)
             {
                 return Utils.GetRandValue(sounds);
+            }
+
+            // Probably the worst way to do this, but it works for now
+            public static string GetWeaponSound(WeaponHash type)
+            {
+                string ret;
+                switch (type)
+                {
+                    default:
+                    case WeaponHash.APPistol:
+                    case WeaponHash.Pistol:
+                    case WeaponHash.CombatPistol:
+                    case WeaponHash.Pistol50: ret = "FIREARM_01, FIREARM_02, GAT_01, GAT_02, GUN_01, GUN_02, WEAPON_01, WEAPON_02"; break;
+                    case WeaponHash.AdvancedRifle:
+                    case WeaponHash.AssaultRifle:
+                    case WeaponHash.CarbineRifle: return "ASSAULT_RIFLE";
+                    case WeaponHash.AssaultSMG:
+                    case WeaponHash.MicroSMG: ret = "SUBMACHINE_GUN_01, SUBMACHINE_GUN_02, GAT_01, GAT_02"; break;
+                    case WeaponHash.MG:
+                    case WeaponHash.CombatMG: ret = "MACHINE_GUN_01, MACHINE_GUN_02"; break;
+                    case WeaponHash.Bat: ret = "BAT_01, BAT_02"; break;
+                    case WeaponHash.Knife: ret = "KNIFE_01, KNIFE_02"; break;
+                    case WeaponHash.RPG: ret = "RPG_01, RPG_02"; break;
+                    case WeaponHash.Minigun: return "MINIGUN";
+                    case WeaponHash.GrenadeLauncher: ret =  "GRENADE_LAUNCHER_01, GRENADE_LAUNCHER_02"; break;
+                    case WeaponHash.SawnOffShotgun: ret = "SAWED_OFF_01, SAWED_OFF_02"; break;
+                    case WeaponHash.AssaultShotgun: ret = "ASSAULT_SHOTGUN_01, ASSAULT_SHOTGUN_02"; break;
+                    case WeaponHash.PumpShotgun:
+                    case WeaponHash.BullpupShotgun: ret = "SHOTGUN_01, SHOTGUN_02"; break;
+                    case WeaponHash.SniperRifle:
+                    case WeaponHash.HeavySniper: return "SNIPER_RIFLE";
+                    case WeaponHash.Grenade:
+                    case WeaponHash.SmokeGrenade: ret = "EXPLOSIVE_01, EXPLOSIVE_02, EXPLOSIVE_03"; break;
+                }
+
+                return Utils.GetRandValue(ret.Split(','));
             }
         }
     }
