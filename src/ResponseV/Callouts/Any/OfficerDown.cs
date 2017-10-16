@@ -1,4 +1,4 @@
-﻿
+﻿using System.Linq;
 using Rage;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("OfficerDown", CalloutProbability.Low)]
+    [CalloutInfo("OfficerDown", CalloutProbability.VeryHigh)]
     public class OfficerDown : Callout
     {
         private Vector3 SpawnPoint;
@@ -35,6 +35,8 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = "Reports of " + (multiple ? "Multiple Officers": "an Officer") + " Down";
             CalloutPosition = SpawnPoint;
 
+            string aud;
+
             if (!multiple)
             {
                 type = Utils.GetRandValue(Enums.CalloutType.Shooting, Enums.CalloutType.Stabbing, Enums.CalloutType.Unknown);
@@ -43,29 +45,24 @@ namespace ResponseV.Callouts.Any
                 {
                     default:
                     case Enums.CalloutType.Unknown:
-                        Functions.PlayScannerAudioUsingPosition(
-                            $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                            $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_DOWN)} IN_OR_ON_POSITION", SpawnPoint);
+                        aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_DOWN);
                         break;
                     case Enums.CalloutType.Shooting:
-                        Functions.PlayScannerAudioUsingPosition(
-                            $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                            $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_SHOT)} IN_OR_ON_POSITION", SpawnPoint);
+                        aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_SHOT);
                         break;
                     case Enums.CalloutType.Stabbing:
-                        Functions.PlayScannerAudioUsingPosition(
-                            $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_OFFICER_STABBED IN_OR_ON_POSITION", SpawnPoint);
+                        aud = "CRIME_OFFICER_STABBED";
                         break;
                 }
             }
             else
             {
                 type = Enums.CalloutType.Shooting;
-                Functions.PlayScannerAudioUsingPosition(
-                    $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                    $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICERS_DOWN)} IN_OR_ON_POSITION", SpawnPoint);
+                aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICERS_DOWN);
             }
-            
+
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {aud} IN_OR_ON_POSITION", SpawnPoint);
+
             return base.OnBeforeCalloutDisplayed();
         }
 
@@ -89,16 +86,17 @@ namespace ResponseV.Callouts.Any
                     suspects.Add(suspect);
                     break;
                 case Enums.CalloutType.Stabbing:
+                    veh = new Vehicle(Utils.GetRandValue(vehicleModels), SpawnPoint);
+                    veh.CreateRandomDriver();
+                    veh.Driver.Kill();
+
+                    officers.Add(veh);
+
                     suspect = new Ped(Utils.GetRandValue(Model.PedModels), SpawnPoint, Utils.GetRandInt(1, 360));
                     suspect.Inventory.GiveNewWeapon(WeaponHash.Knife, 1, true);
                     suspect.Tasks.FightAgainstClosestHatedTarget(30f);
                     suspects.Add(suspect);
-
-                    Vehicle veh2 = new Vehicle(Utils.GetRandValue(vehicleModels), SpawnPoint);
-                    veh2.CreateRandomDriver();
-                    veh2.Driver.Kill();
-
-                    officers.Add(veh2);
+                    
                     break;
                 case Enums.CalloutType.Shooting:
                     if (multiple)
@@ -115,15 +113,21 @@ namespace ResponseV.Callouts.Any
                         // Spawn police
                         for (int j = 0; j < Utils.GetRandInt(2, 5); j++)
                         {
-                            Vehicle veh3 = new Vehicle(Utils.GetRandValue(vehicleModels), SpawnPoint.Around(10f));
-                            veh3.CreateRandomDriver();
-                            veh3.Driver.Kill();
+                            Vehicle veh2 = new Vehicle(Utils.GetRandValue(vehicleModels), SpawnPoint.Around(10f));
+                            veh2.CreateRandomDriver();
+                            veh2.Driver.Kill();
 
-                            officers.Add(veh3);
+                            officers.Add(veh2);
                         }
                     }
                     else
                     {
+                        veh = new Vehicle(Utils.GetRandValue(vehicleModels), SpawnPoint);
+                        veh.CreateRandomDriver();
+                        veh.Driver.Kill();
+
+                        officers.Add(veh);
+
                         suspect = new Ped(Utils.GetRandValue(Model.PedModels), SpawnPoint, Utils.GetRandInt(1, 360));
                         suspect.Inventory.GiveNewWeapon(Utils.GetRandValue(weaponList), (short)Utils.GetRandInt(10, 60), true);
                         suspects.Add(suspect);
@@ -157,7 +161,7 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
   
-            if (state== Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 70)
+            if (state == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 100)
             {
                 state = Enums.Callout.OnScene;
 
@@ -197,7 +201,7 @@ namespace ResponseV.Callouts.Any
                 }
                 else
                 {
-                    LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 3, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
+                    LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 2, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
                 }
             });
         }

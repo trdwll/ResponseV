@@ -4,6 +4,7 @@ using LSPD_First_Response;
 using BetterEMS.API;
 using Rage.Native;
 using Rage;
+using System.Collections.Generic;
 
 namespace ResponseV
 {
@@ -23,7 +24,7 @@ namespace ResponseV
 
         public static bool GetRandBool()
         {
-            return RANDOM.Next(100) % 2 == 0;
+            return RANDOM.Next(2) == 0;
         }
 
         public static double GetRandDouble()
@@ -49,6 +50,37 @@ namespace ResponseV
             EMSFunctions.RespondToLocation(location);
         }
 
+        /// <summary>
+        /// Shoutout to khorio for the colors!
+        /// </summary>
+        public class CalloutStandardization
+        {
+            /// <summary>
+            /// Set the color of the blip
+            /// </summary>
+            /// <param name="blip">The blip to set the color of</param>
+            /// <param name="type">The color ((Blips default to yellow))</param>
+            public static void SetStandardColor(Blip blip, BlipTypes type)
+            {
+                if (blip) NativeFunction.Natives.SET_BLIP_COLOUR(blip, (int)type);
+            }
+
+            /// <summary>
+            /// Description
+            /// <para>Enemy = Enemies  [red]</para>
+            /// <para>Officers = Cops/Detectives/Commanders  [blue] (not gross system blue)</para>
+            /// <para>Support = EMS/Coroner/ETC  [green]</para>
+            /// <para>Civilians = Bystanders/Witnesses/broken down/etc  [orange]</para>
+            ///  <para>Other = Animals/Obstacles/Rocks/etc  [purple]</para>
+            /// </summary>
+            public enum BlipTypes { Enemy = 1, Officers = 3, Support = 2, Civilians = 17, Other = 19 }
+
+            public static void SetBlipScalePed(Blip blip)
+            {
+                if (blip) blip.Scale = 0.75f;
+            }
+        }
+
         public class Radio
         {
             public static readonly string[] WE_HAVE = { "CITIZENS_REPORT_01", "CITIZENS_REPORT_02", "CITIZENS_REPORT_03", "CITIZENS_REPORT_04", "OFFICERS_REPORT_01", "OFFICERS_REPORT_02", "OFFICERS_REPORT_03", "WE_HAVE_01", "WE_HAVE_02" };
@@ -63,7 +95,7 @@ namespace ResponseV
             public static readonly string[] SPEEDING = { "CRIME_SPEEDING_01", "CRIME_SPEEDING_02", "CRIME_SPEEDING_03" };
             public static readonly string[] PARKING = { "CRIME_ILLEGAL_PARKING_01", "CRIME_ILLEGAL_PARKING_02", "PARKING_VIOLATION" };
             public static readonly string[] VEHICLE_FIRE = { "CRIME_CAR_FIRE_01", "CRIME_CAR_FIRE_02", "CRIME_CAR_FIRE_03" };
-            public static readonly string[] ARMED_CAR_ROBBERY = { "CRIME_ARMED_ROBBERY", "" };
+            public static readonly string[] ARMED_CAR_ROBBERY = { "CRIME_ARMED_CAR_ROBBERY_01", "CRIME_ARMED_CAR_ROBBERY_02" };
 
             public static string GetRandomSound(string[] sounds)
             {

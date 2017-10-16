@@ -40,7 +40,7 @@ namespace ResponseV.Callouts.Any
 
             ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
 
-            CalloutMessage = "Reports of a Person with a " + weapon.ToString();
+            CalloutMessage = "Reports of a Person with a " + (Utils.GetRandBool() ? weapon.ToString() : "Weapon");
             CalloutPosition = SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(

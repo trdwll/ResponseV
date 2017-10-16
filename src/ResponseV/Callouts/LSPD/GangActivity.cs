@@ -64,11 +64,6 @@ namespace ResponseV.Callouts.LSPD
             return base.OnCalloutAccepted();
         }
 
-        public override void OnCalloutNotAccepted()
-        {
-            base.OnCalloutNotAccepted();
-        }
-
         public override void Process()
         {
             base.Process();

@@ -77,6 +77,7 @@
     <Compile Include="Callouts\Any\ParkingViolation.cs" />
     <Compile Include="Callouts\Any\PedHitByVehicle.cs" />
     <Compile Include="Callouts\Any\PersonWithWeapon.cs" />
+    <Compile Include="Callouts\Any\PrankCall.cs" />
     <Compile Include="Callouts\Any\Pursuit.cs" />
     <Compile Include="Callouts\Any\Robbery.cs" />
     <Compile Include="Callouts\Any\SexOffender.cs" />

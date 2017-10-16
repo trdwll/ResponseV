@@ -49,7 +49,6 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.DrugBust));
 
             //Functions.RegisterCallout(typeof(Callouts.Any.Arson));
-            //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.Explosion));
             //Functions.RegisterCallout(typeof(Callouts.Any.DriveBy));
             //Functions.RegisterCallout(typeof(Callouts.Any.StolenVehicle));
@@ -68,11 +67,12 @@ namespace ResponseV
             // In Progress
             // Functions.RegisterCallout(typeof(Callouts.Any.DUI));
             // Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash));
+            //Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
 
 
             // Finished/RFC
-            Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
-            
+            // Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
+
             //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
             //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
@@ -85,14 +85,12 @@ namespace ResponseV
 
         public override void Finally() { }
 
+
         public static Assembly LSPDFR(object sender, ResolveEventArgs e)
         {
             foreach (Assembly a in Functions.GetAllUserPlugins())
             {
-                if (e.Name.ToLower().Contains(a.GetName().Name.ToLower()))
-                {
-                    return a;
-                }
+                if (e.Name.ToLower().Contains(a.GetName().Name.ToLower())) return a;
             }
             return null;
         }
