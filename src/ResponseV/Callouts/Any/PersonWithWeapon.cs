@@ -60,8 +60,8 @@ namespace ResponseV.Callouts.Any
             suspect.Tasks.Wander();
             suspect.CanAttackFriendlies = true;
             suspect.IsPersistent = true;
-            suspect.BlockPermanentEvents = Utils.GetRandBool();
-            suspect.Tasks.FightAgainstClosestHatedTarget(30f);
+            //suspect.BlockPermanentEvents = Utils.GetRandBool();
+            //suspect.Tasks.FightAgainstClosestHatedTarget(30f);
 
             suspect.Inventory.GiveNewWeapon(weapon, (short)Utils.GetRandInt(30, 90), true);
 
@@ -107,9 +107,12 @@ namespace ResponseV.Callouts.Any
                 Functions.AddPedToPursuit(pursuit, suspect);
                 blip.Delete();
 
+                suspect.BlockPermanentEvents = Utils.GetRandBool();
+                suspect.Tasks.FightAgainstClosestHatedTarget(50f);
+
                 state = Enums.Callout.InPursuit;
 
-                GameFiber.Sleep(10000);
+                GameFiber.Sleep(5000);
                 LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 1, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
             });
         }

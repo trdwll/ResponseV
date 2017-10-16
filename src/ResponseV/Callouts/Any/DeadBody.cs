@@ -79,7 +79,7 @@ namespace ResponseV.Callouts.Any
             if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 20)
             {
                 blip.IsRouteEnabled = false;
-                Game.DisplaySubtitle("Call for a coroner");
+                Arrest_Manager.API.Functions.CallCoroner(SpawnPoint, true);
                 End();
             }
         }

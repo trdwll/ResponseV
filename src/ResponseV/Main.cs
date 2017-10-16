@@ -9,7 +9,8 @@ namespace ResponseV
         public override void Initialize()
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LSPDFR);
-            Functions.OnOnDutyStateChanged += OnDutyStateChangedEvent;  
+            Functions.OnOnDutyStateChanged += OnDutyStateChangedEvent;
+            Rage.Game.DisplayNotification("Response~y~V~w~ loaded");
         }
 
         private void OnDutyStateChangedEvent(bool onDuty)
@@ -55,6 +56,7 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.Theft));
             //Functions.RegisterCallout(typeof(Callouts.Any.PublicIntoxication));
             //Functions.RegisterCallout(typeof(Callouts.Any.Racing));
+            //Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash));
 
             // Nature
             //Functions.RegisterCallout(typeof(Callouts.Nature.IllegalHunting));
@@ -66,13 +68,12 @@ namespace ResponseV
 
             // In Progress
             // Functions.RegisterCallout(typeof(Callouts.Any.DUI));
-            // Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash));
             //Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
+            // Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
 
 
             // Finished/RFC
-            // Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
-
+            //Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
             //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
             //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
@@ -84,7 +85,6 @@ namespace ResponseV
         }
 
         public override void Finally() { }
-
 
         public static Assembly LSPDFR(object sender, ResolveEventArgs e)
         {

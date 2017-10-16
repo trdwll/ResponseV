@@ -13,6 +13,7 @@
         // used for when we have multiple outcomes for a callout like Officer Down
         public enum CalloutType
         {
+            FailureToCheckIn,
             Stabbing,
             Shooting,
             Unknown

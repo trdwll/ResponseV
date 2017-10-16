@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 // random person watching children at park
-// not necessarily a pedo or sex offender
+// x=806.32
+// y=-258.67
+// z=65.63
 namespace ResponseV.Callouts.Any
 {
     class SexOffender

@@ -39,12 +39,10 @@ namespace ResponseV.Callouts.Any
         {
             veh = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), SpawnPoint)
             {
-                EngineHealth = 350.0f,
-                IsOnFire = true,
-                IsFireProof = true
+                EngineHealth = 350.0f
             };
             vic = veh.CreateRandomDriver();
-            vic.Kill();
+            vic.Tasks.LeaveVehicle(veh, LeaveVehicleFlags.LeaveDoorOpen);
 
             blip = new Blip(SpawnPoint)
             {
@@ -64,9 +62,11 @@ namespace ResponseV.Callouts.Any
 
         public override void Process()
         {
-            if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 20)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 50)
             {
-                veh.IsFireProof = false;
+                vic.Kill();
+                veh.Explode(false);
+                blip.IsRouteEnabled = false;
                 if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(vic) == true)
                 {
                     End();
@@ -74,7 +74,7 @@ namespace ResponseV.Callouts.Any
 
                 if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(vic) == false)
                 {
-                    Game.DisplaySubtitle("Request a coroner");
+                    Arrest_Manager.API.Functions.CallCoroner(SpawnPoint, true);
                     End();
                 }
             }

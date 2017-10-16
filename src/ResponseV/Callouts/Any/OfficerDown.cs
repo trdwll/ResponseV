@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("OfficerDown", CalloutProbability.VeryHigh)]
+    [CalloutInfo("OfficerDown", CalloutProbability.Low)]
     public class OfficerDown : Callout
     {
         private Vector3 SpawnPoint;
@@ -36,23 +36,16 @@ namespace ResponseV.Callouts.Any
             CalloutPosition = SpawnPoint;
 
             string aud;
-
             if (!multiple)
             {
-                type = Utils.GetRandValue(Enums.CalloutType.Shooting, Enums.CalloutType.Stabbing, Enums.CalloutType.Unknown);
+                type = Enums.CalloutType.Stabbing; //Utils.GetRandValue(Enums.CalloutType.Shooting, Enums.CalloutType.Stabbing, Enums.CalloutType.Unknown);
 
                 switch (type)
                 {
                     default:
-                    case Enums.CalloutType.Unknown:
-                        aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_DOWN);
-                        break;
-                    case Enums.CalloutType.Shooting:
-                        aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_SHOT);
-                        break;
-                    case Enums.CalloutType.Stabbing:
-                        aud = "CRIME_OFFICER_STABBED";
-                        break;
+                    case Enums.CalloutType.Unknown: aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_DOWN); break;
+                    case Enums.CalloutType.Shooting: aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_SHOT); break;
+                    case Enums.CalloutType.Stabbing: aud = "CRIME_OFFICER_STABBED";  break;
                 }
             }
             else
@@ -76,15 +69,6 @@ namespace ResponseV.Callouts.Any
             {
                 default:
                 case Enums.CalloutType.Unknown:
-                    veh = new Vehicle(Utils.GetRandValue(vehicleModels), SpawnPoint);
-                    veh.CreateRandomDriver();
-                    veh.Driver.Kill();
-
-                    officers.Add(veh);
-
-                    suspect = new Ped(Utils.GetRandValue(Model.PedModels), SpawnPoint, Utils.GetRandInt(1, 360));
-                    suspects.Add(suspect);
-                    break;
                 case Enums.CalloutType.Stabbing:
                     veh = new Vehicle(Utils.GetRandValue(vehicleModels), SpawnPoint);
                     veh.CreateRandomDriver();
@@ -93,10 +77,13 @@ namespace ResponseV.Callouts.Any
                     officers.Add(veh);
 
                     suspect = new Ped(Utils.GetRandValue(Model.PedModels), SpawnPoint, Utils.GetRandInt(1, 360));
-                    suspect.Inventory.GiveNewWeapon(WeaponHash.Knife, 1, true);
-                    suspect.Tasks.FightAgainstClosestHatedTarget(30f);
+
+                    if (type == Enums.CalloutType.Stabbing)
+                    {
+                        suspect.Inventory.GiveNewWeapon(WeaponHash.Knife, 1, true);
+                        suspect.Tasks.FightAgainstClosestHatedTarget(30f);
+                    }
                     suspects.Add(suspect);
-                    
                     break;
                 case Enums.CalloutType.Shooting:
                     if (multiple)
@@ -161,7 +148,7 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
   
-            if (state == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 100)
+            if (state == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 70)
             {
                 state = Enums.Callout.OnScene;
 

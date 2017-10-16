@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Arrest Manager">
+      <HintPath>..\..\..\refs\Arrest Manager.dll</HintPath>
+    </Reference>
     <Reference Include="BetterEMS, Version=3.0.6298.2858, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\refs\BetterEMS.dll</HintPath>
@@ -67,6 +70,7 @@
     <Compile Include="Callouts\Any\DrugBust.cs" />
     <Compile Include="Callouts\Any\Assault.cs" />
     <Compile Include="Callouts\Any\DUI.cs" />
+    <Compile Include="Callouts\Any\IndecentExposure.cs" />
     <Compile Include="Callouts\Any\Kidnapping.cs" />
     <Compile Include="Callouts\Any\Littering.cs" />
     <Compile Include="Callouts\Any\Loitering.cs" />
