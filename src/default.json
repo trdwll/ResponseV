@@ -1,0 +1,60 @@
+{
+	"Roleplay": {
+		"Realism": false,
+		"OfficerName": "Ofc. Johnson"
+	},
+	"Ambient": {
+		"Call": false,
+		"Patrol": false,
+		"TrafficStop": false,
+		"PedestrianCrimes": false
+	},
+	"Callouts": {
+		"MinRadius": 500,
+		"MaxRadius": 1000,
+		"AircraftCrash": true,
+		"AnimalAttack": true,
+		"Assault": true,
+		"AttemptedMurder": true,
+		"AttemptedSuicide": true,
+		"BarFight": true,
+		"CivOnFire": true,
+		"DeadBody": true,
+		"DrugBust": true,
+		"DUI": true,
+		"IndecentExposure": true,
+		"Kidnapping": true,
+		"Littering": true,
+		"Loitering": true,
+		"MissingPerson": true,
+		"MVA": true,
+		"OfficerDown": true,
+		"Overdose": true,
+		"ParkingViolation": true,
+		"PedHitByVehicle": true,
+		"PersonWithWeapon": true,
+		"PrankCall": true,
+		"Pursuit": true,
+		"Robbery": true,
+		"SexOffender": true,
+		"Speeding": true,
+		"SuspiciousItem": true,
+		"Vandalism": true,
+		"VehicleFire": true,
+		"Forgery": false,
+		"IllegalDeal": false,
+		"Importing": false,
+		"TerroristAttack": false,
+		"TerroristPlot": false,
+		"GangActivity": true,
+		"PrisonBreak": true,
+		"PrisonRiot": true,
+		"AnimalVsVehicle": true,
+		"IllegalHunting": true,
+		"OverKillLimit": true,
+		"Poaching": true
+	},
+	"Misc": {
+		"TrafficBackup": false
+	}
+}

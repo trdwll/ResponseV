@@ -1,7 +1,8 @@
 ﻿using System;
 using LSPD_First_Response.Mod.API;
 using System.Reflection;
-
+using System.Windows.Forms;
+using System.IO;
 namespace ResponseV
 {
     public class Main : Plugin
@@ -10,12 +11,15 @@ namespace ResponseV
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LSPDFR);
             Functions.OnOnDutyStateChanged += OnDutyStateChangedEvent;
-            Rage.Game.DisplayNotification("Response~y~V~w~ loaded");
+
+            Rage.Game.DisplayNotification($"Response~y~V~w~ ~b~{Configuration.APPVERSION} ~w~loaded successfully");
+            
         }
 
         private void OnDutyStateChangedEvent(bool onDuty)
         {
             if (!onDuty) return;
+
 
             // Fed
             //Functions.RegisterCallout(typeof(Callouts.Fed.TerroristPlot));

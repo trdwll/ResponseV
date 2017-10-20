@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResponseV", "ResponseV\ResponseV.csproj", "{F6D9FD96-952E-4073-9E21-4ED1829A6C43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResponseV Configurator", "ResponseV Configurator\ResponseV Configurator.csproj", "{46EAA5F0-4195-4B5A-ACA1-B3FC3CF17C60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F6D9FD96-952E-4073-9E21-4ED1829A6C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6D9FD96-952E-4073-9E21-4ED1829A6C43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6D9FD96-952E-4073-9E21-4ED1829A6C43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46EAA5F0-4195-4B5A-ACA1-B3FC3CF17C60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46EAA5F0-4195-4B5A-ACA1-B3FC3CF17C60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46EAA5F0-4195-4B5A-ACA1-B3FC3CF17C60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46EAA5F0-4195-4B5A-ACA1-B3FC3CF17C60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

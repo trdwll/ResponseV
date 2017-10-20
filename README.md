@@ -7,7 +7,11 @@ __A LSPDFR mod to add more calls, immersion, and overall fun to the core mod.__
 - [LSPDFR](https://www.lcpdfr.com/files/file/7792-lspd-first-response/) _>= 0.3.1_
 - [RagePluginHook](https://ragepluginhook.net/Downloads.aspx) _>= 0.57.1152.13084_
 - [BetterEMS](https://www.lcpdfr.com/files/file/11647-better-ems/) _>= 3.0_
+- [Arrest Manager](http://www.lcpdfr.com/files/file/8107-arrest-manager-grab-peds-more-jail-points-cells-prisoner-transport-enhanced-scene-management-towinginsurance-pedfollow-pedgrabtaxi-weapondrop-xml-customisation-api/) _>= 7.9.0.0_
 - [.Net Framework 4.7](https://www.microsoft.com/en-us/download/details.aspx?id=55170)
+
+_The reason why BetterEMS and Arrest Manager are requirements is, because in the plugin we do calls to respond EMS and Coroner (usually get called after EMS is on scene) with you._
+
 
 # How to install?
 - Install the requirements above (_read their installation instructions_).
