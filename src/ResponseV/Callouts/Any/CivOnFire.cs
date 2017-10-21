@@ -71,7 +71,7 @@ namespace ResponseV.Callouts.Any
 
                 if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(vic) == false)
                 {
-                    Game.DisplaySubtitle("coroner();");
+                    Arrest_Manager.API.Functions.CallCoroner(true);
                     End();
                 }
             }

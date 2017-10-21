@@ -11,7 +11,7 @@ using LSPD_First_Response.Engine.Scripting;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("PersonWithWeapon", CalloutProbability.Medium)]
+    [CalloutInfo("PersonWithWeapon", CalloutProbability.VeryHigh)]
     public class PersonWithWeapon : Callout
     {
         private Vector3 SpawnPoint;
@@ -46,8 +46,7 @@ namespace ResponseV.Callouts.Any
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
                 $"{LSPDFR.Radio.GetWeaponSound(weapon)} IN_OR_ON_POSITION", SpawnPoint);
-
-            Game.DisplaySubtitle(LSPDFR.Radio.GetWeaponSound(weapon));
+            
             return base.OnBeforeCalloutDisplayed();
         }
 
@@ -55,19 +54,20 @@ namespace ResponseV.Callouts.Any
         {
             state = Enums.Callout.EnRoute;
 
-            suspect = new Ped(SpawnPoint);
+            suspect = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), SpawnPoint, 360);
 
             suspect.Tasks.Wander();
-            suspect.CanAttackFriendlies = true;
             suspect.IsPersistent = true;
-            //suspect.BlockPermanentEvents = Utils.GetRandBool();
-            //suspect.Tasks.FightAgainstClosestHatedTarget(30f);
+            suspect.CanAttackFriendlies = true;
+            if (Utils.GetRandBool()) suspect.RelationshipGroup = RelationshipGroup.HatesPlayer;
+            else suspect.RelationshipGroup = RelationshipGroup.AmbientFriendEmpty;
 
             suspect.Inventory.GiveNewWeapon(weapon, (short)Utils.GetRandInt(30, 90), true);
 
             blip = new Blip(SpawnPoint)
             {
-                IsRouteEnabled = true
+                IsRouteEnabled = true,
+                IsFriendly = false
             };
             blip.EnableRoute(System.Drawing.Color.Red);
 
@@ -106,6 +106,8 @@ namespace ResponseV.Callouts.Any
                 pursuit = Functions.CreatePursuit();
                 Functions.AddPedToPursuit(pursuit, suspect);
                 blip.Delete();
+                
+                if (Utils.GetRandBool()) Functions.SetPursuitDisableAI(pursuit, true);
 
                 suspect.BlockPermanentEvents = Utils.GetRandBool();
                 suspect.Tasks.FightAgainstClosestHatedTarget(50f);

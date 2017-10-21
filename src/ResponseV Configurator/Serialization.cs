@@ -53,8 +53,76 @@ namespace ResponseV_Configurator
 
                 public static void SerializeToFile(object obj, string jsonFile)
                 {
-                    System.IO.File.WriteAllText(jsonFile, SerializeObject(obj));
+                    System.IO.File.WriteAllText(jsonFile, Pretty(SerializeObject(obj)));
                 }
+            }
+
+            // https://stackoverflow.com/a/23828858
+            public static string Pretty(string jsonString)
+            {
+                var stringBuilder = new StringBuilder();
+
+                bool escaping = false;
+                bool inQuotes = false;
+                int indentation = 0;
+
+                foreach (char character in jsonString)
+                {
+                    if (escaping)
+                    {
+                        escaping = false;
+                        stringBuilder.Append(character);
+                    }
+                    else
+                    {
+                        if (character == '\\')
+                        {
+                            escaping = true;
+                            stringBuilder.Append(character);
+                        }
+                        else if (character == '\"')
+                        {
+                            inQuotes = !inQuotes;
+                            stringBuilder.Append(character);
+                        }
+                        else if (!inQuotes)
+                        {
+                            if (character == ',')
+                            {
+                                stringBuilder.Append(character);
+                                stringBuilder.Append("\r\n");
+                                stringBuilder.Append('\t', indentation);
+                            }
+                            else if (character == '[' || character == '{')
+                            {
+                                stringBuilder.Append(character);
+                                stringBuilder.Append("\r\n");
+                                stringBuilder.Append('\t', ++indentation);
+                            }
+                            else if (character == ']' || character == '}')
+                            {
+                                stringBuilder.Append("\r\n");
+                                stringBuilder.Append('\t', --indentation);
+                                stringBuilder.Append(character);
+                            }
+                            else if (character == ':')
+                            {
+                                stringBuilder.Append(character);
+                                stringBuilder.Append('\t');
+                            }
+                            else
+                            {
+                                stringBuilder.Append(character);
+                            }
+                        }
+                        else
+                        {
+                            stringBuilder.Append(character);
+                        }
+                    }
+                }
+
+                return stringBuilder.ToString();
             }
         }
     }

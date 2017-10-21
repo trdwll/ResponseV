@@ -72,9 +72,8 @@ namespace ResponseV
 
             // In Progress
             // Functions.RegisterCallout(typeof(Callouts.Any.DUI));
-            //Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
+            // Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
             // Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
-
 
             // Finished/RFC
             //Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));

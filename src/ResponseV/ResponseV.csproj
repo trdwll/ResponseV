@@ -112,6 +112,7 @@
     <Compile Include="Misc\TrafficBackup.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RageMethods.cs" />
     <Compile Include="Serialization.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>

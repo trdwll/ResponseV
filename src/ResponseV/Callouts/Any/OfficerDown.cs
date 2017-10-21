@@ -38,7 +38,7 @@ namespace ResponseV.Callouts.Any
             string aud;
             if (!multiple)
             {
-                type = Enums.CalloutType.Stabbing; //Utils.GetRandValue(Enums.CalloutType.Shooting, Enums.CalloutType.Stabbing, Enums.CalloutType.Unknown);
+                type = Utils.GetRandValue(Enums.CalloutType.Shooting, Enums.CalloutType.Stabbing, Enums.CalloutType.Unknown);
 
                 switch (type)
                 {
@@ -76,7 +76,7 @@ namespace ResponseV.Callouts.Any
 
                     officers.Add(veh);
 
-                    suspect = new Ped(Utils.GetRandValue(Model.PedModels), SpawnPoint, Utils.GetRandInt(1, 360));
+                    suspect = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), SpawnPoint, Utils.GetRandInt(1, 360));
 
                     if (type == Enums.CalloutType.Stabbing)
                     {
@@ -91,7 +91,7 @@ namespace ResponseV.Callouts.Any
                         // Spawn suspects
                         for (int i = 0; i < Utils.GetRandInt(2, 5); i++)
                         {
-                            Ped sus = new Ped(Utils.GetRandValue(Model.PedModels), SpawnPoint, Utils.GetRandInt(1, 360));
+                            Ped sus = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), SpawnPoint, Utils.GetRandInt(1, 360));
                             sus.Inventory.GiveNewWeapon(Utils.GetRandValue(weaponList), (short)Utils.GetRandInt(10, 60), true);
                             sus.Tasks.FightAgainstClosestHatedTarget(30f);
                             suspects.Add(sus);
@@ -115,7 +115,7 @@ namespace ResponseV.Callouts.Any
 
                         officers.Add(veh);
 
-                        suspect = new Ped(Utils.GetRandValue(Model.PedModels), SpawnPoint, Utils.GetRandInt(1, 360));
+                        suspect = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), SpawnPoint, Utils.GetRandInt(1, 360));
                         suspect.Inventory.GiveNewWeapon(Utils.GetRandValue(weaponList), (short)Utils.GetRandInt(10, 60), true);
                         suspects.Add(suspect);
                     }
