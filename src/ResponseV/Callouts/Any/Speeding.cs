@@ -9,38 +9,38 @@ namespace ResponseV.Callouts.Any
     [CalloutInfo("Speeding", CalloutProbability.VeryHigh)]
     public class Speeding : Callout
     {
-        private Vector3 SpawnPoint;
-        private Vehicle veh;
-        private Ped suspect;
-        private Blip blip;
-        private LHandle pursuit;
-        private Enums.Callout state;
+        private Vector3 m_SpawnPoint;
+        private Vehicle m_Vehicle;
+        private Ped m_Suspect;
+        private Blip m_Blip;
+        private LHandle m_Pursuit;
+        private Enums.Callout m_State;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)));
 
-            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
 
             CalloutMessage = "Reports of a Speeding Vehicle";
-            CalloutPosition = SpawnPoint;
+            CalloutPosition = m_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} "+
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} IN_OR_ON_POSITION", m_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            state = Enums.Callout.EnRoute;
+            m_State = Enums.Callout.EnRoute;
 
-            veh = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), SpawnPoint);
-            suspect = veh.CreateRandomDriver();
-            veh.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(40, 80));
+            m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), m_SpawnPoint);
+            m_Suspect = m_Vehicle.CreateRandomDriver();
+            m_Vehicle.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(40, 80));
 
-            blip = new Blip(SpawnPoint);
+            m_Blip = new Blip(m_SpawnPoint);
 
             return base.OnCalloutAccepted();
         }
@@ -52,18 +52,18 @@ namespace ResponseV.Callouts.Any
 
         public override void Process()
         {
-            if (state == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 50)
+            if (m_State == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50)
             {
-                state = Enums.Callout.OnScene;
+                m_State = Enums.Callout.OnScene;
 
                 Pursuit();
             }
 
-            if (state == Enums.Callout.InPursuit)
+            if (m_State == Enums.Callout.InPursuit)
             {
-                if (!Functions.IsPursuitStillRunning(pursuit))
+                if (!Functions.IsPursuitStillRunning(m_Pursuit))
                 {
-                    state = Enums.Callout.Done;
+                    m_State = Enums.Callout.Done;
                     End();
                 }
             }
@@ -73,11 +73,11 @@ namespace ResponseV.Callouts.Any
         {
             GameFiber.StartNew(delegate
             {
-                pursuit = Functions.CreatePursuit();
-                Functions.AddPedToPursuit(pursuit, suspect);
-                blip.Delete();
+                m_Pursuit = Functions.CreatePursuit();
+                Functions.AddPedToPursuit(m_Pursuit, m_Suspect);
+                m_Blip.Delete();
 
-                state = Enums.Callout.InPursuit;
+                m_State = Enums.Callout.InPursuit;
 
                 LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 1, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
             });
@@ -85,8 +85,8 @@ namespace ResponseV.Callouts.Any
 
         public override void End()
         {
-            blip.Delete();
-            veh.Dismiss();
+            m_Blip.Delete();
+            m_Vehicle.Dismiss();
 
             base.End();
         }

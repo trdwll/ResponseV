@@ -15,34 +15,29 @@ namespace ResponseV.Callouts.Any
     [CalloutInfo("AircraftCrash", CalloutProbability.VeryHigh)]
     public class AircraftCrash : Callout
     {
-        private Vector3 SpawnPoint;
-        private Vehicle aircraft;
-        private List<Ped> vics = new List<Ped>();
-        private Blip blip;
+        private Vector3 m_SpawnPoint;
+        private Vehicle m_Aircraft;
+        private List<Ped> m_Victims = new List<Ped>();
+        private Blip m_Blip;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(1000f));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(1000f));
 
-            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 50f);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 50f);
 
             CalloutMessage = "Reports of an Aircraft Crash";
-            CalloutPosition = SpawnPoint;
+            CalloutPosition = m_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.AIRCRAFT_CRASH)} IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.AIRCRAFT_CRASH)} IN_OR_ON_POSITION", m_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            // spawn plane/heli
-            // spawn peds and kill
-            // decorate peds with blood
-            
-
             return base.OnCalloutAccepted();
         }
 
@@ -55,9 +50,11 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 50)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50)
             {
-               
+                // spawn plane/heli
+                // spawn peds and kill
+                // decorate peds with blood
             }
         }
 

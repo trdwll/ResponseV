@@ -16,43 +16,43 @@ namespace ResponseV.Callouts.Any
     [CalloutInfo("DUI", CalloutProbability.VeryHigh)]
     public class DUI : Callout
     {
-        private Vector3 SpawnPoint;
-        private Ped ped;
-        private Vehicle veh;
-        private Blip blip;
+        private Vector3 m_SpawnPoint;
+        private Ped m_Ped;
+        private Vehicle m_Vehicle;
+        private Blip m_Blip;
 
-        private Model[] vehicleModels = Model.VehicleModels;
+        private Model[] m_VehicleModels = Model.VehicleModels;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(/*Utils.getRandInt(300, 350)*/150f));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(/*Utils.getRandInt(300, 350)*/150f));
 
-            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
 
             CalloutMessage = "Reports of " + (Utils.GetRandInt(0, 2) == 1 ? "a" : "a Possible") + " DUI";
-            CalloutPosition = SpawnPoint;
+            CalloutPosition = m_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DUI)} IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DUI)} IN_OR_ON_POSITION", m_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            veh = new Vehicle(Utils.GetRandValue(vehicleModels), SpawnPoint);
-            veh.IsPersistent = true;
+            m_Vehicle = new Vehicle(Utils.GetRandValue(m_VehicleModels), m_SpawnPoint);
+            m_Vehicle.IsPersistent = true;
 
-            ped = veh.CreateRandomDriver();
-            ped.IsPersistent = true;
-            ped.BlockPermanentEvents = true;
+            m_Ped = m_Vehicle.CreateRandomDriver();
+            m_Ped.IsPersistent = true;
+            m_Ped.BlockPermanentEvents = true;
 
-            blip = ped.AttachBlip();
-            blip.IsFriendly = false;
+            m_Blip = m_Ped.AttachBlip();
+            m_Blip.IsFriendly = false;
             
-            ped.Tasks.CruiseWithVehicle(Utils.GetRandInt(5, 45));
-            //ped.Tasks.PerformDrivingManeuver(VehicleManeuver.SwerveLeft);
+            m_Ped.Tasks.CruiseWithVehicle(Utils.GetRandInt(5, 45));
+            //m_Ped.Tasks.PerformDrivingManeuver(VehicleManeuver.SwerveLeft);
 
             return base.OnCalloutAccepted();
         }
@@ -66,7 +66,7 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 50 && Functions.IsPedArrested(ped))
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50 && Functions.IsPedArrested(m_Ped))
             {
                 End();
             }
@@ -74,8 +74,8 @@ namespace ResponseV.Callouts.Any
 
         public override void End()
         {
-            blip.Delete();
-            ped.Dismiss();
+            m_Blip.Delete();
+            m_Ped.Dismiss();
 
             base.End();
         }

@@ -11,17 +11,17 @@ using LSPD_First_Response.Engine.Scripting;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("PersonWithWeapon", CalloutProbability.VeryHigh)]
+    [CalloutInfo("PersonWithWeapon", CalloutProbability.Low)]
     public class PersonWithWeapon : Callout
     {
-        private Vector3 SpawnPoint;
-        private Ped suspect;
-        private WeaponHash weapon;
-        private Blip blip;
-        private LHandle pursuit;
-        private Enums.Callout state;
+        private Vector3 m_SpawnPoint;
+        private Ped m_Suspect;
+        private WeaponHash m_Weapon;
+        private Blip m_Blip;
+        private LHandle m_Pursuit;
+        private Enums.Callout m_State;
 
-        private WeaponHash[] weaponList = {
+        private WeaponHash[] m_WeaponList = {
             WeaponHash.AdvancedRifle, WeaponHash.AssaultRifle, WeaponHash.CarbineRifle, // Assault Rifles
             WeaponHash.AssaultSMG, WeaponHash.MicroSMG, // SMGs
             WeaponHash.MG, WeaponHash.CombatMG, // LMGs
@@ -34,42 +34,42 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)));
 
-            weapon = Utils.GetRandValue(weaponList);
+            m_Weapon = Utils.GetRandValue(m_WeaponList);
 
-            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
 
-            CalloutMessage = "Reports of a Person with a " + (Utils.GetRandBool() ? weapon.ToString() : "Weapon");
-            CalloutPosition = SpawnPoint;
+            CalloutMessage = "Reports of a Person with a " + (Utils.GetRandBool() ? m_Weapon.ToString() : "Weapon");
+            CalloutPosition = m_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetWeaponSound(weapon)} IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.GetWeaponSound(m_Weapon)} IN_OR_ON_POSITION", m_SpawnPoint);
             
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            state = Enums.Callout.EnRoute;
+            m_State = Enums.Callout.EnRoute;
 
-            suspect = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), SpawnPoint, 360);
+            m_Suspect = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), m_SpawnPoint, 360);
 
-            suspect.Tasks.Wander();
-            suspect.IsPersistent = true;
-            suspect.CanAttackFriendlies = true;
-            if (Utils.GetRandBool()) suspect.RelationshipGroup = RelationshipGroup.HatesPlayer;
-            else suspect.RelationshipGroup = RelationshipGroup.AmbientFriendEmpty;
+            m_Suspect.Tasks.Wander();
+            m_Suspect.IsPersistent = true;
+            m_Suspect.CanAttackFriendlies = true;
+            if (Utils.GetRandBool()) m_Suspect.RelationshipGroup = RelationshipGroup.HatesPlayer;
+            else m_Suspect.RelationshipGroup = RelationshipGroup.AmbientFriendEmpty;
 
-            suspect.Inventory.GiveNewWeapon(weapon, (short)Utils.GetRandInt(30, 90), true);
+            m_Suspect.Inventory.GiveNewWeapon(m_Weapon, (short)Utils.GetRandInt(30, 90), true);
 
-            blip = new Blip(SpawnPoint)
+            m_Blip = new Blip(m_SpawnPoint)
             {
                 IsRouteEnabled = true,
                 IsFriendly = false
             };
-            blip.EnableRoute(System.Drawing.Color.Red);
+            m_Blip.EnableRoute(System.Drawing.Color.Red);
 
             return base.OnCalloutAccepted();
         }
@@ -81,19 +81,19 @@ namespace ResponseV.Callouts.Any
 
         public override void Process()
         {
-            if (state == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 50)
+            if (m_State == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50)
             {
-                blip.IsRouteEnabled = false;
-                state = Enums.Callout.OnScene;
+                m_Blip.IsRouteEnabled = false;
+                m_State = Enums.Callout.OnScene;
 
                 Pursuit();
             }
 
-            if (state == Enums.Callout.InPursuit)
+            if (m_State == Enums.Callout.InPursuit)
             {
-                if (!Functions.IsPursuitStillRunning(pursuit))
+                if (!Functions.IsPursuitStillRunning(m_Pursuit))
                 {
-                    state = Enums.Callout.Done;
+                    m_State = Enums.Callout.Done;
                     End();
                 }
             }
@@ -103,16 +103,19 @@ namespace ResponseV.Callouts.Any
         {
             GameFiber.StartNew(delegate
             {
-                pursuit = Functions.CreatePursuit();
-                Functions.AddPedToPursuit(pursuit, suspect);
-                blip.Delete();
+                m_Pursuit = Functions.CreatePursuit();
+                Functions.AddPedToPursuit(m_Pursuit, m_Suspect);
+                m_Blip.Delete();
                 
-                if (Utils.GetRandBool()) Functions.SetPursuitDisableAI(pursuit, true);
+                if (Utils.GetRandBool()) 
+                {
+                    Functions.SetPursuitDisableAI(m_Pursuit, true);
+                }
 
-                suspect.BlockPermanentEvents = Utils.GetRandBool();
-                suspect.Tasks.FightAgainstClosestHatedTarget(50f);
+                m_Suspect.BlockPermanentEvents = Utils.GetRandBool();
+                m_Suspect.Tasks.FightAgainstClosestHatedTarget(50f);
 
-                state = Enums.Callout.InPursuit;
+                m_State = Enums.Callout.InPursuit;
 
                 GameFiber.Sleep(5000);
                 LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 1, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
@@ -121,8 +124,8 @@ namespace ResponseV.Callouts.Any
 
         public override void End()
         {
-            blip.Delete();
-            suspect.Dismiss();
+            m_Blip.Delete();
+            m_Suspect.Dismiss();
 
             base.End();
         }

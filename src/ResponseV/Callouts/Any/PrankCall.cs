@@ -14,21 +14,21 @@ namespace ResponseV.Callouts.Any
     [CalloutInfo("PrankCall", CalloutProbability.VeryHigh)]
     public class PrankCall : Callout
     {
-        private Vector3 SpawnPoint;
-        private Blip blip;
-        private Enums.Callout state;
+        private Vector3 m_SpawnPoint;
+        private Blip m_Blip;
+        private Enums.Callout m_State;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(300, 1500)));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(300, 1500)));
 
-            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
 
             string type = Utils.GetRandValue("a Shooting", "a Stabbing", "an Armed Car Robbery", "an Armed Robbery", "a Robbery", "an Officer Down", "Multiple Officers Down", 
                 "a DUI", "an Aircraft Crash", "a Civilian on Fire", "a Kidnapping", "a Dead Body", "an Overdose");
 
             CalloutMessage = "Reports of " + type;
-            CalloutPosition = SpawnPoint;
+            CalloutPosition = m_SpawnPoint;
 
             // Come up with way to get a safe name from the audio files for above
             // and play the dispatch audio for this call since the immersion isn't there if no audio doesn't play
@@ -38,22 +38,22 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            state = Enums.Callout.EnRoute;
+            m_State = Enums.Callout.EnRoute;
 
-            blip = new Blip(SpawnPoint)
+            m_Blip = new Blip(m_SpawnPoint)
             {
                 IsRouteEnabled = true
             };
-            blip.EnableRoute(System.Drawing.Color.White);
+            m_Blip.EnableRoute(System.Drawing.Color.White);
 
             return base.OnCalloutAccepted();
         }
 
         public override void Process()
         {
-            if (state == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 20)
+            if (m_State == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 20)
             {
-                state = Enums.Callout.OnScene;
+                m_State = Enums.Callout.OnScene;
 
                 End();
             }
@@ -62,7 +62,7 @@ namespace ResponseV.Callouts.Any
         public override void End()
         {
             Game.DisplayHelp("Dispatch, call is a prank - resuming patrol.");
-            blip.Delete();
+            m_Blip.Delete();
 
             base.End();
         }

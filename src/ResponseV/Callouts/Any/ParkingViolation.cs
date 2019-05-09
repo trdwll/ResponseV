@@ -14,38 +14,38 @@ namespace ResponseV.Callouts.Any
     [CalloutInfo("ParkingViolation", CalloutProbability.VeryLow)]
     public class ParkingViolation : Callout
     {
-        private Vector3 SpawnPoint;
-        private Vehicle veh;
-        private Blip blip;
-        private Enums.Callout state;
+        private Vector3 m_SpawnPoint;
+        private Vehicle m_Vehicle;
+        private Blip m_Blip;
+        private Enums.Callout m_State;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)).Around(5f));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)).Around(5f));
 
-            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
 
             CalloutMessage = "Reports of an Illegally Parked Vehicle";
-            CalloutPosition = SpawnPoint;
+            CalloutPosition = m_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.PARKING)} IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.PARKING)} IN_OR_ON_POSITION", m_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            state = Enums.Callout.EnRoute;
+            m_State = Enums.Callout.EnRoute;
 
-            veh = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), SpawnPoint);
+            m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), m_SpawnPoint);
             
-            blip = new Blip(SpawnPoint)
+            m_Blip = new Blip(m_SpawnPoint)
             {
                 IsRouteEnabled = true
             };
-            blip.EnableRoute(System.Drawing.Color.White);
+            m_Blip.EnableRoute(System.Drawing.Color.White);
 
             return base.OnCalloutAccepted();
         }
@@ -57,18 +57,18 @@ namespace ResponseV.Callouts.Any
 
         public override void Process()
         {
-            if (state == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 20)
+            if (m_State == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 20)
             {
-                state = Enums.Callout.OnScene;
-                blip.IsRouteEnabled = false;
+                m_State = Enums.Callout.OnScene;
+                m_Blip.IsRouteEnabled = false;
                 End();
             }
         }
 
         public override void End()
         {
-            blip.Delete();
-            veh.Dismiss();
+            m_Blip.Delete();
+            m_Vehicle.Dismiss();
 
             base.End();
         }

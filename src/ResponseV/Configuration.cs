@@ -6,7 +6,7 @@ namespace ResponseV
     {
         public static readonly string APPVERSION = "v1.0.0";
 
-        public static readonly string ConfigFile = $"{Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV\\ResponseV.json";
+        public static readonly string ConfigFile = $"{Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.json";
         public static Cfg.RootObject config = Serialization.JSON.Deserialize.GetFromFile<Cfg.RootObject>(ConfigFile);
 
         public class Cfg

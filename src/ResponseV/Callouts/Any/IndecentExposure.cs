@@ -9,40 +9,40 @@ namespace ResponseV.Callouts.Any
     [CalloutInfo("IndecentExposure", CalloutProbability.Low)]
     public class IndecentExposure : Callout
     {
-        private Vector3 SpawnPoint;
-        private Ped suspect;
-        private Blip blip;
+        private Vector3 m_SpawnPoint;
+        private Ped m_Suspect;
+        private Blip m_Blip;
 
-        private Enums.Callout state;
+        private Enums.Callout m_State;
 
-        private Model[] pedModels = { "a_f_m_fatcult_01", "a_m_m_acult_01", "a_m_y_acult_01", "a_m_y_acult_02" };
+        private Model[] m_PedModels = { "a_f_m_fatcult_01", "a_m_m_acult_01", "a_m_y_acult_01", "a_m_y_acult_02" };
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(400, 550)));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(400, 550)));
 
-            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
 
             CalloutMessage = "Reports of Indecent Exposure";
-            CalloutPosition = SpawnPoint;
+            CalloutPosition = m_SpawnPoint;
             
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_INDECENT_EXPOSURE IN_OR_ON_POSITION", SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_INDECENT_EXPOSURE IN_OR_ON_POSITION", m_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            state = Enums.Callout.EnRoute;
+            m_State = Enums.Callout.EnRoute;
 
-            suspect = new Ped(Utils.GetRandValue(pedModels), SpawnPoint, Utils.GetRandInt(1, 360));
-            suspect.Tasks.Wander();
+            m_Suspect = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
+            m_Suspect.Tasks.Wander();
 
-            blip = new Blip(SpawnPoint)
+            m_Blip = new Blip(m_SpawnPoint)
             {
                 IsRouteEnabled = true
             };
-            blip.EnableRoute(System.Drawing.Color.Yellow);
+            m_Blip.EnableRoute(System.Drawing.Color.Yellow);
 
             return base.OnCalloutAccepted();
         }
@@ -51,25 +51,25 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
 
-            if (state == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 30)
+            if (m_State == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 30)
             {
-                state = Enums.Callout.OnScene;
+                m_State = Enums.Callout.OnScene;
 
-                blip.IsRouteEnabled = false;
-                blip.Delete();
+                m_Blip.IsRouteEnabled = false;
+                m_Blip.Delete();
             }
 
-            if (state == Enums.Callout.OnScene && (Functions.IsPedGettingArrested(suspect) || Functions.IsPedArrested(suspect) || suspect.IsDead))
+            if (m_State == Enums.Callout.OnScene && (Functions.IsPedGettingArrested(m_Suspect) || Functions.IsPedArrested(m_Suspect) || m_Suspect.IsDead))
             {
-                state = Enums.Callout.Done;
+                m_State = Enums.Callout.Done;
                 End();
             }
         }
 
         public override void End()
         {
-            blip.Delete();
-            suspect.Dismiss();
+            m_Blip.Delete();
+            m_Suspect.Dismiss();
 
             base.End();
         }

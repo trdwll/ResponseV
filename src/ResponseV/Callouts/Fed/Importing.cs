@@ -45,7 +45,7 @@ sports drift tampa
     [CalloutInfo("Importing", CalloutProbability.VeryHigh)]
     public class Importing : Callout
     {
-        private Vector3 SpawnPoint;
+        private Vector3 m_SpawnPoint;
 
         public override bool OnBeforeCalloutDisplayed()
         {
@@ -56,14 +56,14 @@ sports drift tampa
                 new Vector3(-971.35f, -3000.64f, 14.59f) // Airport 1
             };
 
-            SpawnPoint = points[new Random().Next(0, points.Length)];
+            m_SpawnPoint = points[new Random().Next(0, points.Length)];
 
-            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 40f);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 40f);
 
             var types = Enum.GetValues(typeof(EType));
 
             CalloutMessage = $"Reports of illegal importing of {(EType)types.GetValue(new Random().Next(0, types.Length))}";
-            CalloutPosition = SpawnPoint;
+            CalloutPosition = m_SpawnPoint;
 
             return base.OnBeforeCalloutDisplayed();
         }

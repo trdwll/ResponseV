@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ResponseV</RootNamespace>
     <AssemblyName>ResponseV</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,20 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Arrest Manager">
-      <HintPath>..\..\..\refs\Arrest Manager.dll</HintPath>
+    <Reference Include="LSPD First Response">
+      <HintPath>G:\Program Files\Steam\steamapps\common\Grand Theft Auto V\plugins\LSPD First Response.dll</HintPath>
     </Reference>
-    <Reference Include="BetterEMS, Version=3.0.6298.2858, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\refs\BetterEMS.dll</HintPath>
-    </Reference>
-    <Reference Include="LSPD First Response, Version=0.3.38.5436, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\refs\LSPD First Response.dll</HintPath>
-    </Reference>
-    <Reference Include="RagePluginHookSDK, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\refs\RagePluginHookSDK.dll</HintPath>
+    <Reference Include="RagePluginHookSDK">
+      <HintPath>G:\Program Files\Steam\steamapps\common\Grand Theft Auto V\SDK\RagePluginHookSDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -119,6 +111,6 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /y "$(ProjectDir)$(OutDir)ResponseV.dll" "D:\Games\steamapps\common\Grand Theft Auto V\plugins\lspdfr\"</PostBuildEvent>
+    <PostBuildEvent>copy /y "$(ProjectDir)$(OutDir)ResponseV.dll" "G:\Program Files\Steam\steamapps\common\Grand Theft Auto V\plugins\LSPDFR\"</PostBuildEvent>
   </PropertyGroup>
 </Project>

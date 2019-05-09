@@ -16,16 +16,16 @@ namespace ResponseV.Callouts.Fed
     [CalloutInfo("TerroristPlot", CalloutProbability.VeryHigh)]
     public class TerroristPlot : Callout
     {
-        private Vector3 SpawnPoint;
+        private Vector3 m_SpawnPoint;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(400, 600)));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(400, 600)));
 
-            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 30f);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 30f);
 
             CalloutMessage = "Terrorist Plot"; // Add - _<type>_
-            CalloutPosition = SpawnPoint;
+            CalloutPosition = m_SpawnPoint;
 
             return base.OnBeforeCalloutDisplayed();
         }

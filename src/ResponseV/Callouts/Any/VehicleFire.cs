@@ -14,43 +14,43 @@ namespace ResponseV.Callouts.Any
     [CalloutInfo("VehicleFire", CalloutProbability.VeryHigh)]
     public class VehicleFire : Callout
     {
-        private Vector3 SpawnPoint;
-        private Vehicle veh;
-        private Ped vic;
-        private Blip blip;
+        private Vector3 m_SpawnPoint;
+        private Vehicle m_Vehicle;
+        private Ped m_Victim;
+        private Blip m_Blip;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)));
 
-            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
 
             CalloutMessage = "Reports of a Vehicle Fire";
-            CalloutPosition = SpawnPoint;
+            CalloutPosition = m_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.VEHICLE_FIRE)} IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.VEHICLE_FIRE)} IN_OR_ON_POSITION", m_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            veh = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), SpawnPoint)
+            m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), m_SpawnPoint)
             {
                 EngineHealth = 350.0f
             };
-            vic = veh.CreateRandomDriver();
-            vic.Tasks.LeaveVehicle(veh, LeaveVehicleFlags.LeaveDoorOpen);
+            m_Victim = m_Vehicle.CreateRandomDriver();
+            m_Victim.Tasks.LeaveVehicle(m_Vehicle, LeaveVehicleFlags.LeaveDoorOpen);
 
-            blip = new Blip(SpawnPoint)
+            m_Blip = new Blip(m_SpawnPoint)
             {
                 IsRouteEnabled = true
             };
-            blip.EnableRoute(System.Drawing.Color.Yellow);
+            m_Blip.EnableRoute(System.Drawing.Color.Yellow);
 
-            LSPDFR.RequestEMS(SpawnPoint);
+            LSPDFR.RequestEMS(m_SpawnPoint);
 
             return base.OnCalloutAccepted();
         }
@@ -62,28 +62,28 @@ namespace ResponseV.Callouts.Any
 
         public override void Process()
         {
-            if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 50)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50)
             {
-                vic.Kill();
-                veh.Explode(false);
-                blip.IsRouteEnabled = false;
-                if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(vic) == true)
-                {
-                    End();
-                }
+                m_Victim.Kill();
+                m_Vehicle.Explode(false);
+                m_Blip.IsRouteEnabled = false;
+                //if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(m_Victim) == true)
+                //{
+                //    End();
+                //}
 
-                if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(vic) == false)
-                {
-                    Arrest_Manager.API.Functions.CallCoroner(true);
-                    End();
-                }
+                //if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(m_Victim) == false)
+                //{
+                //    Arrest_Manager.API.Functions.CallCoroner(true);
+                //    End();
+                //}
             }
         }
 
         public override void End()
         {
-            blip.Delete();
-            veh.Dismiss();
+            m_Blip.Delete();
+            m_Vehicle.Dismiss();
 
             base.End();
         }

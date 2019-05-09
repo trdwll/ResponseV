@@ -15,46 +15,46 @@ namespace ResponseV.Callouts.Any
     [CalloutInfo("DeadBody", CalloutProbability.Low)]
     public class DeadBody : Callout
     {
-        private Vector3 SpawnPoint;
-        private Ped vic;
-        private Blip blip;
+        private Vector3 m_SpawnPoint;
+        private Ped m_Victim;
+        private Blip m_Blip;
 
-        private Model[] models = Model.PedModels;
+        private Model[] m_Models = Model.PedModels;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(350, 400)));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(350, 400)));
 
-            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 25f);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
 
             CalloutMessage = $"Reports of a " + (Utils.GetRandInt(0, 2) == 1 ? "Deceased Person" : "Dead Body");
-            CalloutPosition = SpawnPoint;
+            CalloutPosition = m_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DEADBODY)} IN_OR_ON_POSITION", SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DEADBODY)} IN_OR_ON_POSITION", m_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            vic = new Ped(Utils.GetRandValue(models), SpawnPoint, Utils.GetRandInt(1, 360));
+            m_Victim = new Ped(Utils.GetRandValue(m_Models), m_SpawnPoint, Utils.GetRandInt(1, 360));
 
-            if (Native.GetSafeCoordForPed(SpawnPoint, out Vector3 pos))
+            if (Native.GetSafeCoordForPed(m_SpawnPoint, out Vector3 pos))
             {
-                vic.Position = pos;
+                m_Victim.Position = pos;
             }
 
-            blip = new Blip(SpawnPoint)
+            m_Blip = new Blip(m_SpawnPoint)
             {
                 IsRouteEnabled = true
             };
-            blip.EnableRoute(System.Drawing.Color.Black);
+            m_Blip.EnableRoute(System.Drawing.Color.Black);
             
-            vic.Kill();
+            m_Victim.Kill();
 
-            DamagePack.ApplyDamagePack(vic, 
+            DamagePack.ApplyDamagePack(m_Victim, 
                 Utils.GetRandValue(
                     DamagePack.BigHitByVehicle, DamagePack.SCR_Torture, 
                     DamagePack.Explosion_Large, DamagePack.Burnt_Ped_0,
@@ -76,18 +76,17 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
             
-            if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) < 20)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 20)
             {
-                blip.IsRouteEnabled = false;
-                Arrest_Manager.API.Functions.CallCoroner(SpawnPoint, true);
+                m_Blip.IsRouteEnabled = false;
                 End();
             }
         }
 
         public override void End()
         {
-            blip.Delete();
-            vic.Dismiss();
+            m_Blip.Delete();
+            m_Victim.Dismiss();
 
             base.End();
         }

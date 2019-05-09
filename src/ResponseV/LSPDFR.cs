@@ -1,5 +1,4 @@
 ﻿using LSPD_First_Response;
-using BetterEMS.API;
 using Rage.Native;
 using Rage;
 
@@ -22,7 +21,7 @@ namespace ResponseV
 
         public static void RequestEMS(Rage.Vector3 location)
         {
-            EMSFunctions.RespondToLocation(location);
+            LSPD_First_Response.Mod.API.Functions.RequestBackup(location, EBackupResponseType.Code3, EBackupUnitType.Ambulance);
         }
 
         /// <summary>
