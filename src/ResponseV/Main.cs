@@ -1,8 +1,7 @@
 ﻿using System;
 using LSPD_First_Response.Mod.API;
 using System.Reflection;
-using System.Windows.Forms;
-using System.IO;
+
 namespace ResponseV
 {
     public class Main : Plugin
@@ -66,7 +65,6 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.Loitering));
             //Functions.RegisterCallout(typeof(Callouts.Any.Littering));
             //Functions.RegisterCallout(typeof(Callouts.Any.DrugBust));
-
             //Functions.RegisterCallout(typeof(Callouts.Any.Arson));
             //Functions.RegisterCallout(typeof(Callouts.Any.Explosion));
             //Functions.RegisterCallout(typeof(Callouts.Any.DriveBy));
@@ -75,6 +73,7 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.PublicIntoxication));
             //Functions.RegisterCallout(typeof(Callouts.Any.Racing));
             //Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Trespassing));
 
             // Nature
             //Functions.RegisterCallout(typeof(Callouts.Nature.IllegalHunting));

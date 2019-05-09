@@ -94,7 +94,7 @@ namespace ResponseV.Callouts
             }
             catch (Exception e)
             {
-                Rage.Game.DisplayNotification($"Response~y~V~w~ exception. Please report to developer.");
+                Rage.Game.DisplayNotification($"Response~y~V~w~ has had an error. Please report to developer.");
                 m_Logger.Log(e.ToString(), Logger.ELogLevel.LL_TRACE);
             }
         }
