@@ -1,30 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Rage;
+﻿using Rage;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
-using LSPD_First_Response.Engine.Scripting;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("VehicleFire", CalloutProbability.VeryHigh)]
-    public class VehicleFire : Callout
+    [CalloutInfo("VehicleFire", CalloutProbability.Medium)]
+    public class VehicleFire : RVCallout
     {
-        private Vector3 m_SpawnPoint;
         private Vehicle m_Vehicle;
-        private Ped m_Victim;
-        private Blip m_Blip;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)));
-
-            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
-
             CalloutMessage = "Reports of a Vehicle Fire";
             CalloutPosition = m_SpawnPoint;
 
@@ -37,20 +23,20 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), m_SpawnPoint)
+            m_Vehicle = new Vehicle(Utils.GetRandValue(m_Vehicles), m_SpawnPoint)
             {
                 EngineHealth = 350.0f
             };
-            m_Victim = m_Vehicle.CreateRandomDriver();
-            m_Victim.Tasks.LeaveVehicle(m_Vehicle, LeaveVehicleFlags.LeaveDoorOpen);
 
-            m_Blip = new Blip(m_SpawnPoint)
+            m_Victims.Add(m_Vehicle.CreateRandomDriver());
+            m_Victims.ForEach(v => v.Tasks.LeaveVehicle(m_Vehicle, LeaveVehicleFlags.LeaveDoorOpen));
+
+            GameFiber.StartNew(delegate
             {
-                IsRouteEnabled = true
-            };
-            m_Blip.EnableRoute(System.Drawing.Color.Yellow);
-
-            LSPDFR.RequestEMS(m_SpawnPoint);
+                GameFiber.Sleep(5000);
+                LSPDFR.RequestEMS(m_SpawnPoint);
+                LSPDFR.RequestFire(m_SpawnPoint);
+            });
 
             return base.OnCalloutAccepted();
         }
@@ -62,11 +48,26 @@ namespace ResponseV.Callouts.Any
 
         public override void Process()
         {
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 75)
             {
-                m_Victim.Kill();
-                m_Vehicle.Explode(false);
-                m_Blip.IsRouteEnabled = false;
+                bool bCool = Utils.GetRandBool();
+                m_Victims.ForEach(v =>
+                {
+                    if (bCool)
+                    {
+                        v.Kill();
+                    }
+                    else
+                    {
+                        v.Tasks.Flee(v, Utils.GetRandInt(25, 50), 5);
+                    }
+                });
+                
+                m_Vehicle.Explode(bCool);
+
+
+                End();
+
                 //if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(m_Victim) == true)
                 //{
                 //    End();
@@ -78,14 +79,6 @@ namespace ResponseV.Callouts.Any
                 //    End();
                 //}
             }
-        }
-
-        public override void End()
-        {
-            m_Blip.Delete();
-            m_Vehicle.Dismiss();
-
-            base.End();
         }
     }
 }

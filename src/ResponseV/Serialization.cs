@@ -3,7 +3,7 @@
 namespace ResponseV
 {
     /*
-     * Serialization class written by Jack 'OhYea777' Taylor (https://github.com/OhYea777) and is licensed under GNU GPLv3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
+     * Serialization class written by Jack 'OhYea777' Taylor (https://github.com/OhYea777) and is licensed under MIT
      * This class was written for an old project we worked on and is being recycled for this current project
      * Thanks Jack
      */

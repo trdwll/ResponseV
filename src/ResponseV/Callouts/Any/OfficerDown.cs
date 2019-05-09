@@ -7,29 +7,19 @@ using System.Collections.Generic;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("OfficerDown", CalloutProbability.Low)]
-    public class OfficerDown : Callout
+    public class OfficerDown : RVCallout
     {
-        private Vector3 m_SpawnPoint;
         private LHandle m_Pursuit;
-        private Blip m_Blip;
 
         private List<Vehicle> m_Officers = new List<Vehicle>();
-        private List<Ped> m_Suspects = new List<Ped>();
 
-        private Enums.Callout m_State;
         private Enums.CalloutType m_CalloutType;
         
         private bool m_bMultiple;
-
-        private Model[] m_VehicleModels = { "police", "police2", "police3", "police4", "sheriff", "sheriff2" };
-        private WeaponHash[] m_WeaponList = { WeaponHash.AssaultRifle, WeaponHash.Pistol, WeaponHash.SawnOffShotgun };
+        private bool m_bOnScene;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(400, 550)));
-
-            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
-
             m_bMultiple = Utils.GetRandBool();
 
             CalloutMessage = "Reports of " + (m_bMultiple ? "Multiple Officers": "an Officer") + " Down";
@@ -61,8 +51,6 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_State = Enums.Callout.EnRoute;
-
             // TODO: Move this into Process?
             Ped suspect;
             Vehicle veh;
@@ -71,7 +59,7 @@ namespace ResponseV.Callouts.Any
                 default:
                 case Enums.CalloutType.Unknown:
                 case Enums.CalloutType.Stabbing:
-                    veh = new Vehicle(Utils.GetRandValue(m_VehicleModels), m_SpawnPoint);
+                    veh = new Vehicle(Utils.GetRandValue(m_PoliceVehicleModels), m_SpawnPoint);
                     veh.CreateRandomDriver();
                     veh.Driver.Kill();
 
@@ -101,7 +89,7 @@ namespace ResponseV.Callouts.Any
                         // Spawn police
                         for (int j = 0; j < Utils.GetRandInt(2, 5); j++)
                         {
-                            Vehicle veh2 = new Vehicle(Utils.GetRandValue(m_VehicleModels), m_SpawnPoint.Around(10f));
+                            Vehicle veh2 = new Vehicle(Utils.GetRandValue(m_PoliceVehicleModels), m_SpawnPoint.Around(10f));
                             veh2.CreateRandomDriver();
                             if (Utils.GetRandBool())
                             {
@@ -113,7 +101,7 @@ namespace ResponseV.Callouts.Any
                     }
                     else
                     {
-                        veh = new Vehicle(Utils.GetRandValue(m_VehicleModels), m_SpawnPoint);
+                        veh = new Vehicle(Utils.GetRandValue(m_PoliceVehicleModels), m_SpawnPoint);
                         veh.CreateRandomDriver();
                         veh.Driver.Kill();
 
@@ -126,19 +114,20 @@ namespace ResponseV.Callouts.Any
                     break;
             }
 
-            // Turn on police car lighting
-            m_Officers.ForEach(v =>
+            // TODO: Fix the lighting, it doesn't work atm.
+            m_Officers.ForEach(o =>
             {
-                v.IsSirenOn = true;
-                v.IsSirenSilent = true;
-                v.IsEngineOn = true;
+                if (o.VehicleModelIsELS())
+                {
+                    o.IsSirenOn = false;
+                    o.IsSirenSilent = false;
+                }
+                else
+                {
+                    o.IsSirenOn = true;
+                    o.IsSirenSilent = true;
+                }
             });
-
-            m_Blip = new Blip(m_SpawnPoint)
-            {
-                IsRouteEnabled = true
-            };
-            m_Blip.EnableRoute(System.Drawing.Color.Blue);
 
             return base.OnCalloutAccepted();
         }
@@ -152,22 +141,16 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
   
-            if (m_State == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 70)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 70)
             {
-                m_State = Enums.Callout.OnScene;
-
-                m_Blip.IsRouteEnabled = false;
+                m_bOnScene = true;
 
                 OfcDown();
             }
 
-            if (m_State == Enums.Callout.InPursuit)
+            if (m_bOnScene && !Functions.IsPursuitStillRunning(m_Pursuit))
             {
-                if (!Functions.IsPursuitStillRunning(m_Pursuit))
-                {
-                    m_State = Enums.Callout.Done;
-                    End();
-                }
+                End();
             }
         }
 
@@ -180,9 +163,8 @@ namespace ResponseV.Callouts.Any
                 {
                     Functions.AddPedToPursuit(m_Pursuit, suspect);
                 });
-                m_Blip.Delete();
 
-                m_State = Enums.Callout.InPursuit;
+                Functions.SetPursuitIsActiveForPlayer(m_Pursuit, true);
 
                 if (m_bMultiple)
                 {
@@ -199,7 +181,6 @@ namespace ResponseV.Callouts.Any
 
         public override void End()
         {
-            m_Blip.Delete();
             m_Officers.ForEach(veh => veh.Dismiss());
             m_Suspects.ForEach(suspect => suspect.Dismiss());
 

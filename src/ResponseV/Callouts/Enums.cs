@@ -1,6 +1,6 @@
 ﻿namespace ResponseV.Callouts
 {
-    class Enums
+    public class Enums
     {
         public enum Callout
         {

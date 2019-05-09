@@ -12,14 +12,28 @@ namespace ResponseV
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LSPDFR);
             Functions.OnOnDutyStateChanged += OnDutyStateChangedEvent;
 
-            Rage.Game.DisplayNotification($"Response~y~V~w~ ~b~{Configuration.APPVERSION} ~w~loaded successfully");
-            
+            Rage.Game.DisplayNotification($"Response~y~V~w~ ~b~{Configuration.APPVERSION} ~w~by ~b~trdwll ~w~loaded successfully");
         }
 
         private void OnDutyStateChangedEvent(bool onDuty)
         {
             if (!onDuty) return;
 
+            // Finished/RFC
+            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
+            Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
+            Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
+            Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
+            Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
+            Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
+            //Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
+            //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
+
+            // In Progress
+            //Functions.RegisterCallout(typeof(Callouts.Any.DUI));
+            //Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
 
             // Fed
             //Functions.RegisterCallout(typeof(Callouts.Fed.TerroristPlot));
@@ -69,22 +83,6 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Nature.OverKillLimit));
             //Functions.RegisterCallout(typeof(Callouts.Nature.AnimalCruelty));
             //Functions.RegisterCallout(typeof(Callouts.Nature.EndangeredSpecies));
-
-            // In Progress
-            // Functions.RegisterCallout(typeof(Callouts.Any.DUI));
-            // Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
-            // Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
-
-            // Finished/RFC
-            //Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
-            //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
-            //Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
-            //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
-            //Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
-            //Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
-            //Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
-            //Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
-            //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
         }
 
         public override void Finally() { }

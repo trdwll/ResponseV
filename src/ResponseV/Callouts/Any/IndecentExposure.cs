@@ -7,25 +7,13 @@ using System.Collections.Generic;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("IndecentExposure", CalloutProbability.Low)]
-    public class IndecentExposure : Callout
+    public class IndecentExposure : RVCallout
     {
-        private Vector3 m_SpawnPoint;
-        private Ped m_Suspect;
-        private Blip m_Blip;
-
-        private Enums.Callout m_State;
-
-        private Model[] m_PedModels = { "a_f_m_fatcult_01", "a_m_m_acult_01", "a_m_y_acult_01", "a_m_y_acult_02" };
-
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(400, 550)));
-
-            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
-
             CalloutMessage = "Reports of Indecent Exposure";
             CalloutPosition = m_SpawnPoint;
-            
+
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_INDECENT_EXPOSURE IN_OR_ON_POSITION", m_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
@@ -33,16 +21,10 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_State = Enums.Callout.EnRoute;
+            Model[] PedModels = { "a_f_m_fatcult_01", "a_m_m_acult_01", "a_m_y_acult_01", "a_m_y_acult_02" };
 
-            m_Suspect = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
-            m_Suspect.Tasks.Wander();
-
-            m_Blip = new Blip(m_SpawnPoint)
-            {
-                IsRouteEnabled = true
-            };
-            m_Blip.EnableRoute(System.Drawing.Color.Yellow);
+            m_Suspects.Add(new Ped(Utils.GetRandValue(PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360)));
+            m_Suspects.ForEach(s => s.Tasks.Wander());
 
             return base.OnCalloutAccepted();
         }
@@ -51,27 +33,14 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
 
-            if (m_State == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 30)
+            // TODO: Fix this to be able to support multiple suspects            
+            m_Suspects.ForEach(s => 
             {
-                m_State = Enums.Callout.OnScene;
-
-                m_Blip.IsRouteEnabled = false;
-                m_Blip.Delete();
-            }
-
-            if (m_State == Enums.Callout.OnScene && (Functions.IsPedGettingArrested(m_Suspect) || Functions.IsPedArrested(m_Suspect) || m_Suspect.IsDead))
-            {
-                m_State = Enums.Callout.Done;
-                End();
-            }
-        }
-
-        public override void End()
-        {
-            m_Blip.Delete();
-            m_Suspect.Dismiss();
-
-            base.End();
+                if (Functions.IsPedGettingArrested(s) || Functions.IsPedArrested(s) || s.IsDead)
+                {
+                    End();
+                }
+            });
         }
     }
 }

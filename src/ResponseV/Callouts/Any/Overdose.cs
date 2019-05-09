@@ -5,29 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Rage;
-using LSPD_First_Response;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
-using LSPD_First_Response.Engine.Scripting;
 
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("Overdose", CalloutProbability.Medium)]
-    public class Overdose : Callout
+    public class Overdose : RVCallout
     {
-        private Vector3 m_SpawnPoint;
-        private Ped m_Victim;
-        private Blip m_Blip;
-
-        private Model[] m_Models = Model.PedModels;
-
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 700)));
-
-            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
-
-            CalloutMessage = $"Reports of " + (Utils.GetRandInt(0, 2) == 1 ? "an" : "a Possible") + " Overdose";
+            CalloutMessage = $"Reports of " + (Utils.GetRandBool() ? "an" : "a Possible") + " Overdose";
             CalloutPosition = m_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
@@ -39,24 +27,24 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_Victim = new Ped(Utils.GetRandValue(m_Models), m_SpawnPoint, Utils.GetRandInt(1, 360));
+            m_Logger.Log("Accepted Overdose Callout", Logger.ELogLevel.LL_INFO);
+
+            m_Victims.Add(new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360)));
 
             if (Native.GetSafeCoordForPed(m_SpawnPoint, out Vector3 pos))
             {
-                m_Victim.Position = pos;
+                m_Victims.ForEach(v => v.Position = pos);
             }
 
-            m_Blip = new Blip(m_SpawnPoint)
-            {
-                IsRouteEnabled = true
-            };
-            m_Blip.EnableRoute(System.Drawing.Color.Orange);
-
-            m_Victim.Kill();
+            m_Victims.ForEach(v => v.Kill());
 
             // BetterEMS.API.EMSFunctions.OverridePedDeathDetails(m_Victim, "", "Overdose", Game.GameTime, (float)Utils.GetRandDouble()+.1f);
 
-            LSPDFR.RequestEMS(m_Victim.Position);
+            GameFiber.StartNew(delegate
+            {
+                GameFiber.Sleep(5000);
+                LSPDFR.RequestEMS(m_SpawnPoint);
+            });
 
             return base.OnCalloutAccepted();
         }
@@ -67,7 +55,6 @@ namespace ResponseV.Callouts.Any
 
             if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 20)
             {
-                m_Blip.IsRouteEnabled = false;
                 End();
                 //if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(m_Victim) == true)
                 //{
@@ -84,9 +71,6 @@ namespace ResponseV.Callouts.Any
 
         public override void End()
         {
-            m_Blip.Delete();
-            m_Victim.Dismiss();
-
             base.End();
         }
     }

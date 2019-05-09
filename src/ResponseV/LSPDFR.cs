@@ -24,6 +24,11 @@ namespace ResponseV
             LSPD_First_Response.Mod.API.Functions.RequestBackup(location, EBackupResponseType.Code3, EBackupUnitType.Ambulance);
         }
 
+        public static void RequestFire(Rage.Vector3 location)
+        {
+            LSPD_First_Response.Mod.API.Functions.RequestBackup(location, EBackupResponseType.Code3, EBackupUnitType.Firetruck); // Sends a police car instead of a fire truck
+        }
+
         /// <summary>
         /// Shoutout to khorio for the colors!
         /// </summary>

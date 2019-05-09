@@ -82,8 +82,10 @@
     <Compile Include="Callouts\Any\SexOffender.cs" />
     <Compile Include="Callouts\Any\Speeding.cs" />
     <Compile Include="Callouts\Any\SuspiciousItem.cs" />
+    <Compile Include="Callouts\Any\Trespassing.cs" />
     <Compile Include="Callouts\Any\Vandalism.cs" />
     <Compile Include="Callouts\Any\VehicleFire.cs" />
+    <Compile Include="Callouts\Callout.cs" />
     <Compile Include="Callouts\Enums.cs" />
     <Compile Include="Callouts\Fed\Forgery.cs" />
     <Compile Include="Callouts\Fed\IllegalDeal.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="Callouts\Nature\Poaching.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="DamagePacks.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="LSPDFR.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Misc\TrafficBackup.cs" />
