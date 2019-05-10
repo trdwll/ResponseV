@@ -32,12 +32,8 @@ namespace ResponseV
 
         public static bool IsNight()
         {
-            // night = between 2000 - 0600
             TimeSpan now = Rage.World.TimeOfDay;
-            TimeSpan start = new TimeSpan(20, 0, 0);
-            TimeSpan end = new TimeSpan(06, 0, 0);
-
-            return ((now >= start) && (now <= end));
+            return now.Hours >= 20 || now.Hours < 6;
         }
 
         public static bool IsDay()

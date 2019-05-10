@@ -17,6 +17,15 @@ namespace ResponseV
             Rage.Game.DisplayNotification($"Response~y~V~w~ ~b~{Configuration.APPVERSION} ~w~by ~b~trdwll ~w~loaded successfully");
 
             Rage.Game.RawFrameRender += OnRawFrameRender;
+
+            if (Utils.IsNight())
+            {
+                Rage.Game.DisplayNotification("Is Night");
+            }
+            else
+            {
+                Rage.Game.DisplayNotification("Is Day");
+            }
         }
 
         private void OnDutyStateChangedEvent(bool onDuty)
