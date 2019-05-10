@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Rage;
+﻿using Rage;
 
 namespace ResponseV.Ambient
 {
@@ -12,35 +6,15 @@ namespace ResponseV.Ambient
     {
         public static void Initialize()
         {
-            Main.MainLogger.Log("AmbientEvent: Fight started");
-
+            Main.MainLogger.Log("AmbientEvents: Fight started");
             Ped Player = Game.LocalPlayer.Character;
 
-            List<Ped> Peds = new List<Ped>();
-            for (int i = 0; i < Utils.GetRandInt(2, 4); i++)
-            {
-                // PedModels returns animals also so maybe filter this later?
-                // TODO: Fix peds spawning in the air also
-                Peds.Add(new Ped(Utils.GetRandValue(Model.PedModels), Player.Position.Around(25f, 30f), Utils.GetRandInt(1, 360)));
-            }
+            // PedModels returns animals also so maybe filter this later?
+            Ped ped1 = new Ped(Utils.GetRandValue(Model.PedModels), Player.Position.Around(25f, 30f), Utils.GetRandInt(1, 360));
+            Ped ped2 = new Ped(Utils.GetRandValue(Model.PedModels), Player.Position.Around(25f, 30f), Utils.GetRandInt(1, 360));
 
-            Peds.ForEach(p =>
-            {
-                Ped randPed = Peds.Take(1).First();
-
-                if (randPed == p)
-                {
-                    randPed = Peds.Take(1).First();
-                }
-
-                p.Tasks.FightAgainst(randPed);
-
-                // lol this is annoying
-                //if (Utils.GetRandBool())
-                //{
-                //    p.Tasks.FightAgainst(Player);
-                //}
-            });
+            ped1.Tasks.FightAgainst(ped2);
+            ped2.Tasks.FightAgainst(ped1);
         }
     }
 }

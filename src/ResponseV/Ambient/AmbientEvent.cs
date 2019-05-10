@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Rage;
+﻿using Rage;
 
 namespace ResponseV.Ambient
 {
@@ -18,16 +12,16 @@ namespace ResponseV.Ambient
             AE_CALL
         }
 
-        private static EAmbientEvent m_AmbientEvent;
+        private static EAmbientEvent s_AmbientEvent;
 
         public static void Initialize()
         {
             for (;;)
             {
                 GameFiber.Yield();
-                m_AmbientEvent = EAmbientEvent.AE_FIGHT;// Utils.GetRandValue(EAmbientEvent.AE_CALL, EAmbientEvent.AE_PATROL);
+                s_AmbientEvent = EAmbientEvent.AE_FIGHT;// Utils.GetRandValue(EAmbientEvent.AE_CALL, EAmbientEvent.AE_PATROL);
 
-                switch (m_AmbientEvent)
+                switch (s_AmbientEvent)
                 {
                 case EAmbientEvent.AE_CALL: Call.Initialize(); break;
                 case EAmbientEvent.AE_PATROL: Patrol.Initialize(); break;
