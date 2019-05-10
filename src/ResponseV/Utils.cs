@@ -51,7 +51,6 @@ namespace ResponseV
         }
     }
 
-
     // Credits to Albo1125 for these extensions 
     public static class AlboExtensions
     {

@@ -2,11 +2,13 @@
 using LSPD_First_Response.Mod.API;
 using System.Reflection;
 using System.Windows.Forms;
+using ResponseV.Ambient;
 
 namespace ResponseV
 {
     public class Main : Plugin
     {
+        public static Logger MainLogger = new Logger();
         public override void Initialize()
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LSPDFR);
@@ -21,6 +23,8 @@ namespace ResponseV
         {
             if (!onDuty) return;
 
+            Rage.GameFiber AmbientEvents = Rage.GameFiber.StartNew(new System.Threading.ThreadStart(AmbientEvent.Initialize), "AmbientEventsFiber");
+            
             // Finished/RFC
             //Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
             //Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
@@ -31,7 +35,6 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
             //Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
-
 
             // In Progress
             //Functions.RegisterCallout(typeof(Callouts.Any.DUI));

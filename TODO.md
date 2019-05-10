@@ -5,6 +5,11 @@
 
 
 # Callouts
+ALL
+- Check if BetterEMS etc are enabled then do some additional checks like on OD if they revived the victim etc
+
+___
+
 - PersonWithWeapon
     - Extend this to not only have a pursuit, but could be an open carry situation etc
 - Overdose

@@ -51,7 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ambient\AmbientEvent.cs" />
     <Compile Include="Ambient\Call.cs" />
+    <Compile Include="Ambient\Fight.cs" />
     <Compile Include="Ambient\Patrol.cs" />
     <Compile Include="Ambient\PedCrimes.cs" />
     <Compile Include="Ambient\Pullover.cs" />
@@ -60,8 +62,10 @@
     <Compile Include="Callouts\Any\AttemptedMurder.cs" />
     <Compile Include="Callouts\Any\AttemptedSuicide.cs" />
     <Compile Include="Callouts\Any\BarFight.cs" />
+    <Compile Include="Callouts\Any\BeachParty.cs" />
     <Compile Include="Callouts\Any\CivOnFire.cs" />
     <Compile Include="Callouts\Any\DeadBody.cs" />
+    <Compile Include="Callouts\Any\Drowning.cs" />
     <Compile Include="Callouts\Any\DrugBust.cs" />
     <Compile Include="Callouts\Any\Assault.cs" />
     <Compile Include="Callouts\Any\DUI.cs" />
@@ -74,11 +78,13 @@
     <Compile Include="Callouts\Any\OfficerDown.cs" />
     <Compile Include="Callouts\Any\Overdose.cs" />
     <Compile Include="Callouts\Any\ParkingViolation.cs" />
+    <Compile Include="Callouts\Any\Party.cs" />
     <Compile Include="Callouts\Any\PedHitByVehicle.cs" />
     <Compile Include="Callouts\Any\PersonWithWeapon.cs" />
     <Compile Include="Callouts\Any\PrankCall.cs" />
     <Compile Include="Callouts\Any\Pursuit.cs" />
     <Compile Include="Callouts\Any\Robbery.cs" />
+    <Compile Include="Callouts\Any\SearchWarrant.cs" />
     <Compile Include="Callouts\Any\SexOffender.cs" />
     <Compile Include="Callouts\Any\Speeding.cs" />
     <Compile Include="Callouts\Any\SuspiciousItem.cs" />
