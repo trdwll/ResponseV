@@ -7,21 +7,20 @@ using LSPD_First_Response.Mod.Callouts;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("Speeding", CalloutProbability.VeryHigh)]
-    public class Speeding : Callout
+    public class Speeding : RVCallout
     {
-        private Vector3 m_SpawnPoint;
         private Vehicle m_Vehicle;
-        private Ped m_Suspect;
-        private Blip m_Blip;
         private LHandle m_Pursuit;
-        private Enums.Callout m_State;
+
+        private bool m_bIsPursuit = Utils.GetRandBool();
+        private bool m_bOnScene;
+
+        private Ped m_Driver;
+
+        private Blip m_SpeedingVehicleBlip;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)));
-
-            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
-
             CalloutMessage = "Reports of a Speeding Vehicle";
             CalloutPosition = m_SpawnPoint;
 
@@ -34,60 +33,75 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_State = Enums.Callout.EnRoute;
-
             m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), m_SpawnPoint);
-            m_Suspect = m_Vehicle.CreateRandomDriver();
-            m_Vehicle.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(40, 80));
+            m_Driver = m_Vehicle.CreateRandomDriver();
+            m_Suspects.Add(m_Driver);
 
-            m_Blip = new Blip(m_SpawnPoint);
+            m_SpeedingVehicleBlip = m_Vehicle.AttachBlip();
+            m_SpeedingVehicleBlip.Color = System.Drawing.Color.Green;
+            m_SpeedingVehicleBlip.Scale = 0.5f;
+
+            // TODO: Notify a description, random will display license plate (partials), colors, etc
 
             return base.OnCalloutAccepted();
         }
 
-        public override void OnCalloutNotAccepted()
-        {
-            base.OnCalloutNotAccepted();
-        }
-
         public override void Process()
         {
-            if (m_State == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50 && !m_bOnScene)
             {
-                m_State = Enums.Callout.OnScene;
-
-                Pursuit();
+                m_Vehicle.Driver.KeepTasks = true;
+                m_Vehicle.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(50, 80));
             }
 
-            if (m_State == Enums.Callout.InPursuit)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 30)
             {
-                if (!Functions.IsPursuitStillRunning(m_Pursuit))
+                m_bOnScene = true;
+
+                if (m_bIsPursuit)
                 {
-                    m_State = Enums.Callout.Done;
-                    End();
+                    Pursuit();
                 }
+            }
+
+            if (!m_bIsPursuit && Functions.IsPlayerPerformingPullover() && Functions.GetPulloverSuspect(Functions.GetCurrentPullover()) == m_Driver)
+            {
+                m_Logger.Log("SpeedingVehicle: Pulling over the speeding vehicle");
+                End();
+            }
+
+            if (m_bOnScene && m_bIsPursuit && !Functions.IsPursuitStillRunning(m_Pursuit))
+            {
+                m_Logger.Log("SpeedingVehicle: Pursuit has ended");
+                End();
             }
         }
 
         void Pursuit()
         {
+            m_Logger.Log("SpeedingVehicle: Started pursuit");
             GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
-                Functions.AddPedToPursuit(m_Pursuit, m_Suspect);
-                m_Blip.Delete();
 
-                m_State = Enums.Callout.InPursuit;
+                m_Suspects.ForEach(s =>
+                {
+                    Functions.AddPedToPursuit(m_Pursuit, s);
+                });
 
+                Functions.SetPursuitIsActiveForPlayer(m_Pursuit, true);
+
+                GameFiber.Sleep(10000);
                 LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 1, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
             });
         }
 
         public override void End()
         {
-            m_Blip.Delete();
             m_Vehicle.Dismiss();
+            m_SpeedingVehicleBlip.Delete();
 
+            m_Logger.Log("SpeedingVehicle: End()");
             base.End();
         }
     }

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace ResponseV
+﻿namespace ResponseV
 {
     public class Logger
     {
@@ -17,18 +10,20 @@ namespace ResponseV
             LL_TRACE
         }
 
-        private readonly string m_LogFile = $"{Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.log";
+        private readonly string m_LogFile = $"{System.Windows.Forms.Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.log";
         private readonly string m_DateFormat = $"[{System.DateTime.Now}]";
 
         public Logger()
         {
-            if (!System.IO.File.Exists(m_LogFile))
+            if (System.IO.File.Exists(m_LogFile))
             {
-                WriteLog("--------------------");
-                WriteLog($"ResponseV {Configuration.APPVERSION}");
-                WriteLog("Initialized Log");
-                WriteLog("--------------------");
+                System.IO.File.Delete(m_LogFile);
             }
+
+            WriteLog("--------------------");
+            WriteLog($"ResponseV {Configuration.APPVERSION}");
+            WriteLog("Initialized Log");
+            WriteLog("--------------------");
         }
 
         public void Log(string Message, ELogLevel LogLevel = ELogLevel.LL_INFO)

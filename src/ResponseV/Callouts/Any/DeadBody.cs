@@ -12,21 +12,11 @@ using LSPD_First_Response.Engine.Scripting;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("DeadBody", CalloutProbability.Low)]
-    public class DeadBody : Callout
+    [CalloutInfo("DeadBody", CalloutProbability.VeryHigh)]
+    public class DeadBody : RVCallout
     {
-        private Vector3 m_SpawnPoint;
-        private Ped m_Victim;
-        private Blip m_Blip;
-
-        private Model[] m_Models = Model.PedModels;
-
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(350, 400)));
-
-            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
-
             CalloutMessage = $"Reports of a " + (Utils.GetRandInt(0, 2) == 1 ? "Deceased Person" : "Dead Body");
             CalloutPosition = m_SpawnPoint;
 
@@ -39,37 +29,36 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_Victim = new Ped(Utils.GetRandValue(m_Models), m_SpawnPoint, Utils.GetRandInt(1, 360));
-
-            if (Native.GetSafeCoordForPed(m_SpawnPoint, out Vector3 pos))
+            m_Victims.Add(new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360)));
+            m_Victims.ForEach(v =>
             {
-                m_Victim.Position = pos;
-            }
+                if (Native.GetSafeCoordForPed(m_SpawnPoint, out Vector3 pos))
+                {
+                    v.Position = pos;
+                }
 
-            m_Blip = new Blip(m_SpawnPoint)
+                DamagePack.ApplyDamagePack(v,
+                    Utils.GetRandValue(
+                        DamagePack.BigHitByVehicle, DamagePack.SCR_Torture,
+                        DamagePack.Explosion_Large, DamagePack.Burnt_Ped_0,
+                        DamagePack.Car_Crash_Light, DamagePack.Car_Crash_Heavy,
+                        DamagePack.Fall_Low, DamagePack.Fall,
+                        DamagePack.HitByVehicle, DamagePack.BigRunOverByVehicle,
+                        DamagePack.RunOverByVehicle
+                    ), 100, 1);
+
+                v.Kill();
+            });
+
+            GameFiber.StartNew(delegate
             {
-                IsRouteEnabled = true
-            };
-            m_Blip.EnableRoute(System.Drawing.Color.Black);
-            
-            m_Victim.Kill();
-
-            DamagePack.ApplyDamagePack(m_Victim, 
-                Utils.GetRandValue(
-                    DamagePack.BigHitByVehicle, DamagePack.SCR_Torture, 
-                    DamagePack.Explosion_Large, DamagePack.Burnt_Ped_0,
-                    DamagePack.Car_Crash_Light, DamagePack.Car_Crash_Heavy,
-                    DamagePack.Fall_Low, DamagePack.Fall,
-                    DamagePack.HitByVehicle, DamagePack.BigRunOverByVehicle,
-                    DamagePack.RunOverByVehicle
-                ), 100, 1);
+                GameFiber.Sleep(8000);
+                LSPDFR.RequestEMS(m_SpawnPoint);
+                LSPDFR.RequestFire(m_SpawnPoint);
+                LSPDFR.RequestBackup(m_SpawnPoint, 1);
+            });
 
             return base.OnCalloutAccepted();
-        }
-
-        public override void OnCalloutNotAccepted()
-        {
-            base.OnCalloutNotAccepted();
         }
 
         public override void Process()
@@ -78,17 +67,9 @@ namespace ResponseV.Callouts.Any
             
             if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 20)
             {
-                m_Blip.IsRouteEnabled = false;
+                Utils.Notify("Call a coroner.");
                 End();
             }
-        }
-
-        public override void End()
-        {
-            m_Blip.Delete();
-            m_Victim.Dismiss();
-
-            base.End();
         }
     }
 }

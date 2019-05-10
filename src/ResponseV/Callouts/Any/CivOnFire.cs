@@ -1,29 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Rage;
+﻿using Rage;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
-using LSPD_First_Response.Engine.Scripting;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("CivOnFire", CalloutProbability.VeryLow)]
-    public class CivOnFire : Callout
+    [CalloutInfo("CivOnFire", CalloutProbability.VeryHigh)]
+    public class CivOnFire : RVCallout
     {
-        private Vector3 m_SpawnPoint;
-        private Ped m_Victim;
-        private Blip m_Blip;
-
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(500, 600)));
-
-            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
-
             CalloutMessage = "Reports of a Civilian on Fire";
             CalloutPosition = m_SpawnPoint;
 
@@ -35,24 +20,30 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_Victim = new Ped(m_SpawnPoint)
+            m_Victims.Add(new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, 0f));
+
+            m_Victims.ForEach(v =>
             {
-                IsOnFire = true
-            };
-            // m_Victim.Kill();
+                v.IsOnFire = true; // Makes the civ unable to be extinguished
 
-            m_Blip = new Blip(m_SpawnPoint)
+                DamagePack.ApplyDamagePack(v, Utils.GetRandValue(
+                    DamagePack.Burnt_Ped_0, DamagePack.Burnt_Ped_Head_Torso,
+                    DamagePack.Burnt_Ped_Left_Arm, DamagePack.Burnt_Ped_Limbs,
+                    DamagePack.Burnt_Ped_Right_Arm), 100, 1);
+
+                if (Utils.GetRandBool())
+                {
+                    v.Kill();
+                }
+            });
+
+
+            GameFiber.StartNew(delegate
             {
-                IsRouteEnabled = true
-            };
-            m_Blip.EnableRoute(System.Drawing.Color.Yellow);
-
-            DamagePack.ApplyDamagePack(m_Victim, Utils.GetRandValue(
-                DamagePack.Burnt_Ped_0, DamagePack.Burnt_Ped_Head_Torso,
-                DamagePack.Burnt_Ped_Left_Arm, DamagePack.Burnt_Ped_Limbs,
-                DamagePack.Burnt_Ped_Right_Arm), 100, 1);
-
-            LSPDFR.RequestEMS(m_Victim.Position);
+                GameFiber.Sleep(6000);
+                LSPDFR.RequestEMS(m_SpawnPoint);
+                LSPDFR.RequestFire(m_SpawnPoint);
+            });
 
             return base.OnCalloutAccepted();
         }
@@ -61,17 +52,8 @@ namespace ResponseV.Callouts.Any
         {
             if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 20)
             {
-                m_Blip.IsRouteEnabled = false;
-
                 End();
             }
-        }
-
-        public override void End()
-        {
-            m_Blip.Delete();
-            m_Victim.Dismiss();
-            base.End();
         }
     }
 }

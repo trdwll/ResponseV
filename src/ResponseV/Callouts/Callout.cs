@@ -25,7 +25,7 @@ namespace ResponseV.Callouts
         public List<Ped> m_Suspects = new List<Ped>();
 
         public Model[] m_PedModels = Model.PedModels;
-        public Model[] m_Vehicles = Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle && !v.IsEmergencyVehicle).ToArray();
+        public Model[] m_Vehicles = Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle && !v.IsEmergencyVehicle && !v.IsBigVehicle).ToArray();
 
         public Model[] m_PoliceVehicleModels = { "police", "police2", "police3", "police4", "sheriff", "sheriff2" };
 
@@ -79,6 +79,7 @@ namespace ResponseV.Callouts
             if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 35)
             {
                 m_CallBlip.IsRouteEnabled = false;
+                m_Logger.Log("DistanceTo(m_SpawnPoint) < 35 so hide m_CallBlip");
             }
         }
 
@@ -95,7 +96,7 @@ namespace ResponseV.Callouts
             catch (Exception e)
             {
                 Rage.Game.DisplayNotification($"Response~y~V~w~ has had an error. Please report to developer.");
-                m_Logger.Log(e.ToString(), Logger.ELogLevel.LL_TRACE);
+                m_Logger.Log(e.Message, Logger.ELogLevel.LL_TRACE);
             }
         }
     }

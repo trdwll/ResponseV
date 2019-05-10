@@ -8,7 +8,7 @@ namespace ResponseV
 {
     public class Utils
     {
-        private static readonly Random RANDOM = new Random();
+        private static Random RANDOM = new Random();
 
         public static int GetRandInt(int min, int max)
         {
@@ -28,6 +28,26 @@ namespace ResponseV
         public static double GetRandDouble()
         {
             return RANDOM.NextDouble();
+        }
+
+        public static bool IsNight()
+        {
+            // night = between 2000 - 0600
+            TimeSpan now = Rage.World.TimeOfDay;
+            TimeSpan start = new TimeSpan(20, 0, 0);
+            TimeSpan end = new TimeSpan(06, 0, 0);
+
+            return ((now >= start) && (now <= end));
+        }
+
+        public static bool IsDay()
+        {
+            return !IsNight();
+        }
+
+        public static void Notify(string Message)
+        {
+            Rage.Game.DisplayNotification(Message);
         }
     }
 

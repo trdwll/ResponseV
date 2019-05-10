@@ -1,6 +1,7 @@
 ﻿using System;
 using LSPD_First_Response.Mod.API;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace ResponseV
 {
@@ -12,6 +13,8 @@ namespace ResponseV
             Functions.OnOnDutyStateChanged += OnDutyStateChangedEvent;
 
             Rage.Game.DisplayNotification($"Response~y~V~w~ ~b~{Configuration.APPVERSION} ~w~by ~b~trdwll ~w~loaded successfully");
+
+            Rage.Game.RawFrameRender += OnRawFrameRender;
         }
 
         private void OnDutyStateChangedEvent(bool onDuty)
@@ -19,15 +22,16 @@ namespace ResponseV
             if (!onDuty) return;
 
             // Finished/RFC
-            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
-            Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
-            Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
-            Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
-            Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
-            Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
+            //Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
+            //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
+            //Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
+            //Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
+            //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
             //Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
             //Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
+
 
             // In Progress
             //Functions.RegisterCallout(typeof(Callouts.Any.DUI));
@@ -93,6 +97,10 @@ namespace ResponseV
                 if (e.Name.ToLower().Contains(a.GetName().Name.ToLower())) return a;
             }
             return null;
+        }
+        private static void OnRawFrameRender(object sender, Rage.GraphicsEventArgs e)
+        {
+            e.Graphics.DrawText($"ResponseV {Configuration.APPVERSION}", "Verdana", 10.0f, new System.Drawing.PointF(1f, 1f), System.Drawing.Color.White);
         }
     }
 }
