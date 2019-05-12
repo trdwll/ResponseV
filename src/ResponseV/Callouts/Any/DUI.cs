@@ -1,81 +1,97 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Rage;
-using Rage.Native;
-using LSPD_First_Response;
+﻿using Rage;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
-using LSPD_First_Response.Engine.Scripting;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("DUI", CalloutProbability.VeryHigh)]
-    public class DUI : Callout
+    [CalloutInfo("DUI", CalloutProbability.Medium)]
+    public class DUI : RVCallout
     {
-        private Vector3 m_SpawnPoint;
-        private Ped m_Ped;
         private Vehicle m_Vehicle;
-        private Blip m_Blip;
-
-        private Model[] m_VehicleModels = Model.VehicleModels;
+        private Ped m_Suspect;
+        private Blip m_SuspectBlip;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(/*Utils.getRandInt(300, 350)*/150f));
-
-            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
-
             CalloutMessage = "Reports of " + (Utils.GetRandInt(0, 2) == 1 ? "a" : "a Possible") + " DUI";
-            CalloutPosition = m_SpawnPoint;
+            CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DUI)} IN_OR_ON_POSITION", m_SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DUI)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            m_Vehicle = new Vehicle(Utils.GetRandValue(m_VehicleModels), m_SpawnPoint);
+            m_Vehicle = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint);
             m_Vehicle.IsPersistent = true;
 
-            m_Ped = m_Vehicle.CreateRandomDriver();
-            m_Ped.IsPersistent = true;
-            m_Ped.BlockPermanentEvents = true;
+            m_Suspect = m_Vehicle.CreateRandomDriver();
+            m_Suspect.IsPersistent = true;
+            m_Suspect.BlockPermanentEvents = true;
+            m_Suspect.Tasks.CruiseWithVehicle(Utils.GetRandInt(5, 20));
 
-            m_Blip = m_Ped.AttachBlip();
-            m_Blip.IsFriendly = false;
-            
-            m_Ped.Tasks.CruiseWithVehicle(Utils.GetRandInt(5, 45));
-            //m_Ped.Tasks.PerformDrivingManeuver(VehicleManeuver.SwerveLeft);
+            m_SuspectBlip = m_Suspect.AttachBlip();
+
+            StartVehicleDUI();
+
+            // TODO: If Traffic Policer is installed? then add DUI 
+            // Breathalyzer.SetPedAlcoholLevels(m_Suspect, Breathalyzer.GetRandomOverTheLimitAlcoholLevel());
 
             return base.OnCalloutAccepted();
-        }
-
-        public override void OnCalloutNotAccepted()
-        {
-            base.OnCalloutNotAccepted();
         }
 
         public override void Process()
         {
             base.Process();
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50 && Functions.IsPedArrested(m_Ped))
+            // TODO: possible fleeing/pursuit
+
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_Suspect) > 300 && g_bOnScene)
+            {
+                Utils.Notify("Suspect got away.");
+                End();
+            }
+
+            if (Functions.IsPedArrested(m_Suspect) || m_Suspect.IsDead)
             {
                 End();
             }
         }
 
+        private void StartVehicleDUI()
+        {
+            GameFiber.StartNew(delegate
+            {
+                try
+                {
+                    while (m_Suspect.IsInAnyVehicle(false))
+                    {
+                        m_Suspect.Tasks.PerformDrivingManeuver(m_Vehicle, VehicleManeuver.SwerveLeft);
+                        GameFiber.Sleep(500);
+                        m_Suspect.Tasks.PerformDrivingManeuver(m_Vehicle, VehicleManeuver.SwerveRight);
+                        GameFiber.Sleep(500);
+                        m_Suspect.Tasks.PerformDrivingManeuver(m_Vehicle, VehicleManeuver.SwerveLeft);
+                        GameFiber.Sleep(500);
+                        m_Suspect.Tasks.CruiseWithVehicle(m_Vehicle, Utils.GetRandInt(5, 20), VehicleDrivingFlags.Normal);
+                        GameFiber.Sleep(5500);
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Utils.CrashNotify();
+                    g_Logger.Log(e.Message, Logger.ELogLevel.LL_TRACE);
+                    End();
+                }
+            });
+        }
+
         public override void End()
         {
-            m_Blip.Delete();
-            m_Ped.Dismiss();
+            m_Vehicle.Dismiss();
+            m_SuspectBlip.Delete();
 
             base.End();
         }

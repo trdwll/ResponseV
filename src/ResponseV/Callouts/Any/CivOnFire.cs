@@ -10,19 +10,19 @@ namespace ResponseV.Callouts.Any
         public override bool OnBeforeCalloutDisplayed()
         {
             CalloutMessage = "Reports of a Civilian on Fire";
-            CalloutPosition = m_SpawnPoint;
+            CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_CIV_ON_FIRE IN_OR_ON_POSITION", m_SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_CIV_ON_FIRE IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            m_Victims.Add(new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, 0f));
+            g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, 0f));
 
-            m_Victims.ForEach(v =>
+            g_Victims.ForEach(v =>
             {
                 v.IsOnFire = true; // Makes the civ unable to be extinguished
 
@@ -41,8 +41,8 @@ namespace ResponseV.Callouts.Any
             GameFiber.StartNew(delegate
             {
                 GameFiber.Sleep(6000);
-                LSPDFR.RequestEMS(m_SpawnPoint);
-                LSPDFR.RequestFire(m_SpawnPoint);
+                LSPDFR.RequestEMS(g_SpawnPoint);
+                LSPDFR.RequestFire(g_SpawnPoint);
             });
 
             return base.OnCalloutAccepted();
@@ -50,7 +50,9 @@ namespace ResponseV.Callouts.Any
 
         public override void Process()
         {
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 20)
+            base.Process();
+
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 20)
             {
                 End();
             }

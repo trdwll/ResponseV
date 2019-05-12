@@ -13,7 +13,6 @@ namespace ResponseV.Callouts.Any
         private LHandle m_Pursuit;
 
         private bool m_bIsPursuit = Utils.GetRandBool();
-        private bool m_bOnScene;
 
         private Ped m_Driver;
 
@@ -22,20 +21,20 @@ namespace ResponseV.Callouts.Any
         public override bool OnBeforeCalloutDisplayed()
         {
             CalloutMessage = "Reports of a Speeding Vehicle";
-            CalloutPosition = m_SpawnPoint;
+            CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} "+
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} IN_OR_ON_POSITION", m_SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), m_SpawnPoint);
+            m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), g_SpawnPoint);
             m_Driver = m_Vehicle.CreateRandomDriver();
-            m_Suspects.Add(m_Driver);
+            g_Suspects.Add(m_Driver);
 
             m_SpeedingVehicleBlip = m_Vehicle.AttachBlip();
             m_SpeedingVehicleBlip.Color = System.Drawing.Color.Green;
@@ -48,15 +47,17 @@ namespace ResponseV.Callouts.Any
 
         public override void Process()
         {
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50 && !m_bOnScene)
+            base.Process();
+
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 50 && !g_bOnScene)
             {
                 m_Vehicle.Driver.KeepTasks = true;
                 m_Vehicle.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(50, 80));
             }
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 30)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 30)
             {
-                m_bOnScene = true;
+                g_bOnScene = true;
 
                 if (m_bIsPursuit)
                 {
@@ -64,27 +65,27 @@ namespace ResponseV.Callouts.Any
                 }
             }
 
-            if (!m_bIsPursuit && Functions.IsPlayerPerformingPullover() && Functions.GetPulloverSuspect(Functions.GetCurrentPullover()) == m_Driver)
+            if (!g_bIsPursuit && Functions.IsPlayerPerformingPullover() && Functions.GetPulloverSuspect(Functions.GetCurrentPullover()) == m_Driver)
             {
-                m_Logger.Log("SpeedingVehicle: Pulling over the speeding vehicle");
+                g_Logger.Log("SpeedingVehicle: Pulling over the speeding vehicle");
                 End();
             }
 
-            if (m_bOnScene && m_bIsPursuit && !Functions.IsPursuitStillRunning(m_Pursuit))
+            if (g_bOnScene && g_bIsPursuit && !Functions.IsPursuitStillRunning(m_Pursuit))
             {
-                m_Logger.Log("SpeedingVehicle: Pursuit has ended");
+                g_Logger.Log("SpeedingVehicle: Pursuit has ended");
                 End();
             }
         }
 
         void Pursuit()
         {
-            m_Logger.Log("SpeedingVehicle: Started pursuit");
+            g_Logger.Log("SpeedingVehicle: Started pursuit");
             GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
 
-                m_Suspects.ForEach(s =>
+                g_Suspects.ForEach(s =>
                 {
                     Functions.AddPedToPursuit(m_Pursuit, s);
                 });
@@ -101,7 +102,7 @@ namespace ResponseV.Callouts.Any
             m_Vehicle.Dismiss();
             m_SpeedingVehicleBlip.Delete();
 
-            m_Logger.Log("SpeedingVehicle: End()");
+            g_Logger.Log("SpeedingVehicle: End()");
             base.End();
         }
     }

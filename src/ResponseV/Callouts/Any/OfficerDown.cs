@@ -16,14 +16,13 @@ namespace ResponseV.Callouts.Any
         private Enums.CalloutType m_CalloutType;
         
         private bool m_bMultiple;
-        private bool m_bOnScene;
 
         public override bool OnBeforeCalloutDisplayed()
         {
             m_bMultiple = Utils.GetRandBool();
 
             CalloutMessage = "Reports of " + (m_bMultiple ? "Multiple Officers": "an Officer") + " Down";
-            CalloutPosition = m_SpawnPoint;
+            CalloutPosition = g_SpawnPoint;
 
             string aud;
             if (!m_bMultiple)
@@ -44,7 +43,7 @@ namespace ResponseV.Callouts.Any
                 aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICERS_DOWN);
             }
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {aud} IN_OR_ON_POSITION", m_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {aud} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -59,20 +58,20 @@ namespace ResponseV.Callouts.Any
                 default:
                 case Enums.CalloutType.Unknown:
                 case Enums.CalloutType.Stabbing:
-                    veh = new Vehicle(Utils.GetRandValue(m_PoliceVehicleModels), m_SpawnPoint);
+                    veh = new Vehicle(Utils.GetRandValue(g_PoliceVehicleModels), g_SpawnPoint);
                     veh.CreateRandomDriver();
                     veh.Driver.Kill();
 
                     m_Officers.Add(veh);
 
-                    suspect = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), m_SpawnPoint, Utils.GetRandInt(1, 360));
+                    suspect = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), g_SpawnPoint, Utils.GetRandInt(1, 360));
 
                     if (m_CalloutType == Enums.CalloutType.Stabbing)
                     {
                         suspect.Inventory.GiveNewWeapon(WeaponHash.Knife, 1, true);
                         suspect.Tasks.FightAgainstClosestHatedTarget(30f);
                     }
-                    m_Suspects.Add(suspect);
+                    g_Suspects.Add(suspect);
                     break;
                 case Enums.CalloutType.Shooting:
                     if (m_bMultiple)
@@ -80,16 +79,16 @@ namespace ResponseV.Callouts.Any
                         // Spawn suspects
                         for (int i = 0; i < Utils.GetRandInt(1, 5); i++)
                         {
-                            Ped sus = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), m_SpawnPoint, Utils.GetRandInt(1, 360));
-                            sus.Inventory.GiveNewWeapon(Utils.GetRandValue(m_WeaponList), (short)Utils.GetRandInt(10, 60), true);
+                            Ped sus = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), g_SpawnPoint, Utils.GetRandInt(1, 360));
+                            sus.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)Utils.GetRandInt(10, 60), true);
                             sus.Tasks.FightAgainstClosestHatedTarget(30f);
-                            m_Suspects.Add(sus);
+                            g_Suspects.Add(sus);
                         }
 
                         // Spawn police
                         for (int j = 0; j < Utils.GetRandInt(2, 5); j++)
                         {
-                            Vehicle veh2 = new Vehicle(Utils.GetRandValue(m_PoliceVehicleModels), m_SpawnPoint.Around(10f));
+                            Vehicle veh2 = new Vehicle(Utils.GetRandValue(g_PoliceVehicleModels), g_SpawnPoint.Around(10f));
                             veh2.CreateRandomDriver();
                             if (Utils.GetRandBool())
                             {
@@ -101,15 +100,15 @@ namespace ResponseV.Callouts.Any
                     }
                     else
                     {
-                        veh = new Vehicle(Utils.GetRandValue(m_PoliceVehicleModels), m_SpawnPoint);
+                        veh = new Vehicle(Utils.GetRandValue(g_PoliceVehicleModels), g_SpawnPoint);
                         veh.CreateRandomDriver();
                         veh.Driver.Kill();
 
                         m_Officers.Add(veh);
 
-                        suspect = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), m_SpawnPoint, Utils.GetRandInt(1, 360));
-                        suspect.Inventory.GiveNewWeapon(Utils.GetRandValue(m_WeaponList), (short)Utils.GetRandInt(10, 60), true);
-                        m_Suspects.Add(suspect);
+                        suspect = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), g_SpawnPoint, Utils.GetRandInt(1, 360));
+                        suspect.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)Utils.GetRandInt(10, 60), true);
+                        g_Suspects.Add(suspect);
                     }
                     break;
             }
@@ -141,14 +140,14 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
   
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 70)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 70)
             {
-                m_bOnScene = true;
+                g_bOnScene = true;
 
                 OfcDown();
             }
 
-            if (m_bOnScene && !Functions.IsPursuitStillRunning(m_Pursuit))
+            if (g_bOnScene && !Functions.IsPursuitStillRunning(m_Pursuit))
             {
                 End();
             }
@@ -159,7 +158,7 @@ namespace ResponseV.Callouts.Any
             GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
-                m_Suspects.ForEach(suspect =>
+                g_Suspects.ForEach(suspect =>
                 {
                     Functions.AddPedToPursuit(m_Pursuit, suspect);
                 });
@@ -182,7 +181,7 @@ namespace ResponseV.Callouts.Any
         public override void End()
         {
             m_Officers.ForEach(veh => veh.Dismiss());
-            m_Suspects.ForEach(suspect => suspect.Dismiss());
+            g_Suspects.ForEach(suspect => suspect.Dismiss());
 
             base.End();
         }

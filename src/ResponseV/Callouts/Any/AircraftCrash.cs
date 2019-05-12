@@ -15,23 +15,23 @@ namespace ResponseV.Callouts.Any
     [CalloutInfo("AircraftCrash", CalloutProbability.VeryHigh)]
     public class AircraftCrash : Callout
     {
-        private Vector3 m_SpawnPoint;
+        private Vector3 g_SpawnPoint;
         private Vehicle m_Aircraft;
-        private List<Ped> m_Victims = new List<Ped>();
+        private List<Ped> g_Victims = new List<Ped>();
         private Blip m_Blip;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(1000f));
+            g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(1000f));
 
-            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 50f);
+            ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 50f);
 
             CalloutMessage = "Reports of an Aircraft Crash";
-            CalloutPosition = m_SpawnPoint;
+            CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.AIRCRAFT_CRASH)} IN_OR_ON_POSITION", m_SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.AIRCRAFT_CRASH)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -50,7 +50,7 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 50)
             {
                 // spawn plane/heli
                 // spawn peds and kill

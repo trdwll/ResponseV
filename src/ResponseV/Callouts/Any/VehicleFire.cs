@@ -12,46 +12,43 @@ namespace ResponseV.Callouts.Any
         public override bool OnBeforeCalloutDisplayed()
         {
             CalloutMessage = "Reports of a Vehicle Fire";
-            CalloutPosition = m_SpawnPoint;
+            CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.VEHICLE_FIRE)} IN_OR_ON_POSITION", m_SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.VEHICLE_FIRE)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            m_Vehicle = new Vehicle(Utils.GetRandValue(m_Vehicles), m_SpawnPoint)
+            m_Vehicle = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint)
             {
                 EngineHealth = 350.0f
             };
 
-            m_Victims.Add(m_Vehicle.CreateRandomDriver());
-            m_Victims.ForEach(v => v.Tasks.LeaveVehicle(m_Vehicle, LeaveVehicleFlags.LeaveDoorOpen));
+            g_Victims.Add(m_Vehicle.CreateRandomDriver());
+            g_Victims.ForEach(v => v.Tasks.LeaveVehicle(m_Vehicle, LeaveVehicleFlags.LeaveDoorOpen));
 
             GameFiber.StartNew(delegate
             {
                 GameFiber.Sleep(5000);
-                LSPDFR.RequestEMS(m_SpawnPoint);
-                LSPDFR.RequestFire(m_SpawnPoint);
+                LSPDFR.RequestEMS(g_SpawnPoint);
+                LSPDFR.RequestFire(g_SpawnPoint);
             });
 
             return base.OnCalloutAccepted();
         }
 
-        public override void OnCalloutNotAccepted()
-        {
-            base.OnCalloutNotAccepted();
-        }
-
         public override void Process()
         {
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 75)
+            base.Process();
+
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 75)
             {
                 bool bCool = Utils.GetRandBool();
-                m_Victims.ForEach(v =>
+                g_Victims.ForEach(v =>
                 {
                     if (bCool)
                     {

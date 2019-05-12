@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ResponseV.Misc
+namespace ResponseV.Callouts.Any
 {
-    class TrafficBackup
+    class Paparazzi
     {
     }
 }

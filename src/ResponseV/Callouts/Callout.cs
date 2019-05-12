@@ -11,25 +11,30 @@ using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 using LSPD_First_Response.Engine.Scripting;
 
+using System.Reflection;
+
 namespace ResponseV.Callouts
 {
     public class RVCallout : Callout
     {
-        public Logger m_Logger = new Logger();
+        public Logger g_Logger = new Logger();
 
-        public Vector3 m_SpawnPoint;
+        public Vector3 g_SpawnPoint;
 
-        public Blip m_CallBlip;
+        public Blip g_CallBlip;
 
-        public List<Ped> m_Victims = new List<Ped>();
-        public List<Ped> m_Suspects = new List<Ped>();
+        public bool g_bOnScene;
+        public bool g_bIsPursuit;
 
-        public Model[] m_PedModels = Model.PedModels;
-        public Model[] m_Vehicles = Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle && !v.IsEmergencyVehicle && !v.IsBigVehicle).ToArray();
+        public List<Ped> g_Victims = new List<Ped>();
+        public List<Ped> g_Suspects = new List<Ped>();
 
-        public Model[] m_PoliceVehicleModels = { "police", "police2", "police3", "police4", "sheriff", "sheriff2" };
+        public Model[] g_PedModels = Model.PedModels;
+        public Model[] g_Vehicles = Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle && !v.IsEmergencyVehicle && !v.IsBigVehicle).ToArray();
 
-        public WeaponHash[] m_WeaponList = {
+        public Model[] g_PoliceVehicleModels = { "police", "police2", "police3", "police4", "sheriff", "sheriff2" };
+
+        public WeaponHash[] g_WeaponList = {
             WeaponHash.AdvancedRifle, WeaponHash.AssaultRifle, WeaponHash.CarbineRifle, // Assault Rifles
             WeaponHash.AssaultSMG, WeaponHash.MicroSMG, // SMGs
             WeaponHash.MG, WeaponHash.CombatMG, // LMGs
@@ -42,27 +47,32 @@ namespace ResponseV.Callouts
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_SpawnPoint = World.GetNextPositionOnStreet(
+            g_SpawnPoint = World.GetNextPositionOnStreet(
                 Game.LocalPlayer.Character.Position.Around(
                 Utils.GetRandInt(Configuration.config.Callouts.MinRadius, 
                 Configuration.config.Callouts.MinRadius)));
 
-            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
+            //if (Functions.GetCalloutName(Functions.GetCurrentCallout()) == "UnionDepository")
+            //{
+            //    g_SpawnPoint = new Vector3(17.51f, -655.52f, 31.48f);
+            //}
+
+            ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 25f);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            m_CallBlip = new Blip(m_SpawnPoint)
+            g_CallBlip = new Blip(g_SpawnPoint)
             {
                 IsRouteEnabled = true
             };
 
-            m_CallBlip.EnableRoute(System.Drawing.Color.Blue);
-            m_CallBlip.Color = System.Drawing.Color.Blue;
+            g_CallBlip.EnableRoute(System.Drawing.Color.Blue);
+            g_CallBlip.Color = System.Drawing.Color.Blue;
 
-            m_Logger.Log("Callout was accepted");
+            g_Logger.Log("Callout was accepted");
 
             return base.OnCalloutAccepted();
         }
@@ -76,10 +86,35 @@ namespace ResponseV.Callouts
         {
             base.Process();
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 35)
+            //LHandle callout = Functions.GetCurrentCallout();
+
+            //CalloutInfoAttribute ScriptInfo = typeof(Callout).GetField("ScriptInfo", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(callout) as CalloutInfoAttribute;
+
+            //if (ScriptInfo != null)
+            //{
+            //    //Callout st = ScriptInfo.GetValue(callout) as Callout;
+
+            //    Utils.Notify("Field: " + ScriptInfo?.Name);
+            //}
+            //else
+            //{
+            //    Utils.Notify("field is null");
+            //}
+
+            Utils.Notify(Functions.GetCalloutName(Functions.GetCurrentCallout()));
+
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 35)
             {
-                m_CallBlip.IsRouteEnabled = false;
-                m_Logger.Log("DistanceTo(m_SpawnPoint) < 35 so hide m_CallBlip");
+                g_bOnScene = true;
+                g_CallBlip.IsRouteEnabled = false;
+                g_Logger.Log("RVCallout: DistanceTo(g_SpawnPoint) < 35 so hide g_CallBlip");
+            }
+
+            if (Game.LocalPlayer.IsDead)
+            {
+                Functions.PlayScannerAudio($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_DOWN)} OFFICER_NEEDS_IMMEDIATE_ASSISTANCE");
+                End();
+                g_Logger.Log("Player is dead so force end call.");
             }
         }
 
@@ -89,14 +124,18 @@ namespace ResponseV.Callouts
 
             try
             {
-                m_CallBlip.Delete();
-                m_Victims.ForEach(v => v.Dismiss());
-                m_Suspects.ForEach(s => s.Dismiss());
+                g_CallBlip.Delete();
+
+                g_Victims.ForEach(v => v.Dismiss());
+                g_Suspects.ForEach(s => s.Dismiss());
+
+                g_bOnScene = false;
+                g_bIsPursuit = false;
             }
             catch (Exception e)
             {
-                Rage.Game.DisplayNotification($"Response~y~V~w~ has had an error. Please report to developer.");
-                m_Logger.Log(e.Message, Logger.ELogLevel.LL_TRACE);
+                Utils.CrashNotify();
+                g_Logger.Log(e.Message, Logger.ELogLevel.LL_TRACE);
             }
         }
     }

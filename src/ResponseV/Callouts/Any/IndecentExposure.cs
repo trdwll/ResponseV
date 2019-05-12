@@ -12,9 +12,9 @@ namespace ResponseV.Callouts.Any
         public override bool OnBeforeCalloutDisplayed()
         {
             CalloutMessage = "Reports of Indecent Exposure";
-            CalloutPosition = m_SpawnPoint;
+            CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_INDECENT_EXPOSURE IN_OR_ON_POSITION", m_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_INDECENT_EXPOSURE IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -23,8 +23,8 @@ namespace ResponseV.Callouts.Any
         {
             Model[] PedModels = { "a_f_m_fatcult_01", "a_m_m_acult_01", "a_m_y_acult_01", "a_m_y_acult_02" };
 
-            m_Suspects.Add(new Ped(Utils.GetRandValue(PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360)));
-            m_Suspects.ForEach(s => s.Tasks.Wander());
+            g_Suspects.Add(new Ped(Utils.GetRandValue(PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360)));
+            g_Suspects.ForEach(s => s.Tasks.Wander());
 
             return base.OnCalloutAccepted();
         }
@@ -34,7 +34,7 @@ namespace ResponseV.Callouts.Any
             base.Process();
 
             // TODO: Fix this to be able to support multiple suspects            
-            m_Suspects.ForEach(s => 
+            g_Suspects.ForEach(s => 
             {
                 if (Functions.IsPedGettingArrested(s) || Functions.IsPedArrested(s) || s.IsDead)
                 {

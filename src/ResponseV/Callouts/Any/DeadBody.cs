@@ -18,21 +18,21 @@ namespace ResponseV.Callouts.Any
         public override bool OnBeforeCalloutDisplayed()
         {
             CalloutMessage = $"Reports of a " + (Utils.GetRandInt(0, 2) == 1 ? "Deceased Person" : "Dead Body");
-            CalloutPosition = m_SpawnPoint;
+            CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DEADBODY)} IN_OR_ON_POSITION", m_SpawnPoint);
+                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DEADBODY)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            m_Victims.Add(new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360)));
-            m_Victims.ForEach(v =>
+            g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360)));
+            g_Victims.ForEach(v =>
             {
-                if (Native.GetSafeCoordForPed(m_SpawnPoint, out Vector3 pos))
+                if (Native.GetSafeCoordForPed(g_SpawnPoint, out Vector3 pos))
                 {
                     v.Position = pos;
                 }
@@ -53,9 +53,9 @@ namespace ResponseV.Callouts.Any
             GameFiber.StartNew(delegate
             {
                 GameFiber.Sleep(8000);
-                LSPDFR.RequestEMS(m_SpawnPoint);
-                LSPDFR.RequestFire(m_SpawnPoint);
-                LSPDFR.RequestBackup(m_SpawnPoint, 1);
+                LSPDFR.RequestEMS(g_SpawnPoint);
+                LSPDFR.RequestFire(g_SpawnPoint);
+                LSPDFR.RequestBackup(g_SpawnPoint, 1);
             });
 
             return base.OnCalloutAccepted();
@@ -65,7 +65,7 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
             
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 20)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 20)
             {
                 Utils.Notify("Call a coroner.");
                 End();

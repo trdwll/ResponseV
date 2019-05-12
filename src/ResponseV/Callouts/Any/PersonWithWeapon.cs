@@ -9,26 +9,25 @@ namespace ResponseV.Callouts.Any
     {
         private WeaponHash m_Weapon;
         private LHandle m_Pursuit;
-        private bool m_bOnScene;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_Weapon = Utils.GetRandValue(m_WeaponList);
+            m_Weapon = Utils.GetRandValue(g_WeaponList);
 
             CalloutMessage = "Reports of a Person with a " + (Utils.GetRandBool() ? m_Weapon.ToString() : "Weapon");
-            CalloutPosition = m_SpawnPoint;
+            CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition(
                 $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetWeaponSound(m_Weapon)} IN_OR_ON_POSITION", m_SpawnPoint);
+                $"{LSPDFR.Radio.GetWeaponSound(m_Weapon)} IN_OR_ON_POSITION", g_SpawnPoint);
             
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            m_Suspects.Add(new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), m_SpawnPoint, 360));
-            m_Suspects.ForEach(s =>
+            g_Suspects.Add(new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), g_SpawnPoint, 360));
+            g_Suspects.ForEach(s =>
             {
                 s.Tasks.Wander();
                 s.IsPersistent = true;
@@ -43,15 +42,16 @@ namespace ResponseV.Callouts.Any
 
         public override void Process()
         {
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50)
+            base.Process();
+
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 50)
             {
-                m_bOnScene = true;
-                m_CallBlip.IsRouteEnabled = false;
+                g_CallBlip.IsRouteEnabled = false;
 
                 Pursuit();
             }
 
-            if (m_bOnScene && !Functions.IsPursuitStillRunning(m_Pursuit))
+            if (g_bOnScene && !Functions.IsPursuitStillRunning(m_Pursuit))
             {
                 End();
             }
@@ -62,7 +62,7 @@ namespace ResponseV.Callouts.Any
             GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
-                m_Suspects.ForEach(s =>
+                g_Suspects.ForEach(s =>
                 {
                     // TODO: Add peds to pursuit doesn't show the blip 
                     Functions.AddPedToPursuit(m_Pursuit, s);
@@ -85,7 +85,7 @@ namespace ResponseV.Callouts.Any
                 if (Utils.GetRandBool())
                 {
                     GameFiber.Sleep(5000);
-                    LSPDFR.RequestBackup(m_SpawnPoint, Utils.GetRandInt(1, 3), LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
+                    LSPDFR.RequestBackup(g_SpawnPoint, Utils.GetRandInt(1, 3), LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
                 }
             });
         }

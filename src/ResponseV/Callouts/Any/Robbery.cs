@@ -12,86 +12,82 @@ using LSPD_First_Response.Engine.Scripting;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("Robbery", CalloutProbability.VeryHigh)]
-    public class Robbery : Callout
+    public class Robbery : RVCallout
     {
-        private Vector3 m_SpawnPoint;
         private Vehicle m_Vehicle;
-        private Ped m_Suspect;
-        private Blip m_Blip;
         private LHandle m_Pursuit;
-        private Enums.Callout m_State;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(600, 700)));
-
-            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
-
             CalloutMessage = "Reports of an Armed Robbery";
-            CalloutPosition = m_SpawnPoint;
+            CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_ARMED_ROBBERY IN_OR_ON_POSITION", m_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_ARMED_ROBBERY IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            m_State = Enums.Callout.EnRoute;
+            m_Vehicle = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint);
+            g_Suspects.Add(m_Vehicle.CreateRandomDriver());
 
-            m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), m_SpawnPoint);
-            m_Suspect = m_Vehicle.CreateRandomDriver();
-            m_Vehicle.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(40, 80));
+            if (Utils.GetRandBool())
+            {
+                for (int i = 0; i < Utils.GetRandInt(1, 2); i++)
+                {
+                    g_Suspects.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360)));
+                }
 
-            m_Blip = new Blip(m_SpawnPoint);
+                g_Suspects.ForEach(s => s.Tasks.EnterVehicle(m_Vehicle, -2)); // Doesn't work for some reason
+            }
 
             return base.OnCalloutAccepted();
         }
 
-        public override void OnCalloutNotAccepted()
-        {
-            base.OnCalloutNotAccepted();
-        }
-
         public override void Process()
         {
-            if (m_State == Enums.Callout.EnRoute && Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 50)
+            base.Process();
+
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 50 && !g_bIsPursuit)
             {
-                m_State = Enums.Callout.OnScene;
+                g_bOnScene = true;
+
+                m_Vehicle.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(40, 80));
 
                 Pursuit();
             }
 
-            if (m_State == Enums.Callout.InPursuit)
+            if (g_bIsPursuit && !Functions.IsPursuitStillRunning(m_Pursuit))
             {
-                if (!Functions.IsPursuitStillRunning(m_Pursuit))
-                {
-                    m_State = Enums.Callout.Done;
-                    End();
-                }
+                End();
             }
         }
 
         void Pursuit()
         {
+            g_bIsPursuit = true;
             GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
-                Functions.AddPedToPursuit(m_Pursuit, m_Suspect);
-                m_Blip.Delete();
 
-                m_State = Enums.Callout.InPursuit;
+                g_Suspects.ForEach(s =>
+                {
+                    Functions.AddPedToPursuit(m_Pursuit, s);
+                    s.Inventory.GiveNewWeapon(Utils.GetRandValue(WeaponHash.AssaultRifle, WeaponHash.CombatMG, WeaponHash.MicroSMG, WeaponHash.Pistol), 200, true);
 
-                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 1, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
+                    if (Utils.GetRandBool())
+                    {
+                        // TODO: fix this to have the peds shoot at nearest police vehicle (or we could just make them shoot at us)
+                        s.Tasks.FireWeaponAt(Vector3.RandomUnit, 10, FiringPattern.BurstFireDriveby);
+                    }
+                });
+
+                Functions.SetPursuitIsActiveForPlayer(m_Pursuit, true);
+
+                GameFiber.Sleep(5000);
+                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 3, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
             });
-        }
-
-        public override void End()
-        {
-            m_Blip.Delete();
-            m_Vehicle.Dismiss();
-
-            base.End();
         }
     }
 }

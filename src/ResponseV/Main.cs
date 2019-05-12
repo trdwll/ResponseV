@@ -32,10 +32,10 @@ namespace ResponseV
         {
             if (!onDuty) return;
 
-            Rage.GameFiber AmbientEvents = Rage.GameFiber.StartNew(new System.Threading.ThreadStart(AmbientEvent.Initialize), "AmbientEventsFiber");
-            
+            // Rage.GameFiber AmbientEvents = Rage.GameFiber.StartNew(new System.Threading.ThreadStart(AmbientEvent.Initialize), "AmbientEventsFiber");
+
             // Finished/RFC
-            //Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
+            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
             //Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
             //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
@@ -44,10 +44,11 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
             //Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
-
-            // In Progress
             //Functions.RegisterCallout(typeof(Callouts.Any.DUI));
-            //Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
+
+           // Functions.RegisterCallout(typeof(Callouts.Fed.UnionDepository));
+            // In Progress
+            // Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
             //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
 
             // Fed

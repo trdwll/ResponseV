@@ -45,6 +45,11 @@ namespace ResponseV
         {
             Rage.Game.DisplayNotification(Message);
         }
+
+        public static void CrashNotify()
+        {
+            Rage.Game.DisplayNotification($"Response~y~V~w~ has had an error. Please report to developer.");
+        }
     }
 
     // Credits to Albo1125 for these extensions 

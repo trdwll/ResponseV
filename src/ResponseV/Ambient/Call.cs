@@ -11,7 +11,7 @@ namespace ResponseV.Ambient
 {
     public class Call
     {
-        private List<Vehicle> m_Vehicles = new List<Vehicle>();
+        private List<Vehicle> g_Vehicles = new List<Vehicle>();
 
         enum ECallType
         {
@@ -38,8 +38,8 @@ namespace ResponseV.Ambient
 
         private void End()
         {
-            m_Vehicles.ForEach(v => v.Delete());
-            m_Vehicles.Clear();
+            g_Vehicles.ForEach(v => v.Delete());
+            g_Vehicles.Clear();
         }
     }
 }
