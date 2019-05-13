@@ -7,66 +7,108 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+/**
+ * This class isn't implementing the RVCallout abstract class due to issues with Functions.GetCalloutName(Functions.GetCurrentCallout())
+ */
 namespace ResponseV.Callouts.Fed
 {
     [CalloutInfo("UnionDepository", CalloutProbability.VeryHigh)]
-    public class UnionDepository : RVCallout
+    public class UnionDepository : Callout
     {
-        // private Vector3 m_SpawnPoint = new Vector3(17.51f, -655.52f, 31.48f);
+        private readonly Logger m_Logger = new Logger();
+
+        private readonly Vector3 m_SpawnPoint = new Vector3(-76.98f, -677.95f, 33.95f);//new Vector3(62.77f, -625.39f, 31.71f);//(17.51f, -655.52f, 31.48f);
 
         private Vehicle m_Vehicle1;
         private Vehicle m_Vehicle2;
         private Vehicle m_Vehicle3;
 
         private LHandle m_Pursuit;
+        private bool m_bIsPursuit;
+
+        private bool m_bOnScene;
+        private bool m_bBackupCalled;
+
+        private List<Ped> m_Suspects = new List<Ped>();
+
+        private Blip m_CallBlip;
+
 
         // TODO: Add more possible ped models
-        private Model[] m_PedModels = { "mp_m_waremech_01", "s_m_y_blackops_01", "s_m_y_blackops_02"  };
+        private readonly Model[] m_PedModels = Model.PedModels;//{ "mp_m_waremech_01", "s_m_y_blackops_01", "s_m_y_blackops_02"  };
+        private readonly Model[] m_Vehicles = { "SPEEDO", "BOXVILLE" };
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = "Reports of a Robbery at the Union Depository";
-            CalloutPosition = g_SpawnPoint;
+            CalloutMessage = "Reports of a " + (Utils.GetRandBool() ? "Robbery" : "Heist" ) + " at the Union Depository";
+            CalloutPosition = m_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} UNION_DEPOSITORY_ROBBERY IN_OR_ON_POSITION", g_SpawnPoint);
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
+
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} UNION_DEPOSITORY_ROBBERY IN_OR_ON_POSITION", m_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            g_Logger.Log("UnionDepository: Call accepted");
+            m_Logger.Log("UnionDepository: Call accepted");
 
-            m_Vehicle1 = new Vehicle("STOCKADE", new Vector3(29.37f, -658.82f, 31.23f), 313.50f);
-            Ped suspect = new Ped(Utils.GetRandValue(m_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
-            Ped suspect2 = new Ped(Utils.GetRandValue(m_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
-            g_Suspects.Add(suspect);
-            g_Suspects.Add(suspect2);
+            m_CallBlip = new Blip(m_SpawnPoint)
+            {
+                IsRouteEnabled = true
+            };
+
+            m_CallBlip.EnableRoute(System.Drawing.Color.Blue);
+            m_CallBlip.Color = System.Drawing.Color.Blue;
+
+            m_Vehicle1 = new Vehicle("STOCKADE", new Vector3(-94.28f, -671.04f, 35.05f), 69.04f);//new Vector3(29.37f, -658.82f, 31.23f), 313.50f);
+            Ped suspect = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
+            Ped suspect2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
+            m_Suspects.Add(suspect);
+            m_Suspects.Add(suspect2);
 
             suspect.WarpIntoVehicle(m_Vehicle1, -1);
             suspect2.WarpIntoVehicle(m_Vehicle1, 0);
-            
+
+            // Spawn a possible second STOCKADE
             if (Utils.GetRandBool())
             {
-                m_Vehicle2 = new Vehicle("STOCKADE", new Vector3(38.77f, -649.90f, 31.23f), 313.50f);
-                Ped sus = new Ped(Utils.GetRandValue(m_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
-                Ped sus2 = new Ped(Utils.GetRandValue(m_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
-                g_Suspects.Add(sus);
-                g_Suspects.Add(sus2);
+                m_Vehicle2 = new Vehicle("STOCKADE", new Vector3(-85.70f, -674.37f, 34.94f), 67.71f);//new Vector3(38.77f, -649.90f, 31.23f), 313.50f);
+                Ped sus = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
+                Ped sus2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
+                m_Suspects.Add(sus);
+                m_Suspects.Add(sus2);
 
                 sus.WarpIntoVehicle(m_Vehicle2, -1);
                 sus2.WarpIntoVehicle(m_Vehicle2, 0);
             }
+
+            // Spawn a possible third STOCKADE
             if (Utils.GetRandBool())
             {
-                m_Vehicle3 = new Vehicle("STOCKADE", new Vector3(52.94f, -632.16f, 31.25f), 331.61f);
-                Ped sus = new Ped(Utils.GetRandValue(m_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
-                Ped sus2 = new Ped(Utils.GetRandValue(m_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
-                g_Suspects.Add(sus);
-                g_Suspects.Add(sus2);
+                m_Vehicle3 = new Vehicle("STOCKADE", new Vector3(-76.98f, -677.95f, 33.95f), 67.48f);//new Vector3(52.94f, -632.16f, 31.25f), 331.61f);
+                Ped sus = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
+                Ped sus2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
+                m_Suspects.Add(sus);
+                m_Suspects.Add(sus2);
 
                 sus.WarpIntoVehicle(m_Vehicle3, -1);
                 sus2.WarpIntoVehicle(m_Vehicle3, 0);
+            }
+
+            // Spawn a possible group of people that shoot police on sight
+            if (Utils.GetRandBool())
+            {
+                for (int i = 0; i < Utils.GetRandInt(2, 6); i++)
+                {
+                    Ped p = new Ped(Utils.GetRandValue(m_PedModels), new Vector3(-84.27f, -661.55f, 35.94f), Utils.GetRandInt(1, 360));
+                    m_Suspects.Add(p);
+                }
+
+                Vehicle v = new Vehicle(Utils.GetRandValue(m_Vehicles), new Vector3(-87.38f, -658.41f, 35.57f), 160.89f);
+                v.Dismiss();
             }
 
             return base.OnCalloutAccepted();
@@ -76,53 +118,80 @@ namespace ResponseV.Callouts.Fed
         {
             base.Process();
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 100)
-            {
-                // Destroy the barriers in the area so the Stockades can drive out
-                World.SpawnExplosion(new Vector3(62.77f, -625.39f, 31.71f), 1, 5f, false, true, 0f);
+            float DistanceTo = Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint);
 
-                m_Vehicle1.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(45, 70));
-                m_Vehicle2?.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(45, 70));
-                m_Vehicle3?.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(45, 70));
+            if (DistanceTo <= 200 && !m_bBackupCalled)
+            {
+                // Standard procedure to respond nearby units
+                Utils.Notify($"Dispatch to any available units in the vicinity of the Union Depository; respond code 3 for a possible robbery.");
+                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 2);
+                m_bBackupCalled = true;
             }
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 50 && !g_bIsPursuit)
+            if (DistanceTo < 100 && !m_bOnScene)
             {
-                g_Logger.Log("UnionDepository: OnScene and start pursuit");
-                g_bOnScene = true;
+                m_bOnScene = true;
+                m_CallBlip.IsRouteEnabled = false;
+                m_Logger.Log("UnionDepository: DistanceTo(m_SpawnPoint) < 100 so hide m_CallBlip");
 
+                m_Vehicle1.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(45, 70), VehicleDrivingFlags.IgnorePathFinding);
+                m_Vehicle2?.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(45, 70), VehicleDrivingFlags.IgnorePathFinding);
+                m_Vehicle3?.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(45, 70), VehicleDrivingFlags.IgnorePathFinding);
+
+                m_Logger.Log("UnionDepository: Making vehicles start to cruise.");
+            }
+
+            if (DistanceTo < 50 && !m_bIsPursuit)
+            {
+                m_Logger.Log("UnionDepository: OnScene and start pursuit");
+                m_bOnScene = true;
+
+                // Notify dispatch that the heist is real.
                 Pursuit();
             }
 
-            if (g_bIsPursuit && !Functions.IsPursuitStillRunning(m_Pursuit))
+            if (Game.LocalPlayer.IsDead)
             {
-                g_Logger.Log("UnionDepository: Pursuit has finished so End()");
+                Functions.PlayScannerAudio($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_DOWN)} OFFICER_NEEDS_IMMEDIATE_ASSISTANCE");
+                End();
+                m_Logger.Log("UnionDepository: Player is dead so force end call.");
+            }
+
+            if (m_bIsPursuit && !Functions.IsPursuitStillRunning(m_Pursuit))
+            {
+                // TODO: Check if suspects are dead or arrested
+                // TODO: Check if vehicles are not dead 
+                // then Utils.Notify("Dispatch all suspects are dead or in custody, start fire and ems.");
+                m_Logger.Log("UnionDepository: Pursuit has finished so End()");
                 End();
             }
         }
 
         void Pursuit()
         {
-            g_bIsPursuit = true;
+            m_bIsPursuit = true;
             GameFiber.StartNew(delegate
             {
-                g_Logger.Log("UnionDepository: Started pursuit");
+                m_Logger.Log("UnionDepository: Started pursuit");
                 m_Pursuit = Functions.CreatePursuit();
 
-                g_Suspects.ForEach(s =>
+                m_Suspects.ForEach(s =>
                 {
                     Functions.AddPedToPursuit(m_Pursuit, s);
                     s.Inventory.GiveNewWeapon(Utils.GetRandValue(WeaponHash.AdvancedRifle, WeaponHash.CombatMG, WeaponHash.Smg), 200, true);
+                    s.Armor = 100;
+                    s.Health = 100;
 
                     s.RelationshipGroup = RelationshipGroup.HatesPlayer;
 
                     s.Tasks.FightAgainstClosestHatedTarget(50f);
                 });
 
+
                 Functions.SetPursuitIsActiveForPlayer(m_Pursuit, true);
 
                 GameFiber.Sleep(3000);
-                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 5, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
+                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 3, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
 
                 GameFiber.Sleep(1000);
                 LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 1, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.NooseTeam);
@@ -130,60 +199,68 @@ namespace ResponseV.Callouts.Fed
 
                 GameFiber.Sleep(1000);
                 LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 1, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.AirUnit);
-            });
+            }, "UnionDepositoryPursuitFiber");
 
 
-            GameFiber.StartNew(delegate
-            {
-                g_Logger.Log("UnionDepository: Checking nearby vehicles and turning on their lighting");
-                for (;;)
-                {
-                    GameFiber.Yield();
-                    List<Vehicle> NearbyVehicles1 = m_Vehicle1.Driver.GetNearbyVehicles(16).ToList();
-                    List<Vehicle> NearbyVehicles2 = m_Vehicle2?.Driver.GetNearbyVehicles(16).ToList();
-                    List<Vehicle> NearbyVehicles3 = m_Vehicle3?.Driver.GetNearbyVehicles(16).ToList();
+            //GameFiber.StartNew(delegate
+            //{
+            //    m_Logger.Log("UnionDepository: Checking nearby vehicles and turning on their lighting");
+            //    for (;;)
+            //    {
+            //        GameFiber.Yield();
+            //        List<Vehicle> NearbyVehicles1 = m_Vehicle1.Driver.GetNearbyVehicles(16).ToList();
+            //        List<Vehicle> NearbyVehicles2 = m_Vehicle2?.Driver.GetNearbyVehicles(16).ToList();
+            //        List<Vehicle> NearbyVehicles3 = m_Vehicle3?.Driver.GetNearbyVehicles(16).ToList();
 
-                    NearbyVehicles1.ForEach(v =>
-                    {
-                        if (v.IsPoliceVehicle)
-                        {
-                            v.IsSirenOn = true;
-                        }
-                    });
+            //        NearbyVehicles1.ForEach(v =>
+            //        {
+            //            if (v.IsPoliceVehicle)
+            //            {
+            //                v.IsSirenOn = true;
+            //            }
+            //        });
 
-                    NearbyVehicles2?.ForEach(v =>
-                    {
-                        if (v.IsPoliceVehicle)
-                        {
-                            v.IsSirenOn = true;
-                        }
-                    });
+            //        NearbyVehicles2?.ForEach(v =>
+            //        {
+            //            if (v.IsPoliceVehicle)
+            //            {
+            //                v.IsSirenOn = true;
+            //            }
+            //        });
 
-                    NearbyVehicles3?.ForEach(v =>
-                    {
-                        if (v.IsPoliceVehicle)
-                        {
-                            v.IsSirenOn = true;
-                        }
-                    });
+            //        NearbyVehicles3?.ForEach(v =>
+            //        {
+            //            if (v.IsPoliceVehicle)
+            //            {
+            //                v.IsSirenOn = true;
+            //            }
+            //        });
 
-                    // Clear all lists before we get them again
-                    NearbyVehicles1.Clear();
-                    NearbyVehicles2?.Clear();
-                    NearbyVehicles3?.Clear();
+            //        // Clear all lists before we get them again
+            //        NearbyVehicles1.Clear();
+            //        NearbyVehicles2?.Clear();
+            //        NearbyVehicles3?.Clear();
 
-                    GameFiber.Sleep(10000);
-                }
-            });
+            //        GameFiber.Sleep(10000);
+            //    }
+            //}, "UnionDepositoryPoliceLightingFiber");
         }
 
         public override void End()
         {
+            base.End();
+
             m_Vehicle1.Dismiss();
             m_Vehicle2?.Dismiss();
             m_Vehicle3?.Dismiss();
 
-            base.End();
+            m_CallBlip.Delete();
+
+            m_Suspects.ForEach(s => s.Dismiss());
+            m_bIsPursuit = false;
+            m_bOnScene = false;
+
+            m_Logger.Log("UnionDepository: Ended");
         }
     }
 }

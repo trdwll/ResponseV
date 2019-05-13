@@ -52,11 +52,6 @@ namespace ResponseV.Callouts
                 Utils.GetRandInt(Configuration.config.Callouts.MinRadius, 
                 Configuration.config.Callouts.MinRadius)));
 
-            //if (Functions.GetCalloutName(Functions.GetCurrentCallout()) == "UnionDepository")
-            //{
-            //    g_SpawnPoint = new Vector3(17.51f, -655.52f, 31.48f);
-            //}
-
             ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 25f);
 
             return base.OnBeforeCalloutDisplayed();
@@ -86,24 +81,7 @@ namespace ResponseV.Callouts
         {
             base.Process();
 
-            //LHandle callout = Functions.GetCurrentCallout();
-
-            //CalloutInfoAttribute ScriptInfo = typeof(Callout).GetField("ScriptInfo", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(callout) as CalloutInfoAttribute;
-
-            //if (ScriptInfo != null)
-            //{
-            //    //Callout st = ScriptInfo.GetValue(callout) as Callout;
-
-            //    Utils.Notify("Field: " + ScriptInfo?.Name);
-            //}
-            //else
-            //{
-            //    Utils.Notify("field is null");
-            //}
-
-            Utils.Notify(Functions.GetCalloutName(Functions.GetCurrentCallout()));
-
-            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 35)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 35 && !g_bOnScene)
             {
                 g_bOnScene = true;
                 g_CallBlip.IsRouteEnabled = false;

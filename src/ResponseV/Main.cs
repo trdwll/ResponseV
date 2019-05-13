@@ -14,18 +14,12 @@ namespace ResponseV
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LSPDFR);
             Functions.OnOnDutyStateChanged += OnDutyStateChangedEvent;
 
-            Rage.Game.DisplayNotification($"Response~y~V~w~ ~b~{Configuration.APPVERSION} ~w~by ~b~trdwll ~w~loaded successfully");
+            Rage.Game.DisplayNotification($"Response~y~V~w~ ~b~{Configuration.APPVERSION} ~w~by ~b~trdwll ~w~loaded successfully.");
 
             Rage.Game.RawFrameRender += OnRawFrameRender;
 
-            if (Utils.IsNight())
-            {
-                Rage.Game.DisplayNotification("Is Night");
-            }
-            else
-            {
-                Rage.Game.DisplayNotification("Is Day");
-            }
+            string WelcomeMessage = $"Welcome {Configuration.config.Roleplay.OfficerName}, to the " + (Utils.IsNight() ? "night" : "day") + " shift. Stay safe out there.";
+            Rage.Game.DisplayNotification(WelcomeMessage);
         }
 
         private void OnDutyStateChangedEvent(bool onDuty)
@@ -35,7 +29,7 @@ namespace ResponseV
             // Rage.GameFiber AmbientEvents = Rage.GameFiber.StartNew(new System.Threading.ThreadStart(AmbientEvent.Initialize), "AmbientEventsFiber");
 
             // Finished/RFC
-            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
+            //Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
             //Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
             //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
@@ -46,7 +40,7 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
             //Functions.RegisterCallout(typeof(Callouts.Any.DUI));
 
-           // Functions.RegisterCallout(typeof(Callouts.Fed.UnionDepository));
+            Functions.RegisterCallout(typeof(Callouts.Fed.UnionDepository));
             // In Progress
             // Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
             //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
@@ -113,7 +107,7 @@ namespace ResponseV
         }
         private static void OnRawFrameRender(object sender, Rage.GraphicsEventArgs e)
         {
-            e.Graphics.DrawText($"ResponseV {Configuration.APPVERSION}", "Verdana", 10.0f, new System.Drawing.PointF(1f, 1f), System.Drawing.Color.White);
+            e.Graphics.DrawText($"ResponseV {Configuration.APPVERSION}", "Verdana", 10.0f, new System.Drawing.PointF(2f, 2f), System.Drawing.Color.White);
         }
     }
 }
