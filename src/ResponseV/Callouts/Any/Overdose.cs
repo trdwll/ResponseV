@@ -66,7 +66,8 @@ namespace ResponseV.Callouts.Any
                     CheckEMS();
                 }
 
-                if (m_bEMSOnScene)
+                // quick fix so need to fix this later (the IsAlive)
+                if (m_bEMSOnScene || g_Victims.Exists(v => v.IsAlive))
                 {
                     m_bPedIsDead = g_Victims.Exists(v => v.IsDead);
 
