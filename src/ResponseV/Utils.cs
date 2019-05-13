@@ -1,8 +1,10 @@
-﻿using Rage;
+﻿using LSPD_First_Response.Mod.API;
+using Rage;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace ResponseV
 {
@@ -49,6 +51,16 @@ namespace ResponseV
         public static void CrashNotify()
         {
             Rage.Game.DisplayNotification($"Response~y~V~w~ has had an error. Please report to developer.");
+        }
+
+        public static bool IsLSPDFRPluginRunning(string PluginName)
+        {
+            foreach (Assembly assembly in Functions.GetAllUserPlugins())
+            {
+                return assembly.GetName().Name.ToLower() == PluginName.ToLower();
+            }
+
+            return false;
         }
     }
 

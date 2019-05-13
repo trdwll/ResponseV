@@ -21,12 +21,34 @@ namespace ResponseV
 
         public static void RequestEMS(Rage.Vector3 location)
         {
-            LSPD_First_Response.Mod.API.Functions.RequestBackup(location, EBackupResponseType.Code3, EBackupUnitType.Ambulance);
+            if (Main.g_bBetterEMS)
+            {
+                BetterEMS.API.EMSFunctions.RespondToLocation(location, false);
+            }
+            else
+            {
+                LSPD_First_Response.Mod.API.Functions.RequestBackup(location, EBackupResponseType.Code3, EBackupUnitType.Ambulance);
+            }
         }
 
         public static void RequestFire(Rage.Vector3 location)
         {
-            LSPD_First_Response.Mod.API.Functions.RequestBackup(location, EBackupResponseType.Code3, EBackupUnitType.Firetruck); // Sends a police car instead of a fire truck
+            if (Main.g_bBetterEMS)
+            {
+                BetterEMS.API.EMSFunctions.RespondToLocation(location, true);
+            }
+            else
+            {
+                LSPD_First_Response.Mod.API.Functions.RequestBackup(location, EBackupResponseType.Code3, EBackupUnitType.Firetruck);
+            }
+        }
+
+        public static void RequestCoroner(Rage.Vector3 location)
+        {
+            if (Main.g_bArrestManager)
+            {
+                Arrest_Manager.API.Functions.CallCoroner(location, true);
+            }
         }
 
         /// <summary>

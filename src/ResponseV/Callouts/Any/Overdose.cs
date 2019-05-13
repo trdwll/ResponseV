@@ -1,12 +1,18 @@
 ﻿using Rage;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("Overdose", CalloutProbability.Medium)]
     public class Overdose : RVCallout
     {
+        private bool m_bPedIsDead;
+        private bool m_bEMSOnScene;
+        private bool m_bCheckEMS;
+
         public override bool OnBeforeCalloutDisplayed()
         {
             CalloutMessage = $"Reports of " + (Utils.GetRandBool() ? "an" : "a Possible") + " Overdose";
@@ -30,9 +36,15 @@ namespace ResponseV.Callouts.Any
                 g_Victims.ForEach(v => v.Position = pos);
             }
 
-            g_Victims.ForEach(v => v.Kill());
+            g_Victims.ForEach(v =>
+            {
+                v.Kill();
 
-            // BetterEMS.API.EMSFunctions.OverridePedDeathDetails(m_Victim, "", "Overdose", Game.GameTime, (float)Utils.GetRandDouble()+.1f);
+                if (Main.g_bBetterEMS)
+                {
+                    BetterEMS.API.EMSFunctions.OverridePedDeathDetails(v, "", "Overdose", Game.GameTime, (float)Utils.GetRandDouble()+.1f);
+                }
+            });
 
             GameFiber.StartNew(delegate
             {
@@ -46,21 +58,53 @@ namespace ResponseV.Callouts.Any
         public override void Process()
         {
             base.Process();
-
-            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 20)
+            
+            if (g_bOnScene)
             {
-                End();
-                //if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(m_Victim) == true)
-                //{
-                //    End();
-                //}
+                if (!m_bCheckEMS)
+                {
+                    CheckEMS();
+                }
 
-                //if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(m_Victim) == false)
-                //{
-                //    Arrest_Manager.API.Functions.CallCoroner(g_SpawnPoint, true);
-                //    End();
-                //}
+                if (m_bEMSOnScene)
+                {
+                    m_bPedIsDead = g_Victims.Exists(v => v.IsDead);
+
+                    if (m_bPedIsDead)
+                    {
+                        LSPDFR.RequestCoroner(g_SpawnPoint);
+                    }
+
+                    m_bPedIsDead = false;
+                    End();
+                }
             }
+        }
+
+        void CheckEMS()
+        {
+            m_bCheckEMS = true;
+            GameFiber.StartNew(delegate
+            {
+                while (!m_bEMSOnScene)
+                {
+                    GameFiber.Yield();
+                    List<Vehicle> vehicles = Game.LocalPlayer.Character.GetNearbyVehicles(16).ToList();
+
+                    vehicles.ForEach(v =>
+                    {
+                        if (v.Model.Name == "AMBULANCE")
+                        {
+                            m_bEMSOnScene = true;
+                        }
+                    });
+
+                    GameFiber.Sleep(10000);
+                    vehicles.Clear();
+                    g_Logger.Log("Overdose: Checking for nearby EMS");
+                }
+
+            }, "CheckEMSFiber");
         }
     }
 }

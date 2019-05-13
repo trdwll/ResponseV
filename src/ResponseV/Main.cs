@@ -9,6 +9,10 @@ namespace ResponseV
     public class Main : Plugin
     {
         public static Logger MainLogger = new Logger();
+
+        public static bool g_bBetterEMS;
+        public static bool g_bArrestManager;
+
         public override void Initialize()
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LSPDFR);
@@ -29,23 +33,23 @@ namespace ResponseV
             // Rage.GameFiber AmbientEvents = Rage.GameFiber.StartNew(new System.Threading.ThreadStart(AmbientEvent.Initialize), "AmbientEventsFiber");
 
             // Finished/RFC
-            //Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
+            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
             //Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
             //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
             //Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
             //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
             //Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
-            //Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
+            // Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
             //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
             //Functions.RegisterCallout(typeof(Callouts.Any.DUI));
 
-            Functions.RegisterCallout(typeof(Callouts.Fed.UnionDepository));
+            //Functions.RegisterCallout(typeof(Callouts.Fed.UnionDepository));
             // In Progress
             // Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
             //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
 
-            // Fed
+            // Fed - These require more work than other callouts as we spawn specific vehicles in specific places etc
             //Functions.RegisterCallout(typeof(Callouts.Fed.TerroristPlot));
             //Functions.RegisterCallout(typeof(Callouts.Fed.TerroristAttack));
             //Functions.RegisterCallout(typeof(Callouts.Fed.Importing));
@@ -93,6 +97,19 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Nature.OverKillLimit));
             //Functions.RegisterCallout(typeof(Callouts.Nature.AnimalCruelty));
             //Functions.RegisterCallout(typeof(Callouts.Nature.EndangeredSpecies));
+
+
+            g_bBetterEMS = Utils.IsLSPDFRPluginRunning("BetterEMS");
+            g_bArrestManager = Utils.IsLSPDFRPluginRunning("Arrest_Manager");
+
+            if (g_bArrestManager)
+            {
+                Utils.Notify("g_bArrestManager == true");
+            }
+            else
+            {
+                Utils.Notify("g_bArrestManager == false");
+            }
         }
 
         public override void Finally() { }
@@ -105,6 +122,7 @@ namespace ResponseV
             }
             return null;
         }
+
         private static void OnRawFrameRender(object sender, Rage.GraphicsEventArgs e)
         {
             e.Graphics.DrawText($"ResponseV {Configuration.APPVERSION}", "Verdana", 10.0f, new System.Drawing.PointF(2f, 2f), System.Drawing.Color.White);

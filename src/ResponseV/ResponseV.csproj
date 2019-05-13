@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Arrest Manager">
+      <HintPath>..\..\vendor\Arrest Manager.dll</HintPath>
+    </Reference>
+    <Reference Include="BetterEMS">
+      <HintPath>..\..\vendor\BetterEMS.dll</HintPath>
+    </Reference>
     <Reference Include="LSPD First Response">
       <HintPath>G:\Program Files\Steam\steamapps\common\Grand Theft Auto V\plugins\LSPD First Response.dll</HintPath>
     </Reference>
