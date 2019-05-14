@@ -6,8 +6,8 @@ using LSPD_First_Response.Mod.Callouts;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("Speeding", CalloutProbability.VeryHigh)]
-    public class Speeding : RVCallout
+    [CalloutInfo("SpeedingVehicle", CalloutProbability.VeryHigh)]
+    public class SpeedingVehicle : RVCallout
     {
         private Vehicle m_Vehicle;
         private LHandle m_Pursuit;
@@ -20,7 +20,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = "Reports of a Speeding Vehicle";
+            CalloutMessage = "Reports of a speeding vehicle";
             CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} IN_OR_ON_POSITION", g_SpawnPoint);

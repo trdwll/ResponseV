@@ -11,7 +11,7 @@
         }
 
         private readonly string m_LogFile = $"{System.Windows.Forms.Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.log";
-        private readonly string m_DateFormat = $"[{System.DateTime.Now}]";
+        private string m_DateFormat = $"[{System.DateTime.Now}]";
 
         public Logger()
         {

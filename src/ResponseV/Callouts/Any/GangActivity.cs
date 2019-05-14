@@ -9,7 +9,7 @@ using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 using LSPD_First_Response.Engine.Scripting;
 
-namespace ResponseV.Callouts.LSPD
+namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("GangActivity", CalloutProbability.VeryHigh)]
     public class GangActivity : Callout

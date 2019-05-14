@@ -17,18 +17,18 @@ namespace ResponseV.Callouts.Any
     {
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = $"Reports of a " + (Utils.GetRandInt(0, 2) == 1 ? "Deceased Person" : "Dead Body");
+            CalloutMessage = $"Reports of a " + (Utils.GetRandBool() ? "Deceased Person" : "Dead Body");
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DEADBODY)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DEADBODY)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
+            g_Logger.Log("DeadBody: Callout accepted");
+
             g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360)));
             g_Victims.ForEach(v =>
             {
@@ -37,8 +37,7 @@ namespace ResponseV.Callouts.Any
                     v.Position = pos;
                 }
 
-                DamagePack.ApplyDamagePack(v,
-                    Utils.GetRandValue(
+                v.ApplyDamagePack(Utils.GetRandValue(
                         DamagePack.BigHitByVehicle, DamagePack.SCR_Torture,
                         DamagePack.Explosion_Large, DamagePack.Burnt_Ped_0,
                         DamagePack.Car_Crash_Light, DamagePack.Car_Crash_Heavy,
@@ -52,9 +51,8 @@ namespace ResponseV.Callouts.Any
 
             GameFiber.StartNew(delegate
             {
-                GameFiber.Sleep(8000);
+                GameFiber.Sleep(3000);
                 LSPDFR.RequestEMS(g_SpawnPoint);
-                LSPDFR.RequestFire(g_SpawnPoint);
                 LSPDFR.RequestBackup(g_SpawnPoint, 1);
             });
 
@@ -65,9 +63,11 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
             
-            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 20)
+            if (g_bOnScene)
             {
-                Utils.Notify("Call a coroner.");
+                g_Logger.Log("DeadBody: On scene and requesting coroner (if Arrest Manager is installed) then end call");
+                LSPDFR.RequestCoroner(g_SpawnPoint);
+
                 End();
             }
         }

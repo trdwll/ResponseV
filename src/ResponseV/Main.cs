@@ -3,6 +3,7 @@ using LSPD_First_Response.Mod.API;
 using System.Reflection;
 using System.Windows.Forms;
 using ResponseV.Ambient;
+using Rage;
 
 namespace ResponseV
 {
@@ -12,6 +13,7 @@ namespace ResponseV
 
         public static bool g_bBetterEMS;
         public static bool g_bArrestManager;
+        public static bool g_bTrafficPolicer;
 
         public override void Initialize()
         {
@@ -24,12 +26,17 @@ namespace ResponseV
 
             string Area = GTAV.Extensions.GetAreaName(Rage.Game.LocalPlayer.Character.Position);
             string WelcomeMessage = $"Welcome {Configuration.config.Roleplay.OfficerName}, to the " + (Utils.IsNight() ? "night" : "day") + $" shift in {Area}. Stay safe out there.";
-            Rage.Game.DisplayNotification(WelcomeMessage);
+            Utils.Notify(WelcomeMessage);
+
+            // TODO: update checking (turn off via config)
         }
 
         private void OnDutyStateChangedEvent(bool onDuty)
         {
             if (!onDuty) return;
+
+            // TODO: clean up this fucking mess
+            // I was thinking an array to iterate over, but what if someone wants to disable a callout? /shrug
 
             // Rage.GameFiber AmbientEvents = Rage.GameFiber.StartNew(new System.Threading.ThreadStart(AmbientEvent.Initialize), "AmbientEventsFiber");
 
@@ -41,14 +48,15 @@ namespace ResponseV
             // Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
             // Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
             // Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
-            
-            //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
-            //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
-            //Functions.RegisterCallout(typeof(Callouts.Any.DUI));
+            // Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
+            // Functions.RegisterCallout(typeof(Callouts.Any.DUI));
+            // Functions.RegisterCallout(typeof(Callouts.Fed.UnionDepository));
 
-            //Functions.RegisterCallout(typeof(Callouts.Fed.UnionDepository));
+            //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
+            
+
             // In Progress
-            // Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
+            Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
             //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
 
             // Fed - These require more work than other callouts as we spawn specific vehicles in specific places etc
@@ -100,18 +108,25 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Nature.AnimalCruelty));
             //Functions.RegisterCallout(typeof(Callouts.Nature.EndangeredSpecies));
 
-
-            g_bBetterEMS = Utils.IsLSPDFRPluginRunning("BetterEMS");
-            g_bArrestManager = Utils.IsLSPDFRPluginRunning("Arrest_Manager");
-
-            if (g_bArrestManager)
+            Utils.Notify("Response~y~V~w~ Please wait around 30 seconds before going on patrol/receiving calls to allow Response~y~V~w~ to load fully.");
+            // So we put it on a new thread so we can sleep for 20 seconds to allow other plugins to be loaded fully before we start messing with them
+            GameFiber.StartNew(delegate
             {
-                Utils.Notify("g_bArrestManager == true");
-            }
-            else
-            {
-                Utils.Notify("g_bArrestManager == false");
-            }
+                GameFiber.Sleep(20000);
+
+                g_bBetterEMS = Utils.IsLSPDFRPluginRunning("BetterEMS");
+                g_bArrestManager = Utils.IsLSPDFRPluginRunning("Arrest Manager");
+                g_bTrafficPolicer = Utils.IsLSPDFRPluginRunning("Traffic Policer");
+
+                MainLogger.Log($"BetterEMS: {g_bBetterEMS}");
+                MainLogger.Log($"Arrest Manager: {g_bArrestManager}");
+                MainLogger.Log($"Traffic Policer: {g_bTrafficPolicer}");
+
+                foreach (Assembly a in Functions.GetAllUserPlugins())
+                {
+                    MainLogger.Log($"{a.GetName().Name} loaded");
+                }
+            });
         }
 
         public override void Finally() { }

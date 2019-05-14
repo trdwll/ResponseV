@@ -13,20 +13,22 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = "Reports of " + (Utils.GetRandInt(0, 2) == 1 ? "a" : "a Possible") + " DUI";
+            CalloutMessage = "Reports of " + (Utils.GetRandBool() ? "a" : "a Possible") + " DUI";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DUI)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DUI)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            m_Vehicle = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint);
-            m_Vehicle.IsPersistent = true;
+            g_Logger.Log("DUI: Callout accepted");
+
+            m_Vehicle = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint)
+            {
+                IsPersistent = true
+            };
 
             m_Suspect = m_Vehicle.CreateRandomDriver();
             m_Suspect.IsPersistent = true;
@@ -37,8 +39,26 @@ namespace ResponseV.Callouts.Any
 
             StartVehicleDUI();
 
-            // TODO: If Traffic Policer is installed? then add DUI 
-            // Breathalyzer.SetPedAlcoholLevels(m_Suspect, Breathalyzer.GetRandomOverTheLimitAlcoholLevel());
+            if (Main.g_bTrafficPolicer)
+            {
+                if (Utils.GetRandBool())
+                {
+                    // DUI/drinking
+                    Traffic_Policer.API.Functions.SetPedAlcoholLevel(m_Suspect, Traffic_Policer.API.Functions.GetRandomOverTheLimitAlcoholLevel());
+                }
+                else
+                {
+                    // drugs
+                    Traffic_Policer.API.Functions.SetPedDrugsLevels(m_Suspect, Utils.GetRandBool(), Utils.GetRandBool());
+
+                    if (Utils.GetRandBool())
+                    {
+                        Traffic_Policer.API.Functions.SetPedAlcoholLevel(m_Suspect, Utils.GetRandBool() ? 
+                            Traffic_Policer.API.Functions.GetRandomOverTheLimitAlcoholLevel() : 
+                            Traffic_Policer.API.Functions.GetRandomUnderTheLimitAlcoholLevel());
+                    }
+                }
+            }
 
             return base.OnCalloutAccepted();
         }
@@ -47,22 +67,23 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
 
-            // TODO: possible fleeing/pursuit
-
             if (Game.LocalPlayer.Character.Position.DistanceTo(m_Suspect) > 300 && g_bOnScene)
             {
+                g_Logger.Log("DUI: Suspect got away (your distance from the suspect was greater than 300), end call");
                 Utils.Notify("Suspect got away.");
                 End();
             }
 
             if (Functions.IsPedArrested(m_Suspect) || m_Suspect.IsDead)
             {
+                g_Logger.Log("DUI: The suspect was arrested or is dead, end call");
                 End();
             }
         }
 
         private void StartVehicleDUI()
         {
+            g_Logger.Log("DUI: StartVehicleDUI Fiber");
             GameFiber.StartNew(delegate
             {
                 try
@@ -90,8 +111,11 @@ namespace ResponseV.Callouts.Any
 
         public override void End()
         {
-            m_Vehicle.Dismiss();
-            m_SuspectBlip.Delete();
+            g_Logger.Log("DUI: Callout ended");
+
+            m_Suspect?.Dismiss();
+            m_Vehicle?.Dismiss();
+            m_SuspectBlip?.Delete();
 
             base.End();
         }

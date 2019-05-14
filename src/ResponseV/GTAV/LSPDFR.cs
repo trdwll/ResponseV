@@ -1,6 +1,8 @@
 ﻿using LSPD_First_Response;
 using Rage.Native;
 using Rage;
+using static ResponseV.Enums;
+using System;
 
 /*
  * Contains shorthand methods to do stuff with the LSPDFR API
@@ -51,37 +53,6 @@ namespace ResponseV
             }
         }
 
-        /// <summary>
-        /// Shoutout to khorio for the colors!
-        /// </summary>
-        public class CalloutStandardization
-        {
-            /// <summary>
-            /// Set the color of the blip
-            /// </summary>
-            /// <param name="blip">The blip to set the color of</param>
-            /// <param name="type">The color ((Blips default to yellow))</param>
-            public static void SetStandardColor(Blip blip, BlipTypes type)
-            {
-                if (blip) NativeFunction.Natives.SET_BLIP_COLOUR(blip, (int)type);
-            }
-
-            /// <summary>
-            /// Description
-            /// <para>Enemy = Enemies  [red]</para>
-            /// <para>Officers = Cops/Detectives/Commanders  [blue] (not gross system blue)</para>
-            /// <para>Support = EMS/Coroner/ETC  [green]</para>
-            /// <para>Civilians = Bystanders/Witnesses/broken down/etc  [orange]</para>
-            ///  <para>Other = Animals/Obstacles/Rocks/etc  [purple]</para>
-            /// </summary>
-            public enum BlipTypes { Enemy = 1, Officers = 3, Support = 2, Civilians = 17, Other = 19 }
-
-            public static void SetBlipScalePed(Blip blip)
-            {
-                if (blip) blip.Scale = 0.75f;
-            }
-        }
-
         public class Radio
         {
             public static readonly string[] WE_HAVE = { "CITIZENS_REPORT_01", "CITIZENS_REPORT_02", "CITIZENS_REPORT_03", "CITIZENS_REPORT_04", "WE_HAVE_01", "WE_HAVE_02" };
@@ -110,34 +81,54 @@ namespace ResponseV
                 string ret;
                 switch (type)
                 {
-                    default:
-                    case WeaponHash.APPistol:
-                    case WeaponHash.Pistol:
-                    case WeaponHash.CombatPistol:
-                    case WeaponHash.Pistol50: ret = "FIREARM_01, FIREARM_02, GAT_01, GAT_02, GUN_01, GUN_02, WEAPON_01, WEAPON_02"; break;
-                    case WeaponHash.AdvancedRifle:
-                    case WeaponHash.AssaultRifle:
-                    case WeaponHash.CarbineRifle: return "ASSAULT_RIFLE";
-                    case WeaponHash.AssaultSMG:
-                    case WeaponHash.MicroSMG: ret = "SUBMACHINE_GUN_01, SUBMACHINE_GUN_02, GAT_01, GAT_02"; break;
-                    case WeaponHash.MG:
-                    case WeaponHash.CombatMG: ret = "MACHINE_GUN_01, MACHINE_GUN_02"; break;
-                    case WeaponHash.Bat: ret = "BAT_01, BAT_02"; break;
-                    case WeaponHash.Knife: ret = "KNIFE_01, KNIFE_02"; break;
-                    case WeaponHash.RPG: ret = "RPG_01, RPG_02"; break;
-                    case WeaponHash.Minigun: return "MINIGUN";
-                    case WeaponHash.GrenadeLauncher: ret = "GRENADE_LAUNCHER_01, GRENADE_LAUNCHER_02"; break;
-                    case WeaponHash.SawnOffShotgun: ret = "SAWED_OFF_01, SAWED_OFF_02"; break;
-                    case WeaponHash.AssaultShotgun: ret = "ASSAULT_SHOTGUN_01, ASSAULT_SHOTGUN_02"; break;
-                    case WeaponHash.PumpShotgun:
-                    case WeaponHash.BullpupShotgun: ret = "SHOTGUN_01, SHOTGUN_02"; break;
-                    case WeaponHash.SniperRifle:
-                    case WeaponHash.HeavySniper: return "SNIPER_RIFLE";
-                    case WeaponHash.Grenade:
-                    case WeaponHash.SmokeGrenade: ret = "EXPLOSIVE_01, EXPLOSIVE_02, EXPLOSIVE_03"; break;
+                default:
+                case WeaponHash.APPistol:
+                case WeaponHash.Pistol:
+                case WeaponHash.CombatPistol:
+                case WeaponHash.Pistol50: ret = "FIREARM_01, FIREARM_02, GAT_01, GAT_02, GUN_01, GUN_02, WEAPON_01, WEAPON_02"; break;
+                case WeaponHash.AdvancedRifle:
+                case WeaponHash.AssaultRifle:
+                case WeaponHash.CarbineRifle: return "ASSAULT_RIFLE";
+                case WeaponHash.AssaultSMG:
+                case WeaponHash.MicroSMG: ret = "SUBMACHINE_GUN_01, SUBMACHINE_GUN_02, GAT_01, GAT_02"; break;
+                case WeaponHash.MG:
+                case WeaponHash.CombatMG: ret = "MACHINE_GUN_01, MACHINE_GUN_02"; break;
+                case WeaponHash.Bat: ret = "BAT_01, BAT_02"; break;
+                case WeaponHash.Knife: ret = "KNIFE_01, KNIFE_02"; break;
+                case WeaponHash.RPG: ret = "RPG_01, RPG_02"; break;
+                case WeaponHash.Minigun: return "MINIGUN";
+                case WeaponHash.GrenadeLauncher: ret = "GRENADE_LAUNCHER_01, GRENADE_LAUNCHER_02"; break;
+                case WeaponHash.SawnOffShotgun: ret = "SAWED_OFF_01, SAWED_OFF_02"; break;
+                case WeaponHash.AssaultShotgun: ret = "ASSAULT_SHOTGUN_01, ASSAULT_SHOTGUN_02"; break;
+                case WeaponHash.PumpShotgun:
+                case WeaponHash.BullpupShotgun: ret = "SHOTGUN_01, SHOTGUN_02"; break;
+                case WeaponHash.SniperRifle:
+                case WeaponHash.HeavySniper: return "SNIPER_RIFLE";
+                case WeaponHash.Grenade:
+                case WeaponHash.SmokeGrenade: ret = "EXPLOSIVE_01, EXPLOSIVE_02, EXPLOSIVE_03"; break;
                 }
 
                 return Utils.GetRandValue(ret.Split(','));
+            }
+
+            public static string GetCallSoundFromEnum(ECallType CallType)
+            {
+                string ret;
+                switch (CallType)
+                {
+                default: ret = "test"; break;
+                }
+
+                return ret;
+            }
+
+            public static string GetCallTypeFromEnum(ECallType CallType)
+            {
+                switch (CallType)
+                {
+                default:
+                case ECallType.CT_AIRCRAFTCRASH: return "Aircraft Crash";
+                }
             }
         }
     }

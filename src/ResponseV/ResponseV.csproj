@@ -55,6 +55,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Traffic Policer">
+      <HintPath>..\..\vendor\Traffic Policer.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ambient\AmbientEvent.cs" />
@@ -70,7 +73,7 @@
     <Compile Include="Callouts\Any\AttemptedSuicide.cs" />
     <Compile Include="Callouts\Any\BarFight.cs" />
     <Compile Include="Callouts\Any\BeachParty.cs" />
-    <Compile Include="Callouts\Any\CivOnFire.cs" />
+    <Compile Include="Callouts\Any\PedOnFire.cs" />
     <Compile Include="Callouts\Any\DeadBody.cs" />
     <Compile Include="Callouts\Any\Drowning.cs" />
     <Compile Include="Callouts\Any\DrugBust.cs" />
@@ -81,7 +84,7 @@
     <Compile Include="Callouts\Any\Kidnapping.cs" />
     <Compile Include="Callouts\Any\Littering.cs" />
     <Compile Include="Callouts\Any\Loitering.cs" />
-    <Compile Include="Callouts\Any\MissingPerson.cs" />
+    <Compile Include="Callouts\Any\PedMissing.cs" />
     <Compile Include="Callouts\Any\MVA.cs" />
     <Compile Include="Callouts\Any\OfficerDown.cs" />
     <Compile Include="Callouts\Any\Overdose.cs" />
@@ -89,27 +92,26 @@
     <Compile Include="Callouts\Any\ParkingViolation.cs" />
     <Compile Include="Callouts\Any\Party.cs" />
     <Compile Include="Callouts\Any\PedHitByVehicle.cs" />
-    <Compile Include="Callouts\Any\PersonWithWeapon.cs" />
+    <Compile Include="Callouts\Any\PedWithWeapon.cs" />
     <Compile Include="Callouts\Any\PrankCall.cs" />
     <Compile Include="Callouts\Any\Pursuit.cs" />
     <Compile Include="Callouts\Any\Robbery.cs" />
     <Compile Include="Callouts\Any\SearchWarrant.cs" />
     <Compile Include="Callouts\Any\SexOffender.cs" />
-    <Compile Include="Callouts\Any\Speeding.cs" />
+    <Compile Include="Callouts\Any\SpeedingVehicle.cs" />
     <Compile Include="Callouts\Any\StreetPerformerFight.cs" />
     <Compile Include="Callouts\Any\SuspiciousItem.cs" />
     <Compile Include="Callouts\Any\Trespassing.cs" />
     <Compile Include="Callouts\Any\Vandalism.cs" />
     <Compile Include="Callouts\Any\VehicleFire.cs" />
     <Compile Include="Callouts\Callout.cs" />
-    <Compile Include="Callouts\Enums.cs" />
     <Compile Include="Callouts\Fed\Forgery.cs" />
     <Compile Include="Callouts\Fed\IllegalDeal.cs" />
     <Compile Include="Callouts\Fed\Importing.cs" />
     <Compile Include="Callouts\Fed\TerroristAttack.cs" />
     <Compile Include="Callouts\Fed\TerroristPlot.cs" />
     <Compile Include="Callouts\Fed\UnionDepository.cs" />
-    <Compile Include="Callouts\LSPD\GangActivity.cs" />
+    <Compile Include="Callouts\Any\GangActivity.cs" />
     <Compile Include="Callouts\LSSD\PrisonBreak.cs" />
     <Compile Include="Callouts\LSSD\PrisonRiot.cs" />
     <Compile Include="Callouts\Nature\AnimalVsVehicle.cs" />
@@ -117,6 +119,7 @@
     <Compile Include="Callouts\Nature\OverKillLimit.cs" />
     <Compile Include="Callouts\Nature\Poaching.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="GTAV\DamagePacks.cs" />
     <Compile Include="GTAV\Extensions.cs" />
     <Compile Include="GTAV\WorldZone.cs" />

@@ -4,8 +4,8 @@ using LSPD_First_Response.Mod.Callouts;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("PersonWithWeapon", CalloutProbability.Medium)]
-    public class PersonWithWeapon : RVCallout
+    [CalloutInfo("PedWithWeapon", CalloutProbability.Medium)]
+    public class PedWithWeapon : RVCallout
     {
         private WeaponHash m_Weapon;
         private LHandle m_Pursuit;
@@ -25,7 +25,7 @@ namespace ResponseV.Callouts.Any
             }
             else
             {
-                CalloutMessage = "Reports of a Person with a " + (Utils.GetRandBool() ? m_Weapon.ToString() : "Weapon");
+                CalloutMessage = "Reports of a person with a " + (Utils.GetRandBool() ? m_Weapon.ToString() : "weapon");
             }
             CalloutPosition = g_SpawnPoint;
 
@@ -36,7 +36,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            g_Logger.Log("PersonWithWeapon: Callout accepted");
+            g_Logger.Log("PedWithWeapon: Callout accepted");
 
             if (m_bMultiple)
             {
@@ -77,7 +77,7 @@ namespace ResponseV.Callouts.Any
 
                 if (g_bIsPursuit && !Functions.IsPursuitStillRunning(m_Pursuit))
                 {
-                    g_Logger.Log("PersonWithWeapon: Pursuit over, end call");
+                    g_Logger.Log("PedWithWeapon: Pursuit over, end call");
                     End();
                 }
 
@@ -90,7 +90,7 @@ namespace ResponseV.Callouts.Any
 
         void Pursuit()
         {
-            g_Logger.Log("PersonWithWeapon: Create pursuit");
+            g_Logger.Log("PedWithWeapon: Create pursuit");
             g_bIsPursuit = true;
             GameFiber.StartNew(delegate
             {

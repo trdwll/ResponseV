@@ -34,13 +34,17 @@ namespace ResponseV.Callouts.Fed
 
         private Blip m_CallBlip;
 
-
-        // TODO: Add more possible ped models
-        private readonly Model[] m_PedModels = Model.PedModels;//{ "mp_m_waremech_01", "s_m_y_blackops_01", "s_m_y_blackops_02"  };
+        private readonly Model[] m_PedModels = Model.PedModels; // TODO: Come up with some good peds to choose from (only skilled people or *cough* dumb *cough* people would go after the UD)
         private readonly Model[] m_Vehicles = { "SPEEDO", "BOXVILLE" };
 
         public override bool OnBeforeCalloutDisplayed()
         {
+            // If the player is close then we don't want to create this callout
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) <= 200)
+            {
+                return false;
+            }
+
             CalloutMessage = "Reports of a " + (Utils.GetRandBool() ? "Robbery" : "Heist" ) + " at the Union Depository";
             CalloutPosition = m_SpawnPoint;
 
@@ -53,7 +57,7 @@ namespace ResponseV.Callouts.Fed
 
         public override bool OnCalloutAccepted()
         {
-            m_Logger.Log("UnionDepository: Call accepted");
+            m_Logger.Log("UnionDepository: Callout accepted");
 
             m_CallBlip = new Blip(m_SpawnPoint)
             {
@@ -120,7 +124,7 @@ namespace ResponseV.Callouts.Fed
 
             float DistanceTo = Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint);
 
-            if (DistanceTo <= 200 && !m_bBackupCalled)
+            if (DistanceTo <= 250 && !m_bBackupCalled)
             {
                 // Standard procedure to respond nearby units
                 Utils.Notify($"Dispatch to any available units in the vicinity of the Union Depository; respond code 3 for a possible robbery.");
@@ -178,7 +182,7 @@ namespace ResponseV.Callouts.Fed
                 m_Suspects.ForEach(s =>
                 {
                     Functions.AddPedToPursuit(m_Pursuit, s);
-                    s.Inventory.GiveNewWeapon(Utils.GetRandValue(WeaponHash.AdvancedRifle, WeaponHash.CombatMG, WeaponHash.Smg), 200, true);
+                    s.Inventory.GiveNewWeapon(Utils.GetRandValue(WeaponHash.AssaultRifle, WeaponHash.CombatMG, WeaponHash.AssaultSMG), 180, true);
                     s.Armor = 100;
                     s.Health = 100;
 
@@ -191,14 +195,15 @@ namespace ResponseV.Callouts.Fed
                 Functions.SetPursuitIsActiveForPlayer(m_Pursuit, true);
 
                 GameFiber.Sleep(3000);
-                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 3, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
-
-                GameFiber.Sleep(1000);
-                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 1, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.NooseTeam);
-                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 1, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.SwatTeam);
+                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 2, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
 
                 GameFiber.Sleep(1000);
                 LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 1, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.AirUnit);
+
+                GameFiber.Sleep(5000);
+                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 2, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.NooseTeam);
+                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 2, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.NooseAirUnit);
+
             }, "UnionDepositoryPursuitFiber");
 
 

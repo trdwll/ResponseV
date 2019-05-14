@@ -63,7 +63,13 @@ namespace ResponseV
         {
             foreach (Assembly assembly in Functions.GetAllUserPlugins())
             {
-                return assembly.GetName().Name.ToLower() == PluginName.ToLower();
+                AssemblyName an = assembly.GetName();
+                if (an.Name.ToLower() == PluginName.ToLower())
+                {
+                    return true;
+                }
+                // for some reason this fucking return doesn't return true when it should
+                //return assembly.GetName().Name.ToLower() == PluginName.ToLower();
             }
 
             return false;

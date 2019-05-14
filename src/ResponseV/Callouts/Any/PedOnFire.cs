@@ -4,8 +4,8 @@ using LSPD_First_Response.Mod.Callouts;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("CivOnFire", CalloutProbability.VeryHigh)]
-    public class CivOnFire : RVCallout
+    [CalloutInfo("PedOnFire", CalloutProbability.VeryHigh)]
+    public class PedOnFire : RVCallout
     {
         private bool m_bCallPursuit = Utils.GetRandBool();
         private bool m_bSpawnedFire;
@@ -14,7 +14,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = "Reports of a Civilian on Fire";
+            CalloutMessage = "Reports of a person on fire";
             CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_CIV_ON_FIRE IN_OR_ON_POSITION", g_SpawnPoint);
@@ -24,7 +24,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            g_Logger.Log("CivOnFire: Callout accepted");
+            g_Logger.Log("PedOnFire: Callout accepted");
 
             g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, 0f));
 
@@ -32,7 +32,7 @@ namespace ResponseV.Callouts.Any
             if (m_bCallPursuit)
             {
                 g_Suspects.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, 0f));
-                g_Logger.Log("CivOnFire: Suspect created");
+                g_Logger.Log("PedOnFire: Suspect created");
             }
 
             g_Victims.ForEach(v =>
@@ -56,11 +56,11 @@ namespace ResponseV.Callouts.Any
             GameFiber.StartNew(delegate
             {
                 GameFiber.Sleep(6000);
-                g_Logger.Log("CivOnFire: Calling for EMS and Fire");
+                g_Logger.Log("PedOnFire: Calling for EMS and Fire");
                 LSPDFR.RequestFire(g_SpawnPoint);
                 GameFiber.Sleep(3000);
                 LSPDFR.RequestEMS(g_SpawnPoint);
-            }, "CivOnFireRequestEMSFireFiber");
+            }, "PedOnFireRequestEMSFireFiber");
 
             return base.OnCalloutAccepted();
         }
@@ -81,7 +81,7 @@ namespace ResponseV.Callouts.Any
                 // Start checking if EMS is on scene
                 if (!Utils.m_bCheckingEMS)
                 {
-                    Utils.CheckEMSOnScene(g_SpawnPoint, "CivOnFire");
+                    Utils.CheckEMSOnScene(g_SpawnPoint, "PedOnFire");
                 }
 
                 // EMS is on scene and no pursuit is active so lets end the call
@@ -99,7 +99,7 @@ namespace ResponseV.Callouts.Any
                 // If the pursuit is over then just end the call
                 if (g_bIsPursuit && !Functions.IsPursuitStillRunning(m_Pursuit))
                 {
-                    g_Logger.Log("CivOnFire: Pursuit has finished so End()");
+                    g_Logger.Log("PedOnFire: Pursuit has finished so End()");
                     End();
                 }
             }
@@ -110,7 +110,7 @@ namespace ResponseV.Callouts.Any
         {
             g_bIsPursuit = true;
 
-            g_Logger.Log("CivOnFire: Starting pursuit");
+            g_Logger.Log("PedOnFire: Starting pursuit");
 
             GameFiber.StartNew(delegate
             {
@@ -129,7 +129,7 @@ namespace ResponseV.Callouts.Any
                 });
 
                 Functions.SetPursuitIsActiveForPlayer(m_Pursuit, true);
-            }, "CivOnFirePursuitFiber");
+            }, "PedOnFirePursuitFiber");
         }
     }
 }
