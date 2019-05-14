@@ -14,9 +14,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = "Reports of a Vehicle Fire";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.VEHICLE_FIRE)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.VEHICLE_FIRE)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -34,9 +32,10 @@ namespace ResponseV.Callouts.Any
             GameFiber.StartNew(delegate
             {
                 GameFiber.Sleep(5000);
-                LSPDFR.RequestEMS(g_SpawnPoint);
                 LSPDFR.RequestFire(g_SpawnPoint);
-            });
+                GameFiber.Sleep(2000);
+                LSPDFR.RequestEMS(g_SpawnPoint);
+            }, "VehicleFireRequestEMSFireFiber");
 
             return base.OnCalloutAccepted();
         }
@@ -45,7 +44,7 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 75)
+            if (g_bOnScene)
             {
                 bool bCool = Utils.GetRandBool();
                 g_Victims.ForEach(v =>
@@ -59,22 +58,16 @@ namespace ResponseV.Callouts.Any
                         v.Tasks.Flee(v, Utils.GetRandInt(25, 50), 5);
                     }
                 });
-                
+
                 m_Vehicle.Explode(bCool);
 
+                if (bCool)
+                {
+                    // TODO: If vehicle is near grass then spawn more fire (3/molotov) to make it like the fire is spreading
+                    World.SpawnExplosion(g_SpawnPoint, 3, 8.0f, false, false, 0.0f);
+                }
 
                 End();
-
-                //if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(m_Victim) == true)
-                //{
-                //    End();
-                //}
-
-                //if (BetterEMS.API.EMSFunctions.DidEMSRevivePed(m_Victim) == false)
-                //{
-                //    Arrest_Manager.API.Functions.CallCoroner(true);
-                //    End();
-                //}
             }
         }
     }

@@ -2,7 +2,6 @@
 using Rage;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
-using System.Collections.Generic;
 
 namespace ResponseV.Callouts.Any
 {
@@ -21,6 +20,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
+            g_Logger.Log("IndecentExposure: Callout accepted");
             Model[] PedModels = { "a_f_m_fatcult_01", "a_m_m_acult_01", "a_m_y_acult_01", "a_m_y_acult_02" };
 
             g_Suspects.Add(new Ped(Utils.GetRandValue(PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360)));

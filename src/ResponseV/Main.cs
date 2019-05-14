@@ -22,7 +22,8 @@ namespace ResponseV
 
             Rage.Game.RawFrameRender += OnRawFrameRender;
 
-            string WelcomeMessage = $"Welcome {Configuration.config.Roleplay.OfficerName}, to the " + (Utils.IsNight() ? "night" : "day") + " shift. Stay safe out there.";
+            string Area = GTAV.Extensions.GetAreaName(Rage.Game.LocalPlayer.Character.Position);
+            string WelcomeMessage = $"Welcome {Configuration.config.Roleplay.OfficerName}, to the " + (Utils.IsNight() ? "night" : "day") + $" shift in {Area}. Stay safe out there.";
             Rage.Game.DisplayNotification(WelcomeMessage);
         }
 
@@ -33,14 +34,15 @@ namespace ResponseV
             // Rage.GameFiber AmbientEvents = Rage.GameFiber.StartNew(new System.Threading.ThreadStart(AmbientEvent.Initialize), "AmbientEventsFiber");
 
             // Finished/RFC
-            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
-            //Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
-            //Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
-            //Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
-            //Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
-            //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
-            //Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
+            // Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
             // Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
+            // Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
+            // Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
+            // Functions.RegisterCallout(typeof(Callouts.Any.PersonWithWeapon));
+            // Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
+            // Functions.RegisterCallout(typeof(Callouts.Any.Speeding));
+            
+            //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
             //Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
             //Functions.RegisterCallout(typeof(Callouts.Any.DUI));
 

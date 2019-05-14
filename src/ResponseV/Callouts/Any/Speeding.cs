@@ -23,15 +23,15 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = "Reports of a Speeding Vehicle";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} "+
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
+            g_Logger.Log("SpeedingVehicle: Callout accepted");
+
             m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), g_SpawnPoint);
             m_Driver = m_Vehicle.CreateRandomDriver();
             g_Suspects.Add(m_Driver);
@@ -55,14 +55,9 @@ namespace ResponseV.Callouts.Any
                 m_Vehicle.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(50, 80));
             }
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 30)
+            if (g_bOnScene && !g_bIsPursuit)
             {
-                g_bOnScene = true;
-
-                if (m_bIsPursuit)
-                {
-                    Pursuit();
-                }
+                Pursuit();
             }
 
             if (!g_bIsPursuit && Functions.IsPlayerPerformingPullover() && Functions.GetPulloverSuspect(Functions.GetCurrentPullover()) == m_Driver)
@@ -81,6 +76,7 @@ namespace ResponseV.Callouts.Any
         void Pursuit()
         {
             g_Logger.Log("SpeedingVehicle: Started pursuit");
+            g_bIsPursuit = true;
             GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
@@ -99,8 +95,8 @@ namespace ResponseV.Callouts.Any
 
         public override void End()
         {
-            m_Vehicle.Dismiss();
-            m_SpeedingVehicleBlip.Delete();
+            m_Vehicle?.Dismiss();
+            m_SpeedingVehicleBlip?.Delete();
 
             g_Logger.Log("SpeedingVehicle: End()");
             base.End();

@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using Rage;
+﻿using Rage;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 using System.Collections.Generic;
+using ResponseV.GTAV;
 
 namespace ResponseV.Callouts.Any
 {
@@ -43,14 +43,15 @@ namespace ResponseV.Callouts.Any
                 aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICERS_DOWN);
             }
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {aud} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICERS_REPORT)} {aud} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            // TODO: Move this into Process?
+            g_Logger.Log("OfficerDown: Callout accepted");
+
             Ped suspect;
             Vehicle veh;
             switch (m_CalloutType)
@@ -64,7 +65,7 @@ namespace ResponseV.Callouts.Any
 
                     m_Officers.Add(veh);
 
-                    suspect = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), g_SpawnPoint, Utils.GetRandInt(1, 360));
+                    suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
 
                     if (m_CalloutType == Enums.CalloutType.Stabbing)
                     {
@@ -79,7 +80,7 @@ namespace ResponseV.Callouts.Any
                         // Spawn suspects
                         for (int i = 0; i < Utils.GetRandInt(1, 5); i++)
                         {
-                            Ped sus = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), g_SpawnPoint, Utils.GetRandInt(1, 360));
+                            Ped sus = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
                             sus.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)Utils.GetRandInt(10, 60), true);
                             sus.Tasks.FightAgainstClosestHatedTarget(30f);
                             g_Suspects.Add(sus);
@@ -106,7 +107,7 @@ namespace ResponseV.Callouts.Any
 
                         m_Officers.Add(veh);
 
-                        suspect = new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), g_SpawnPoint, Utils.GetRandInt(1, 360));
+                        suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
                         suspect.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)Utils.GetRandInt(10, 60), true);
                         g_Suspects.Add(suspect);
                     }
@@ -131,23 +132,16 @@ namespace ResponseV.Callouts.Any
             return base.OnCalloutAccepted();
         }
 
-        public override void OnCalloutNotAccepted()
-        {
-            base.OnCalloutNotAccepted();
-        }
-
         public override void Process()
         {
             base.Process();
   
-            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 70)
+            if (g_bOnScene && !g_bIsPursuit)
             {
-                g_bOnScene = true;
-
                 OfcDown();
             }
 
-            if (g_bOnScene && !Functions.IsPursuitStillRunning(m_Pursuit))
+            if (g_bIsPursuit && !Functions.IsPursuitStillRunning(m_Pursuit))
             {
                 End();
             }
@@ -155,6 +149,9 @@ namespace ResponseV.Callouts.Any
 
         void OfcDown()
         {
+            g_Logger.Log("OfficerDown: Starting pursuit");
+
+            g_bIsPursuit = true;
             GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
@@ -175,13 +172,15 @@ namespace ResponseV.Callouts.Any
                 {
                     LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 2, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
                 }
-            });
+            }, "OfficerDownPursuitFiber");
         }
 
         public override void End()
         {
-            m_Officers.ForEach(veh => veh.Dismiss());
-            g_Suspects.ForEach(suspect => suspect.Dismiss());
+            m_Officers?.ForEach(veh => veh.Dismiss());
+            g_Suspects?.ForEach(suspect => suspect.Dismiss());
+
+            g_Logger.Log("OfficerDown: End call");
 
             base.End();
         }

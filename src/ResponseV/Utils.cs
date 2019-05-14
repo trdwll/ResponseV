@@ -1,4 +1,5 @@
-﻿using LSPD_First_Response.Mod.API;
+﻿using LSPD_First_Response.Engine.Scripting;
+using LSPD_First_Response.Mod.API;
 using Rage;
 using System;
 using System.Collections.Generic;
@@ -6,11 +7,16 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
+using WorldZone = ResponseV.GTAV.WorldZone;
+
 namespace ResponseV
 {
     public class Utils
     {
         private static Random RANDOM = new Random();
+
+        public static bool m_bCheckingEMS = false;
+        public static bool m_bEMSOnScene = false;
 
         public static int GetRandInt(int min, int max)
         {
@@ -62,59 +68,39 @@ namespace ResponseV
 
             return false;
         }
-    }
 
-    // Credits to Albo1125 for these extensions 
-    public static class AlboExtensions
-    {
-        /// <summary>
-        /// Cache the result of whether a vehicle is an ELS vehicle.
-        /// </summary>
-        private static Dictionary<Model, bool> vehicleModelELSCache = new Dictionary<Model, bool>();
-
-        /// <summary>
-        /// Determine whether the passed vehicle model is an ELS vehicle.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public static bool VehicleModelIsELS(Model model)
+        public static void CheckEMSOnScene(Vector3 location, string CalloutName)
         {
-            try
+            m_bEMSOnScene = false;
+            m_bCheckingEMS = true;
+            GameFiber CheckEMSFiber = GameFiber.StartNew(delegate
             {
-                if (vehicleModelELSCache.ContainsKey(model))
+                while (!m_bEMSOnScene)
                 {
-                    return vehicleModelELSCache[model];
+                    GameFiber.Yield();
+                    List<Vehicle> vehicles = Game.LocalPlayer.Character.GetNearbyVehicles(16).ToList();
+
+                    vehicles.ForEach(v =>
+                    {
+                        if (v.Model.Name == "AMBULANCE")
+                        {
+                            m_bEMSOnScene = true;
+                            Main.MainLogger.Log($"{CalloutName} Utils.CheckEMSOnScene: EMS is on scene");
+                        }
+                    });
+
+                    GameFiber.Sleep(10000);
+                    Main.MainLogger.Log($"{CalloutName} Utils.CheckEMSOnScene: Checking for nearby EMS");
+                    vehicles.Clear();
                 }
 
-                if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "ELS")))
-                {
-                    // no ELS installation at all
-                    vehicleModelELSCache.Add(model, false);
-                    return false;
-                }
+            }, "CheckEMSFiber");
 
-                IEnumerable<string> elsFiles = Directory.EnumerateFiles(
-                    Path.Combine(Directory.GetCurrentDirectory(), "ELS"),
-                    $"{model.Name}.xml", SearchOption.AllDirectories);
-
-                vehicleModelELSCache.Add(model, elsFiles.Any());
-                return vehicleModelELSCache[model];
-            }
-            catch (Exception e)
+            if (m_bEMSOnScene && CheckEMSFiber.IsAlive)
             {
-                Game.LogTrivial($"Failed to determine if a vehicle model '{model}' was ELS-enabled: {e}");
-                return false;
+                CheckEMSFiber.Abort();
+                Main.MainLogger.Log($"{CalloutName} Utils.CheckEMSOnScene: Aborted CheckEMSFiber");
             }
-        }
-
-        /// <summary>
-        /// Determine whether the passed vehicle is an ELS vehicle.
-        /// </summary>
-        /// <param name="vehicle"></param>
-        /// <returns></returns>
-        public static bool VehicleModelIsELS(this Vehicle vehicle)
-        {
-            return VehicleModelIsELS(vehicle.Model);
         }
     }
 }

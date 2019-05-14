@@ -84,7 +84,8 @@ namespace ResponseV
 
         public class Radio
         {
-            public static readonly string[] WE_HAVE = { "CITIZENS_REPORT_01", "CITIZENS_REPORT_02", "CITIZENS_REPORT_03", "CITIZENS_REPORT_04", "OFFICERS_REPORT_01", "OFFICERS_REPORT_02", "OFFICERS_REPORT_03", "WE_HAVE_01", "WE_HAVE_02" };
+            public static readonly string[] WE_HAVE = { "CITIZENS_REPORT_01", "CITIZENS_REPORT_02", "CITIZENS_REPORT_03", "CITIZENS_REPORT_04", "WE_HAVE_01", "WE_HAVE_02" };
+            public static readonly string[] OFFICERS_REPORT = { "OFFICERS_REPORT_01", "OFFICERS_REPORT_02", "OFFICERS_REPORT_03" };
             public static readonly string[] GANG = { "CRIME_GANG_01", "CRIME_GANG_02", "CRIME_GANG_03", "CRIME_GANG_04", "CRIME_GANG_05" };
             public static readonly string[] OVERDOSE = { "OVERDOSE_01", "OVERDOSE_02", "OVERDOSE_03", "OVERDOSE_04", "OVERDOSE_05" };
             public static readonly string[] DUI = { "CRIME_DUI_01", "CRIME_DUI_02", "CRIME_DUI_03", "CRIME_DUI_04" };

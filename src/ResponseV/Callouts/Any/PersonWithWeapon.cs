@@ -10,30 +10,54 @@ namespace ResponseV.Callouts.Any
         private WeaponHash m_Weapon;
         private LHandle m_Pursuit;
 
+        private bool m_bMultiple = Utils.GetRandBool();
+        private bool m_bOpenCarry = Utils.GetRandBool();
+
+        private WeaponHash[] m_OpenCarryList = { WeaponHash.AssaultRifle, WeaponHash.AssaultSMG, WeaponHash.Pistol };
+
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_Weapon = Utils.GetRandValue(g_WeaponList);
+            m_Weapon = m_bOpenCarry ? Utils.GetRandValue(m_OpenCarryList) : Utils.GetRandValue(g_WeaponList);
 
-            CalloutMessage = "Reports of a Person with a " + (Utils.GetRandBool() ? m_Weapon.ToString() : "Weapon");
+            if (m_bMultiple)
+            {
+                CalloutMessage = "Reports of multiple people with weapons";
+            }
+            else
+            {
+                CalloutMessage = "Reports of a Person with a " + (Utils.GetRandBool() ? m_Weapon.ToString() : "Weapon");
+            }
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetWeaponSound(m_Weapon)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetWeaponSound(m_Weapon)} IN_OR_ON_POSITION", g_SpawnPoint);
             
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            g_Suspects.Add(new Ped(Utils.GetRandValue(RageMethods.GetPedModels()), g_SpawnPoint, 360));
+            g_Logger.Log("PersonWithWeapon: Callout accepted");
+
+            if (m_bMultiple)
+            {
+                for (int i = 0; i < Utils.GetRandInt(1, 3); i++)
+                {
+                    g_Suspects.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, 360));
+                }
+            }
+
+            g_Suspects.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, 360));
+
             g_Suspects.ForEach(s =>
             {
                 s.Tasks.Wander();
                 s.IsPersistent = true;
-                s.CanAttackFriendlies = true;
+                if (!m_bOpenCarry)
+                {
+                    s.CanAttackFriendlies = true;
+                }
 
-                s.RelationshipGroup = Utils.GetRandBool() ? RelationshipGroup.HatesPlayer : RelationshipGroup.AmbientFriendEmpty;
+                s.RelationshipGroup = !m_bOpenCarry ? RelationshipGroup.HatesPlayer : RelationshipGroup.AmbientFriendEmpty;
                 s.Inventory.GiveNewWeapon(m_Weapon, (short)Utils.GetRandInt(30, 90), true);
             });
 
@@ -44,21 +68,30 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 50)
+            if (g_bOnScene)
             {
-                g_CallBlip.IsRouteEnabled = false;
+                if (!g_bIsPursuit && !m_bOpenCarry)
+                {
+                    Pursuit();
+                }
 
-                Pursuit();
-            }
+                if (g_bIsPursuit && !Functions.IsPursuitStillRunning(m_Pursuit))
+                {
+                    g_Logger.Log("PersonWithWeapon: Pursuit over, end call");
+                    End();
+                }
 
-            if (g_bOnScene && !Functions.IsPursuitStillRunning(m_Pursuit))
-            {
-                End();
+                if (m_bOpenCarry)
+                {
+                    End();
+                }
             }
         }
 
         void Pursuit()
         {
+            g_Logger.Log("PersonWithWeapon: Create pursuit");
+            g_bIsPursuit = true;
             GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();

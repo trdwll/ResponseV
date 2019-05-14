@@ -29,7 +29,7 @@ namespace ResponseV.Callouts
         public List<Ped> g_Victims = new List<Ped>();
         public List<Ped> g_Suspects = new List<Ped>();
 
-        public Model[] g_PedModels = Model.PedModels;
+        public Model[] g_PedModels = Model.PedModels.Where(p => !p.Name.StartsWith("A_C_")).ToArray();
         public Model[] g_Vehicles = Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle && !v.IsEmergencyVehicle && !v.IsBigVehicle).ToArray();
 
         public Model[] g_PoliceVehicleModels = { "police", "police2", "police3", "police4", "sheriff", "sheriff2" };
@@ -47,10 +47,7 @@ namespace ResponseV.Callouts
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            g_SpawnPoint = World.GetNextPositionOnStreet(
-                Game.LocalPlayer.Character.Position.Around(
-                Utils.GetRandInt(Configuration.config.Callouts.MinRadius, 
-                Configuration.config.Callouts.MinRadius)));
+            g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));
 
             ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 25f);
 
@@ -67,7 +64,7 @@ namespace ResponseV.Callouts
             g_CallBlip.EnableRoute(System.Drawing.Color.Blue);
             g_CallBlip.Color = System.Drawing.Color.Blue;
 
-            g_Logger.Log("Callout was accepted");
+            g_Logger.Log("RVCallout: Callout was accepted");
 
             return base.OnCalloutAccepted();
         }
@@ -92,7 +89,7 @@ namespace ResponseV.Callouts
             {
                 Functions.PlayScannerAudio($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_DOWN)} OFFICER_NEEDS_IMMEDIATE_ASSISTANCE");
                 End();
-                g_Logger.Log("Player is dead so force end call.");
+                g_Logger.Log("RVCallout: Player is dead so force end call.");
             }
         }
 
@@ -102,10 +99,12 @@ namespace ResponseV.Callouts
 
             try
             {
-                g_CallBlip.Delete();
+                g_Logger.Log("RVCallout: Callout ended");
 
-                g_Victims.ForEach(v => v.Dismiss());
-                g_Suspects.ForEach(s => s.Dismiss());
+                g_CallBlip?.Delete();
+
+                g_Victims?.ForEach(v => v.Dismiss());
+                g_Suspects?.ForEach(s => s.Dismiss());
 
                 g_bOnScene = false;
                 g_bIsPursuit = false;

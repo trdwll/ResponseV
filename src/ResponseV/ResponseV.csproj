@@ -118,6 +118,8 @@
     <Compile Include="Callouts\Nature\Poaching.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="GTAV\DamagePacks.cs" />
+    <Compile Include="GTAV\Extensions.cs" />
+    <Compile Include="GTAV\WorldZone.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="GTAV\LSPDFR.cs" />
     <Compile Include="Main.cs" />

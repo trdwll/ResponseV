@@ -9,25 +9,19 @@ namespace ResponseV.Callouts.Any
     [CalloutInfo("Overdose", CalloutProbability.Medium)]
     public class Overdose : RVCallout
     {
-        private bool m_bPedIsDead;
-        private bool m_bEMSOnScene;
-        private bool m_bCheckEMS;
-
         public override bool OnBeforeCalloutDisplayed()
         {
             CalloutMessage = $"Reports of " + (Utils.GetRandBool() ? "an" : "a Possible") + " Overdose";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OVERDOSE)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OVERDOSE)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
 
         public override bool OnCalloutAccepted()
         {
-            g_Logger.Log("Accepted Overdose Callout", Logger.ELogLevel.LL_INFO);
+            g_Logger.Log("Overdose: Callout accepted");
 
             g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360)));
 
@@ -48,9 +42,9 @@ namespace ResponseV.Callouts.Any
 
             GameFiber.StartNew(delegate
             {
-                GameFiber.Sleep(5000);
+                GameFiber.Sleep(3000);
                 LSPDFR.RequestEMS(g_SpawnPoint);
-            });
+            }, "OverdoseRequestEMSFiber");
 
             return base.OnCalloutAccepted();
         }
@@ -61,51 +55,24 @@ namespace ResponseV.Callouts.Any
             
             if (g_bOnScene)
             {
-                if (!m_bCheckEMS)
+                if (!Utils.m_bCheckingEMS)
                 {
-                    CheckEMS();
+                    g_Logger.Log("Overdose: Checking for EMS");
+                    Utils.CheckEMSOnScene(g_SpawnPoint, "Overdose");
                 }
 
                 // quick fix so need to fix this later (the IsAlive)
-                if (m_bEMSOnScene || g_Victims.Exists(v => v.IsAlive))
+                if (Utils.m_bEMSOnScene || g_Victims.Exists(v => v.IsAlive))
                 {
-                    m_bPedIsDead = g_Victims.Exists(v => v.IsDead);
-
-                    if (m_bPedIsDead)
+                    g_Logger.Log("Overdose: EMS on Scene, end call.");
+                    if (g_Victims.Exists(v => v.IsDead))
                     {
                         LSPDFR.RequestCoroner(g_SpawnPoint);
                     }
 
-                    m_bPedIsDead = false;
                     End();
                 }
             }
-        }
-
-        void CheckEMS()
-        {
-            m_bCheckEMS = true;
-            GameFiber.StartNew(delegate
-            {
-                while (!m_bEMSOnScene)
-                {
-                    GameFiber.Yield();
-                    List<Vehicle> vehicles = Game.LocalPlayer.Character.GetNearbyVehicles(16).ToList();
-
-                    vehicles.ForEach(v =>
-                    {
-                        if (v.Model.Name == "AMBULANCE")
-                        {
-                            m_bEMSOnScene = true;
-                        }
-                    });
-
-                    GameFiber.Sleep(10000);
-                    vehicles.Clear();
-                    g_Logger.Log("Overdose: Checking for nearby EMS");
-                }
-
-            }, "CheckEMSFiber");
         }
     }
 }
