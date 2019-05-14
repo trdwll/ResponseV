@@ -52,10 +52,8 @@ namespace ResponseV
             CT_KIDNAPPING,
             CT_LITTERING,
             CT_LOITERING,
-            CT_MISSINGPERSON,
             CT_MVA,
             CT_OFFICERDOWN,
-            CT_MULTIPLEOFFICERDOWN,
             CT_OVERDOSE,
             CT_PAPARAZZI,
             CT_PARKINGVIOLATION,
@@ -76,20 +74,20 @@ namespace ResponseV
             CT_VANDALISM,
             CT_VEHICLEFIRE,
 
-            CT_FORGERY,
-            CT_ILLEGALDEAL,
-            CT_IMPORTING,
-            CT_TERRORISTATTACK,
-            CT_TERRORISTPLOT,
-            CT_UNIONDEPOSITORY,
+            //CT_FORGERY,
+            //CT_ILLEGALDEAL,
+            //CT_IMPORTING,
+            //CT_TERRORISTATTACK,
+            //CT_TERRORISTPLOT,
+            //CT_UNIONDEPOSITORY,
 
-            CT_PRISONBREAK,
-            CT_PRISONRIOT,
+            //CT_PRISONBREAK,
+            //CT_PRISONRIOT,
 
-            CT_ANIMALVSVEHICLE,
-            CT_ILLEGALHUNTING,
-            CT_OVERKILLLIMIT,
-            CT_POACHING
+            //CT_ANIMALVSVEHICLE,
+            //CT_ILLEGALHUNTING,
+            //CT_OVERKILLLIMIT,
+            //CT_POACHING
         }
 
         /// <summary>

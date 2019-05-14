@@ -3,22 +3,47 @@ using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 using LSPD_First_Response.Engine.Scripting;
 using static ResponseV.Enums;
+using Callout = LSPD_First_Response.Mod.Callouts.Callout;
+using ResponseV.GTAV;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("PrankCall", CalloutProbability.Medium)]
-    public class PrankCall : RVCallout
+    [CalloutInfo("PrankCall", CalloutProbability.VeryHigh)]
+    public class PrankCall : Callout
     {
+        private Vector3 m_SpawnPoint;
+
+        private Blip m_CallBlip;
+
         private ECallType m_CallType;
+        private string m_CallTypeString;
+
+        private bool m_bOnScene;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_CallType = RandomEnumValue<ECallType>();
-            string type = Utils.GetRandValue("a Shooting", "a Stabbing", "an Armed Car Robbery", "an Armed Robbery", "a Robbery", "an Officer Down", "Multiple Officers Down", 
-                "a DUI", "an Aircraft Crash", "a Civilian on Fire", "a Kidnapping", "a Dead Body", "an Overdose");
+            m_CallType = ECallType.CT_DROWNING;//RandomEnumValue<ECallType>();
+            m_CallTypeString = LSPDFR.Radio.GetCallTypeFromEnum_PrankCall(m_CallType);
 
-            CalloutMessage = "Reports of " + LSPDFR.Radio.GetCallTypeFromEnum(m_CallType);
-            CalloutPosition = g_SpawnPoint;
+            Vector3 LocalPos = Game.LocalPlayer.Character.Position;
+
+            switch (m_CallType)
+            {
+            default:
+                m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));
+                Main.MainLogger.Log($"PrankCall: SpawnPoint defaulted.");
+                break;
+            case ECallType.CT_DROWNING:
+                // TODO: Get the nearest one to the player rather than having it spawn 4m away lol
+                m_SpawnPoint = LocalPos.GetArea() == Extensions.EWorldArea.Blaine_County ? Utils.GetRandValue(SpawnPoints.BlaineNearWaterSpawnPoints) : Utils.GetRandValue(SpawnPoints.LosSantosNearWaterSpawnPoints);
+                Main.MainLogger.Log($"PrankCall: SpawnPoint fixed for drowning.");
+                break;
+            }
+
+            CalloutMessage = $"(PRANKCALL DEBUG) - Reports of {m_CallTypeString}";
+            CalloutPosition = m_SpawnPoint;
+
+            ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
 
             // Come up with way to get a safe name from the audio files for above
             // and play the dispatch audio for this call since the immersion isn't there if no audio doesn't play
@@ -28,7 +53,15 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            g_Logger.Log("PrankCall: Callout accepted");
+            Main.MainLogger.Log($"PrankCall: Callout accepted - [{m_CallTypeString}]");
+
+            m_CallBlip = new Blip(m_SpawnPoint)
+            {
+                IsRouteEnabled = true
+            };
+
+            m_CallBlip.EnableRoute(System.Drawing.Color.Blue);
+            m_CallBlip.Color = System.Drawing.Color.Blue;
 
             return base.OnCalloutAccepted();
         }
@@ -37,11 +70,34 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
 
-            if (g_bOnScene)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_SpawnPoint) < 35 && !m_bOnScene)
+            {
+                m_bOnScene = true;
+                m_CallBlip.IsRouteEnabled = false;
+                Main.MainLogger.Log("PrankCall: DistanceTo(m_SpawnPoint) < 35 so hide m_CallBlip");
+            }
+
+            if (m_bOnScene)
             {
                 Utils.Notify("Dispatch the call was a prank, returning to patrol.");
                 End();
             }
+
+            if (Game.LocalPlayer.IsDead)
+            {
+                Functions.PlayScannerAudio($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_DOWN)} OFFICER_NEEDS_IMMEDIATE_ASSISTANCE");
+                End();
+                Main.MainLogger.Log("PrankCall: Player is dead so force end call.");
+            }
+        }
+
+        public override void End()
+        {
+            m_CallBlip.Delete();
+
+            m_bOnScene = false;
+
+            base.End();
         }
     }
 }

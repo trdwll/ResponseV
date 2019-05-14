@@ -59,6 +59,16 @@ namespace ResponseV
             Rage.Game.DisplayNotification($"Response~y~V~w~ has had an error. Please report to developer.");
         }
 
+        public static void NotifyDispatchTo(string Message)
+        {
+
+        }
+
+        public static void NotifyPlayerTo(string Message)
+        {
+
+        }
+
         public static bool IsLSPDFRPluginRunning(string PluginName)
         {
             foreach (Assembly assembly in Functions.GetAllUserPlugins())

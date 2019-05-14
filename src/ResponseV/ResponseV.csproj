@@ -122,6 +122,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="GTAV\DamagePacks.cs" />
     <Compile Include="GTAV\Extensions.cs" />
+    <Compile Include="GTAV\SpawnPoints.cs" />
     <Compile Include="GTAV\WorldZone.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="GTAV\LSPDFR.cs" />

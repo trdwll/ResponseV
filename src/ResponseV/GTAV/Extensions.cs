@@ -18,6 +18,7 @@ namespace ResponseV.GTAV
         {
             Los_Santos = -289320599,
             Blaine_County = 2072609373,
+            Oceana = 385094880,
         }
 
         public enum EWorldZone
@@ -252,7 +253,6 @@ namespace ResponseV.GTAV
             return WorldZone.GetAreaName(WorldZone.GetArea(position));
         }
 
-
         /// <summary>
         /// Returns the enum of the zone
         /// </summary>
@@ -262,6 +262,7 @@ namespace ResponseV.GTAV
         {
             return WorldZone.GetZone(position);
         }
+
         /// <summary>
         /// Returns the name of the zone
         /// </summary>
@@ -271,7 +272,6 @@ namespace ResponseV.GTAV
         {
             return WorldZone.GetZoneName(WorldZone.GetZone(position));
         }
-
 
         /// <summary>
         /// Gets the street name
@@ -283,8 +283,6 @@ namespace ResponseV.GTAV
             return World.GetStreetName(position);
         }
         #endregion alexguirre
-
-
     }
 
     // Credits to Albo1125 for these extensions 

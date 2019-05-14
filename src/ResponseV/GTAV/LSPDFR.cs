@@ -111,23 +111,100 @@ namespace ResponseV
                 return Utils.GetRandValue(ret.Split(','));
             }
 
-            public static string GetCallSoundFromEnum(ECallType CallType)
+            public static string GetCallSoundFromEnum_PrankCall(ECallType CallType)
             {
                 string ret;
                 switch (CallType)
                 {
-                default: ret = "test"; break;
+                default:
+                case ECallType.CT_AIRCRAFTCRASH: ret = "blah"; break;
+                case ECallType.CT_ANIMALATTACK: ret = "blah"; break;
+                case ECallType.CT_ASSAULT: ret = "blah"; break;
+                case ECallType.CT_ASSAULTONOFFICER: ret = "blah"; break;
+                case ECallType.CT_ATTEMPTEDMUDER: ret = "blah"; break;
+                case ECallType.CT_ATTEMPTEDSUICIDE: ret = "blah"; break;
+                case ECallType.CT_BARFIGHT: ret = "blah"; break;
+                case ECallType.CT_BEACHPARTY: ret = "blah"; break;
+                case ECallType.CT_DEADBODY: ret = "blah"; break;
+                case ECallType.CT_DROWNING: ret = "blah"; break;
+                case ECallType.CT_DRUGBUST: ret = "blah"; break;
+                case ECallType.CT_DUI: ret = "blah"; break;
+                case ECallType.CT_GANGACTIVITY: ret = "blah"; break;
+                case ECallType.CT_GRAFFITIARTIST: ret = "blah"; break;
+                case ECallType.CT_INDECENTEXPOSURE: ret = "blah"; break;
+                case ECallType.CT_KIDNAPPING: ret = "blah"; break;
+                case ECallType.CT_LITTERING: ret = "blah"; break;
+                case ECallType.CT_LOITERING: ret = "blah"; break;
+                case ECallType.CT_MVA: ret = "blah"; break;
+                case ECallType.CT_OFFICERDOWN: ret = "blah"; break;
+                case ECallType.CT_OVERDOSE: ret = "blah"; break;
+                case ECallType.CT_PAPARAZZI: ret = "blah"; break;
+                case ECallType.CT_PARKINGVIOLATION: ret = "blah"; break;
+                case ECallType.CT_PARTY: ret = "blah"; break;
+                case ECallType.CT_PEDHITBYVEHICLE: ret = "blah"; break;
+                case ECallType.CT_PEDMISSING: ret = "blah"; break;
+                case ECallType.CT_PEDONFIRE: ret = "blah"; break;
+                case ECallType.CT_PEDWITHWEAPON: ret = "blah"; break;
+                case ECallType.CT_PRANKCALL: ret = "blah"; break;
+                case ECallType.CT_PURSUIT: ret = "blah"; break;
+                case ECallType.CT_ROBBERY: ret = "blah"; break;
+                case ECallType.CT_SEARCHWARRANT: ret = "blah"; break;
+                case ECallType.CT_SEXOFFENDER: ret = "blah"; break;
+                case ECallType.CT_SPEEDINGVEHICLE: ret = "blah"; break;
+                case ECallType.CT_STREETPERFORMERFIGHT: ret = "blah"; break;
+                case ECallType.CT_SUSPICIOUSITEM: ret = "blah"; break;
+                case ECallType.CT_TRESPASSING: ret = "blah"; break;
+                case ECallType.CT_VANDALISM: ret = "blah"; break;
+                case ECallType.CT_VEHICLEFIRE: ret = "blah"; break;
                 }
 
                 return ret;
             }
 
-            public static string GetCallTypeFromEnum(ECallType CallType)
+            public static string GetCallTypeFromEnum_PrankCall(ECallType CallType)
             {
                 switch (CallType)
                 {
                 default:
-                case ECallType.CT_AIRCRAFTCRASH: return "Aircraft Crash";
+                case ECallType.CT_AIRCRAFTCRASH: return "an aircraft crash";
+                case ECallType.CT_ANIMALATTACK: return "an animal attack";
+                case ECallType.CT_ASSAULT: return "an assault";
+                case ECallType.CT_ASSAULTONOFFICER: return "an assault on an officer";
+                case ECallType.CT_ATTEMPTEDMUDER: return "an attempted murder";
+                case ECallType.CT_ATTEMPTEDSUICIDE: return "an attempted suicide";
+                case ECallType.CT_BARFIGHT: return "a bar fight";
+                case ECallType.CT_BEACHPARTY: return "a beach party";
+                case ECallType.CT_DEADBODY: return Utils.GetRandValue("a dead body", "a dead person");
+                case ECallType.CT_DROWNING: return "a drowning";
+                case ECallType.CT_DRUGBUST: return "a drug bust";
+                case ECallType.CT_DUI: return Utils.GetRandValue("a dui", "a driver under the influence");
+                case ECallType.CT_GANGACTIVITY: return "gang activity";
+                case ECallType.CT_GRAFFITIARTIST: return "a graffiti artist";
+                case ECallType.CT_INDECENTEXPOSURE: return "indecent exposure";
+                case ECallType.CT_KIDNAPPING: return "a kidnapping";
+                case ECallType.CT_LITTERING: return "littering";
+                case ECallType.CT_LOITERING: return "loitering";
+                case ECallType.CT_MVA: return Utils.GetRandValue("a motor vehicle accident", "a mva", "a vehicle accident");
+                case ECallType.CT_OFFICERDOWN: return Utils.GetRandValue("multiple officers down", "an officer down");
+                case ECallType.CT_OVERDOSE: return Utils.GetRandValue("an overdose", "a possible overdose");
+                case ECallType.CT_PAPARAZZI: return "paparazzi";
+                case ECallType.CT_PARKINGVIOLATION: return "a parking violation";
+                case ECallType.CT_PARTY: return "a party";
+                case ECallType.CT_PEDHITBYVEHICLE: return "a person hit by vehicle";
+                case ECallType.CT_PEDMISSING: return "a person missing";
+                case ECallType.CT_PEDONFIRE: return "a person on fire";
+                case ECallType.CT_PEDWITHWEAPON: return "a person with a weapon";
+                case ECallType.CT_PRANKCALL: return GetCallTypeFromEnum_PrankCall(Enums.RandomEnumValue<ECallType>());
+                case ECallType.CT_PURSUIT: return "a pursuit";
+                case ECallType.CT_ROBBERY: return "a robbery";
+                case ECallType.CT_SEARCHWARRANT: return "a search warrant";
+                case ECallType.CT_SEXOFFENDER: return "a sex offender";
+                case ECallType.CT_SPEEDINGVEHICLE: return "a speeding vehicle";
+                case ECallType.CT_STREETPERFORMERFIGHT: return "a street performer fight";
+                case ECallType.CT_SUSPICIOUSITEM: return "a suspicious item";
+                case ECallType.CT_TRESPASSING: return "a trespassing";
+                case ECallType.CT_VANDALISM: return "a vandalism";
+                case ECallType.CT_VEHICLEFIRE: return "a vehicle on fire";
                 }
             }
         }
