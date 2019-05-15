@@ -21,7 +21,7 @@
             }
 
             WriteLog("--------------------");
-            WriteLog($"ResponseV {Configuration.APPVERSION}");
+            WriteLog($"ResponseV {Updater.m_AppVersion.ToString()}");
             WriteLog("Initialized Log");
             WriteLog("--------------------");
         }

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("Overdose", CalloutProbability.Medium)]
+    [CalloutInfo("Overdose", CalloutProbability.VeryHigh)]
     public class Overdose : RVCallout
     {
         public override bool OnBeforeCalloutDisplayed()

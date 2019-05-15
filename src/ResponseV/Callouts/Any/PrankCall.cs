@@ -20,9 +20,13 @@ namespace ResponseV.Callouts.Any
 
         private bool m_bOnScene;
 
+        private Ped m_Suspect;
+        private Blip m_SuspectBlip;
+        private bool m_bCreateSuspect = Utils.GetRandInt(1, 3) == 1;
+
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_CallType = ECallType.CT_DROWNING;//RandomEnumValue<ECallType>();
+            m_CallType = RandomEnumValue<ECallType>();
             m_CallTypeString = LSPDFR.Radio.GetCallTypeFromEnum_PrankCall(m_CallType);
 
             Vector3 LocalPos = Game.LocalPlayer.Character.Position;
@@ -63,6 +67,12 @@ namespace ResponseV.Callouts.Any
             m_CallBlip.EnableRoute(System.Drawing.Color.Blue);
             m_CallBlip.Color = System.Drawing.Color.Blue;
 
+            if (m_bCreateSuspect)
+            {
+                m_Suspect = new Ped(Utils.GetRandValue(Model.PedModels), m_SpawnPoint, 0f);
+                Main.MainLogger.Log("PrankCall: Spawned suspect");
+            }
+
             return base.OnCalloutAccepted();
         }
 
@@ -79,7 +89,24 @@ namespace ResponseV.Callouts.Any
 
             if (m_bOnScene)
             {
-                Utils.Notify("Dispatch the call was a prank, returning to patrol.");
+                Utils.NotifyPlayerTo("Dispatch", "the call was a prank, returning to patrol.");
+
+                if (m_bCreateSuspect)
+                {
+                    m_SuspectBlip = m_Suspect.AttachBlip();
+                    m_SuspectBlip.Color = System.Drawing.Color.White;
+                    m_SuspectBlip.Scale = 0.5f;
+
+                    Utils.NotifyDispatchTo("Player", $"be advised we've traced the caller and they should be nearby.");
+                }
+                else
+                {
+                    End();
+                }
+            }
+
+            if (m_bCreateSuspect && Functions.IsPedArrested(m_Suspect) || Functions.IsPedGettingArrested(m_Suspect))
+            {
                 End();
             }
 
@@ -93,7 +120,11 @@ namespace ResponseV.Callouts.Any
 
         public override void End()
         {
+            Main.MainLogger.Log("PrankCall: Call ended");
+
             m_CallBlip.Delete();
+            m_SuspectBlip?.Delete();
+            m_Suspect?.Dismiss();
 
             m_bOnScene = false;
 

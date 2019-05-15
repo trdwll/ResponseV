@@ -15,18 +15,22 @@ namespace ResponseV
         public static bool g_bArrestManager;
         public static bool g_bTrafficPolicer;
 
+        private static bool m_UpdateAvailable;
+
         public override void Initialize()
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LSPDFR);
             Functions.OnOnDutyStateChanged += OnDutyStateChangedEvent;
 
-            Rage.Game.DisplayNotification($"Response~y~V~w~ ~b~{Configuration.APPVERSION} ~w~by ~b~trdwll ~w~loaded successfully.");
+            Game.DisplayNotification($"Response~y~V~w~ ~b~{Updater.m_AppVersion?.ToString()} ~w~by ~b~trdwll ~w~loaded successfully.");
 
-            Rage.Game.RawFrameRender += OnRawFrameRender;
+            Game.RawFrameRender += OnRawFrameRender;
 
             string Area = GTAV.Extensions.GetAreaName(Rage.Game.LocalPlayer.Character.Position);
             string WelcomeMessage = $"Welcome {Configuration.config.Roleplay.OfficerName}, to the " + (Utils.IsNight() ? "night" : "day") + $" shift in {Area}. Stay safe out there.";
-            Utils.Notify(WelcomeMessage);
+            Game.DisplayNotification(WelcomeMessage);
+
+            m_UpdateAvailable = Updater.CheckForUpdates();
 
             // TODO: update checking (turn off via config)
         }
@@ -41,7 +45,7 @@ namespace ResponseV
             // Rage.GameFiber AmbientEvents = Rage.GameFiber.StartNew(new System.Threading.ThreadStart(AmbientEvent.Initialize), "AmbientEventsFiber");
 
             // Finished/RFC
-            // Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
+            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
             // Functions.RegisterCallout(typeof(Callouts.Any.CivOnFire));
             // Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
             // Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
@@ -51,12 +55,12 @@ namespace ResponseV
             // Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
             // Functions.RegisterCallout(typeof(Callouts.Any.DUI));
             // Functions.RegisterCallout(typeof(Callouts.Fed.UnionDepository));
+            // Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
 
             //Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
             
 
             // In Progress
-            Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
             //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
 
             // Fed - These require more work than other callouts as we spawn specific vehicles in specific places etc
@@ -108,7 +112,7 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Nature.AnimalCruelty));
             //Functions.RegisterCallout(typeof(Callouts.Nature.EndangeredSpecies));
 
-            Utils.Notify("Response~y~V~w~ Please wait around 30 seconds before going on patrol/receiving calls to allow Response~y~V~w~ to load fully.");
+            Utils.Notify("Please wait around 30 seconds before going on patrol/receiving calls to allow Response~y~V~w~ to load fully.");
             // So we put it on a new thread so we can sleep for 20 seconds to allow other plugins to be loaded fully before we start messing with them
             GameFiber.StartNew(delegate
             {
@@ -126,6 +130,8 @@ namespace ResponseV
                 {
                     MainLogger.Log($"{a.GetName().Name} loaded");
                 }
+
+                Utils.Notify("You can go on duty now. Thanks for waiting. :)");
             });
         }
 
@@ -142,7 +148,12 @@ namespace ResponseV
 
         private static void OnRawFrameRender(object sender, Rage.GraphicsEventArgs e)
         {
-            e.Graphics.DrawText($"ResponseV {Configuration.APPVERSION}", "Verdana", 10.0f, new System.Drawing.PointF(2f, 2f), System.Drawing.Color.White);
+            e.Graphics.DrawText($"ResponseV v{Updater.m_AppVersion?.ToString()}", "Verdana", 10.0f, new System.Drawing.PointF(2f, 2f), System.Drawing.Color.White);
+
+            if (m_UpdateAvailable)
+            {
+                e.Graphics.DrawText($"Version {Updater.m_VersionAvailable?.ToString()} Available!", "Verdana", 10.0f, new System.Drawing.PointF(2f, 12f), System.Drawing.Color.Orange);
+            }
         }
     }
 }

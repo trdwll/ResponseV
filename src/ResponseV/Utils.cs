@@ -51,22 +51,26 @@ namespace ResponseV
 
         public static void Notify(string Message)
         {
-            Rage.Game.DisplayNotification(Message);
+            Game.DisplayNotification($"Response~y~V~w~ {Message}");
         }
 
         public static void CrashNotify()
         {
-            Rage.Game.DisplayNotification($"Response~y~V~w~ has had an error. Please report to developer.");
+            Game.DisplayNotification($"Response~y~V~w~ has had an error. Please report to developer.");
         }
 
-        public static void NotifyDispatchTo(string Message)
-        {
 
+        public static void NotifyDispatchTo(string Unit, string Message)
+        {
+            // NotifyPlayerTo("Player", "Respond to xxx for ...")
+            // NotifyPlayerTo("Player", "We've received multiple calls regarding this.")
+            Notify($"Dispatch to {Unit}: {Message}");
         }
 
-        public static void NotifyPlayerTo(string Message)
+        public static void NotifyPlayerTo(string Unit, string Message)
         {
-
+            // NotifyPlayerTo("Dispatch", "I'll be code 4")
+            Notify($"Player to {Unit}: {Message}");
         }
 
         public static bool IsLSPDFRPluginRunning(string PluginName)
