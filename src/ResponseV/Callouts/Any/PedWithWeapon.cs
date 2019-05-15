@@ -5,7 +5,7 @@ using LSPD_First_Response.Mod.Callouts;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("PedWithWeapon", CalloutProbability.Medium)]
-    public class PedWithWeapon : RVCallout
+    internal class PedWithWeapon : CalloutBase
     {
         private WeaponHash m_Weapon;
         private LHandle m_Pursuit;

@@ -12,7 +12,7 @@ using LSPD_First_Response.Engine.Scripting;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("GangActivity", CalloutProbability.VeryHigh)]
-    public class GangActivity : Callout
+    internal class GangActivity : Callout
     {
         private Vector3 g_SpawnPoint;
  

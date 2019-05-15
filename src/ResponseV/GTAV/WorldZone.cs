@@ -6,7 +6,7 @@ using static ResponseV.GTAV.Extensions;
 namespace ResponseV.GTAV
 {
     // Credits to alexguirre
-    public static class WorldZone
+    internal static class WorldZone
     {
         /// <summary>
         /// Returns the position zone, Los Santos or Blaine County

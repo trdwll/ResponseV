@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("Overdose", CalloutProbability.VeryHigh)]
-    public class Overdose : RVCallout
+    [CalloutInfo("Overdose", CalloutProbability.Medium)]
+    internal class Overdose : CalloutBase
     {
         public override bool OnBeforeCalloutDisplayed()
         {
@@ -61,8 +61,7 @@ namespace ResponseV.Callouts.Any
                     Utils.CheckEMSOnScene(g_SpawnPoint, "Overdose");
                 }
 
-                // quick fix so need to fix this later (the IsAlive)
-                if (Utils.m_bEMSOnScene || g_Victims.Exists(v => v.IsAlive))
+                if (Utils.m_bEMSOnScene)
                 {
                     g_Logger.Log("Overdose: EMS on Scene, end call.");
                     if (g_Victims.Exists(v => v.IsDead))

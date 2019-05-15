@@ -1,7 +1,7 @@
 ﻿// Police patrol the city
 namespace ResponseV.Ambient
 {
-    public class Patrol
+    internal class Patrol
     {
         public static void Initialize()
         {

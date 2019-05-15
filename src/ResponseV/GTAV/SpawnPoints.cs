@@ -2,7 +2,7 @@
 
 namespace ResponseV.GTAV
 {
-    public class SpawnPoints
+    internal class SpawnPoints
     {
         // TODO: Add spawnpoints on the lake near Trevor's house
         public static readonly Vector3[] BlaineNearWaterSpawnPoints = 

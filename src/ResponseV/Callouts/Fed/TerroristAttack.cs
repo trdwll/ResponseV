@@ -12,7 +12,7 @@ namespace ResponseV.Callouts.Fed
 {
     // The attack usually happens after a plot is discovered, but can happen without a plot
     [CalloutInfo("TerroristAttack", CalloutProbability.VeryHigh)]
-    public class TerroristAttack : Callout
+    internal class TerroristAttack : Callout
     {
     }
 }

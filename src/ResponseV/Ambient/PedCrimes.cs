@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 // peds litter, running from police, etc
 namespace ResponseV.Ambient
 {
-    class PedCrimes
+    internal class PedCrimes
     {
     }
 }

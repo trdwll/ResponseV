@@ -7,7 +7,7 @@ namespace ResponseV
      * This class was written for an old project we worked on and is being recycled for this current project
      * Thanks Jack
      */
-    public class Serialization
+    internal class Serialization
     {
         public class JSON
         {

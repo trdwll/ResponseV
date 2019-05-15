@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResponseV.Callouts.LSSD
 {
-    class PrisonBreak
+    internal class PrisonBreak
     {
     }
 }

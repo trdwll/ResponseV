@@ -66,6 +66,7 @@
     <Compile Include="Ambient\Patrol.cs" />
     <Compile Include="Ambient\PedCrimes.cs" />
     <Compile Include="Ambient\Pullover.cs" />
+    <Compile Include="API\API.cs" />
     <Compile Include="Callouts\Any\AircraftCrash.cs" />
     <Compile Include="Callouts\Any\AnimalAttack.cs" />
     <Compile Include="Callouts\Any\AssaultOnOfficer.cs" />
@@ -104,7 +105,7 @@
     <Compile Include="Callouts\Any\Trespassing.cs" />
     <Compile Include="Callouts\Any\Vandalism.cs" />
     <Compile Include="Callouts\Any\VehicleFire.cs" />
-    <Compile Include="Callouts\Callout.cs" />
+    <Compile Include="Callouts\CalloutBase.cs" />
     <Compile Include="Callouts\Fed\Forgery.cs" />
     <Compile Include="Callouts\Fed\IllegalDeal.cs" />
     <Compile Include="Callouts\Fed\Importing.cs" />

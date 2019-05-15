@@ -2,7 +2,7 @@
 
 namespace ResponseV
 {
-    public class RageMethods
+    internal class RageMethods
     {
         public static Rage.Model[] GetPedModels()
         {

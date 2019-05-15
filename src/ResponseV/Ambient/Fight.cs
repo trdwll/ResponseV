@@ -2,7 +2,7 @@
 
 namespace ResponseV.Ambient
 {
-    public class Fight
+    internal class Fight
     {
         public static void Initialize()
         {

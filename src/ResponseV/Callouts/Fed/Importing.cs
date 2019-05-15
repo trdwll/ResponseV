@@ -43,7 +43,7 @@ sports drift tampa
     // Importing of illegal drugs, weapons, humans, etc - you may want to respond with a good amount of agents on these to
     // avoid anyone from getting away
     [CalloutInfo("Importing", CalloutProbability.VeryHigh)]
-    public class Importing : Callout
+    internal class Importing : Callout
     {
         private Vector3 g_SpawnPoint;
 

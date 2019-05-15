@@ -2,7 +2,7 @@
 
 namespace ResponseV.Ambient
 {
-    public class AmbientEvent
+    internal class AmbientEvent
     {
         private enum EAmbientEvent
         {

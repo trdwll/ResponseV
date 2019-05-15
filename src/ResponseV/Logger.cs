@@ -1,6 +1,6 @@
 ﻿namespace ResponseV
 {
-    public class Logger
+    internal class Logger
     {
         public enum ELogLevel
         {
@@ -11,7 +11,6 @@
         }
 
         private readonly string m_LogFile = $"{System.Windows.Forms.Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.log";
-        private string m_DateFormat = $"[{System.DateTime.Now}]";
 
         public Logger()
         {
@@ -21,7 +20,7 @@
             }
 
             WriteLog("--------------------");
-            WriteLog($"ResponseV {Updater.m_AppVersion.ToString()}");
+            WriteLog($"ResponseV {Updater.m_AppVersion?.ToString()}");
             WriteLog("Initialized Log");
             WriteLog("--------------------");
         }
@@ -38,7 +37,7 @@
             case ELogLevel.LL_TRACE: prefix = "[TRACE] "; break;
             }
 
-            WriteLog($"{m_DateFormat} ResponseV {prefix}: {Message}");
+            WriteLog($"[{System.DateTime.Now}] ResponseV {prefix}: {Message}");
         }
 
         private void WriteLog(string Message)

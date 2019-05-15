@@ -10,7 +10,7 @@ using Rage.Native;
 
 namespace ResponseV.GTAV
 {
-    public static class Extensions
+    internal static class Extensions
     {
         #region alexguirre
         // Credits to alexguirre
@@ -286,7 +286,7 @@ namespace ResponseV.GTAV
     }
 
     // Credits to Albo1125 for these extensions 
-    public static class AlboExtensions
+    internal static class AlboExtensions
     {
         /// <summary>
         /// Cache the result of whether a vehicle is an ELS vehicle.

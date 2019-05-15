@@ -7,7 +7,7 @@ using LSPD_First_Response.Mod.Callouts;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("SpeedingVehicle", CalloutProbability.VeryHigh)]
-    public class SpeedingVehicle : RVCallout
+    internal class SpeedingVehicle : CalloutBase
     {
         private Vehicle m_Vehicle;
         private LHandle m_Pursuit;

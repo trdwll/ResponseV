@@ -9,7 +9,7 @@ using System;
  */
 namespace ResponseV
 {
-    public class LSPDFR
+    internal class LSPDFR
     {
         public static void RequestBackup(Rage.Vector3 pos, int numOfUnits,
             EBackupResponseType responseType = EBackupResponseType.Code3,
@@ -60,7 +60,8 @@ namespace ResponseV
             public static readonly string[] GANG = { "CRIME_GANG_01", "CRIME_GANG_02", "CRIME_GANG_03", "CRIME_GANG_04", "CRIME_GANG_05" };
             public static readonly string[] OVERDOSE = { "OVERDOSE_01", "OVERDOSE_02", "OVERDOSE_03", "OVERDOSE_04", "OVERDOSE_05" };
             public static readonly string[] DUI = { "CRIME_DUI_01", "CRIME_DUI_02", "CRIME_DUI_03", "CRIME_DUI_04" };
-            public static readonly string[] AIRCRAFT_CRASH = { "CRIME_AIRCRAFT_CRASH_01", "CRIME_AIRCRAFT_CRASH_02", "CRIME_AIRCRAFT_CRASH_03", "CRIME_HELICOPTER_DOWN_01", "CRIME_HELICOPTER_DOWN_02" };
+            public static readonly string[] AIRCRAFT_CRASH = { "CRIME_AIRCRAFT_CRASH_01", "CRIME_AIRCRAFT_CRASH_02", "CRIME_AIRCRAFT_CRASH_03" };
+            public static readonly string[] HELICOPTER_CRASH = { "CRIME_HELICOPTER_DOWN_01", "CRIME_HELICOPTER_DOWN_02" };
             public static readonly string[] DEADBODY = { "DECEASED_PERSON_01", "DECEASED_PERSON_02" };
             public static readonly string[] OFFICER_DOWN = { "CRIME_OFFICER_DOWN_01", "CRIME_OFFICER_DOWN_02", "CRIME_OFFICER_DOWN_03", "CRIME_OFFICER_DOWN_04" };
             public static readonly string[] OFFICERS_DOWN = { "CRIME_MULTIPLE_OFFICERS_DOWN_01", "CRIME_MULTIPLE_OFFICERS_DOWN_02" };

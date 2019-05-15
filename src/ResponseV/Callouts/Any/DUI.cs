@@ -5,7 +5,7 @@ using LSPD_First_Response.Mod.Callouts;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("DUI", CalloutProbability.Medium)]
-    public class DUI : RVCallout
+    internal class DUI : CalloutBase
     {
         private Vehicle m_Vehicle;
         private Ped m_Suspect;

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace ResponseV.Callouts.Fed
 {
     [CalloutInfo("UnionDepository", CalloutProbability.VeryHigh)]
-    public class UnionDepository : Callout
+    internal class UnionDepository : Callout
     {
         private readonly Logger m_Logger = new Logger();
 

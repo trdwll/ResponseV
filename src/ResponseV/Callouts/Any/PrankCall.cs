@@ -9,7 +9,7 @@ using ResponseV.GTAV;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("PrankCall", CalloutProbability.VeryHigh)]
-    public class PrankCall : Callout
+    internal class PrankCall : Callout
     {
         private Vector3 m_SpawnPoint;
 

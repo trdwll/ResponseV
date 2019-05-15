@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 // Police pullover more people
 namespace ResponseV.Ambient
 {
-    class Pullover
+    internal class Pullover
     {
     }
 }

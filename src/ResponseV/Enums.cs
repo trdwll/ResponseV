@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResponseV
 {
-    public class Enums
+    internal class Enums
     {
         public enum Callout
         {

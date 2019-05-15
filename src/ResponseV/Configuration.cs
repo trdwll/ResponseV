@@ -2,39 +2,55 @@
 
 namespace ResponseV
 {
-    public class Configuration
+    internal class Configuration
     {
-        public static readonly string ConfigFile = $"{Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.json";
+        private static readonly string ConfigFile = $"{Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.json";
         public static Cfg.RootObject config = Serialization.JSON.Deserialize.GetFromFile<Cfg.RootObject>(ConfigFile);
 
         public class Cfg
         {
+            public struct Callout
+            {
+                public bool Enabled;
+                public uint MinRadius; // TODO: Add this
+                public uint MaxRadius; // TODO: Add this
+            }
+
+            public struct Roleplay
+            {
+                public string OfficerName;
+                public string OfficerNumber;
+                public string OfficerUnit;
+                public bool RealismEnabled;
+            }
+
+            public struct Ambient
+            {
+                public bool RespondingToCalls;
+                public bool Patrolling;
+                public bool TrafficStops;
+                public bool PedCrimes;
+            }
+
+            public struct Extensions
+            {
+                public bool TurnWheels { get; set; }
+            }
+
             public class RootObject
             {
-                public Roleplay Roleplay = new Roleplay();
-                public Ambient Ambient = new Ambient();
+                public bool CheckForUpdates { get; set; }
+                public Roleplay Roleplay;
+                public Ambient AmbientEvents;
+                public Extensions Extensions;
                 public Callouts Callouts = new Callouts();
-                public Misc Misc = new Misc();
-            }
-
-            public class Roleplay
-            {
-                public bool Realism { get; set; }
-                public string OfficerName { get; set; }
-            }
-
-            public class Ambient
-            {
-                public bool Call { get; set; }
-                public bool Patrol { get; set; }
-                public bool TrafficStop { get; set; }
-                public bool PedestrianCrimes { get; set; }
             }
 
             public class Callouts
             {
                 public int MinRadius { get; set; }
                 public int MaxRadius { get; set; }
+
 
                 public bool AircraftCrash { get; set; }
                 public bool AnimalAttack { get; set; }
@@ -81,11 +97,6 @@ namespace ResponseV
                 public bool IllegalHunting { get; set; }
                 public bool OverKillLimit { get; set; }
                 public bool Poaching { get; set; }
-            }
-
-            public class Misc
-            {
-                public bool TrafficBackup { get; set; }
             }
         }
     }

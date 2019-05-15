@@ -14,7 +14,7 @@ namespace ResponseV.Callouts.Fed
     // The plot is where you respond to (usually code 2) and search the are for clues to where the attack will be
     // and detain anyone that's at the location, it's usually best to have other agents back you up
     [CalloutInfo("TerroristPlot", CalloutProbability.VeryHigh)]
-    public class TerroristPlot : Callout
+    internal class TerroristPlot : Callout
     {
         private Vector3 g_SpawnPoint;
 

@@ -15,26 +15,26 @@ using System.Reflection;
 
 namespace ResponseV.Callouts
 {
-    public class RVCallout : Callout
+    internal class CalloutBase : Callout
     {
-        public Logger g_Logger = new Logger();
+        protected Logger g_Logger = new Logger();
 
-        public Vector3 g_SpawnPoint;
+        protected Vector3 g_SpawnPoint;
 
-        public Blip g_CallBlip;
+        protected Blip g_CallBlip;
 
-        public bool g_bOnScene;
-        public bool g_bIsPursuit;
+        protected bool g_bOnScene;
+        protected bool g_bIsPursuit;
 
-        public List<Ped> g_Victims = new List<Ped>();
-        public List<Ped> g_Suspects = new List<Ped>();
+        protected List<Ped> g_Victims = new List<Ped>();
+        protected List<Ped> g_Suspects = new List<Ped>();
 
-        public Model[] g_PedModels = Model.PedModels.Where(p => !p.Name.StartsWith("A_C_")).ToArray();
-        public Model[] g_Vehicles = Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle && !v.IsEmergencyVehicle && !v.IsBigVehicle).ToArray();
+        protected Model[] g_PedModels = Model.PedModels.Where(p => !p.Name.StartsWith("A_C_")).ToArray();
+        protected Model[] g_Vehicles = Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle && !v.IsEmergencyVehicle && !v.IsBigVehicle).ToArray();
 
-        public Model[] g_PoliceVehicleModels = { "police", "police2", "police3", "police4", "sheriff", "sheriff2" };
+        protected Model[] g_PoliceVehicleModels = { "police", "police2", "police3", "police4", "sheriff", "sheriff2" };
 
-        public WeaponHash[] g_WeaponList = {
+        protected WeaponHash[] g_WeaponList = {
             WeaponHash.AdvancedRifle, WeaponHash.AssaultRifle, WeaponHash.CarbineRifle, // Assault Rifles
             WeaponHash.AssaultSMG, WeaponHash.MicroSMG, // SMGs
             WeaponHash.MG, WeaponHash.CombatMG, // LMGs
@@ -49,7 +49,10 @@ namespace ResponseV.Callouts
         {
             g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));
 
-            ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 25f);
+            if (g_SpawnPoint.DistanceTo(Game.LocalPlayer.Character.Position) <= 500)
+            {
+                ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 25f);
+            }
 
             return base.OnBeforeCalloutDisplayed();
         }

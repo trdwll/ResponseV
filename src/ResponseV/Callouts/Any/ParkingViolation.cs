@@ -5,7 +5,7 @@ using LSPD_First_Response.Mod.Callouts;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("ParkingViolation", CalloutProbability.VeryLow)]
-    public class ParkingViolation : RVCallout
+    internal class ParkingViolation : CalloutBase
     {
         private Vehicle m_Vehicle;
 

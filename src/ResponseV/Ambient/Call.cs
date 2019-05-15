@@ -9,7 +9,7 @@ using Rage;
 // Units responding to a call
 namespace ResponseV.Ambient
 {
-    public class Call
+    internal class Call
     {
         private List<Vehicle> g_Vehicles = new List<Vehicle>();
 

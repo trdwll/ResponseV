@@ -3,7 +3,7 @@ using Rage;
 
 namespace ResponseV
 {
-    public class Native
+    internal class Native
     {
         public static bool GetSafeCoordForPed(Vector3 Point, out Vector3 outPos)
         {

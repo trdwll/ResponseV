@@ -11,7 +11,7 @@ using WorldZone = ResponseV.GTAV.WorldZone;
 
 namespace ResponseV
 {
-    public class Utils
+    internal class Utils
     {
         private static Random RANDOM = new Random();
 
