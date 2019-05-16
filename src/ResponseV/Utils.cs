@@ -38,6 +38,15 @@ namespace ResponseV
             return RANDOM.NextDouble();
         }
 
+        public static T[] MergeArrays<T>(T[] array1, T[] array2)
+        {
+            T[] tmp = new T[array1.Length + array2.Length];
+            array1.CopyTo(tmp, 0);
+            array2.CopyTo(tmp, array1.Length);
+
+            return tmp;
+        }
+
         public static bool IsNight()
         {
             TimeSpan now = Rage.World.TimeOfDay;

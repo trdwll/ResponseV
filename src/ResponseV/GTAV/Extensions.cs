@@ -117,6 +117,17 @@ namespace ResponseV.GTAV
         }
 
         /// <summary>
+        /// Gets a random position inside the defined radius
+        /// </summary>
+        /// <param name="v3"></param>
+        /// <param name="radius">Radius</param>
+        /// <returns>a random position inside the defined radius</returns>
+        public static Vector3 AroundPosition(this Vector3 v3, float radius)
+        {
+            return v3 + new Vector3(MathHelper.GetRandomSingle(-radius, radius), MathHelper.GetRandomSingle(-radius, radius), 0.0f);
+        }
+
+        /// <summary>
         /// Returns the heading of the closest vehicle node
         /// </summary>
         /// <param name="v3"></param>

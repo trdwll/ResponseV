@@ -10,6 +10,7 @@ using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 
 using LSPD_First_Response.Engine.Scripting;
+using ResponseV.GTAV;
 
 namespace ResponseV.Callouts.Any
 {
@@ -18,13 +19,20 @@ namespace ResponseV.Callouts.Any
     {
         private Vehicle m_Vehicle;
 
-        private Model[] m_AirplaneModels = { };
-        private Model[] m_HelicopterModels = { };
+        private Model[] m_AirplaneModels = Model.VehicleModels.Where(v => v.IsPlane).ToArray();
+        private Model[] m_HelicopterModels = Model.VehicleModels.Where(v => v.IsHelicopter).ToArray();
 
         private bool m_bIsAirplane = Utils.GetRandBool();
+        private bool m_bIsExploded = Utils.GetRandBool();
+
+        private GameFiber m_ExplosionFiber;
 
         public override bool OnBeforeCalloutDisplayed()
         {
+            Vector3[] HeliSpawns = Utils.MergeArrays(SpawnPoints.m_AirplaneCrashSpawnPoints, SpawnPoints.m_HelicopterCrashSpawnPoints);
+
+            g_SpawnPoint = m_bIsAirplane ? Utils.GetRandValue(SpawnPoints.m_AirplaneCrashSpawnPoints) : Utils.GetRandValue(HeliSpawns);
+
             CalloutMessage = "Reports of an " + (m_bIsAirplane ? Utils.GetRandValue("Aircraft", "Airplane") : "Helicopter") + " Crash";
             CalloutPosition = g_SpawnPoint;
 
@@ -40,22 +48,38 @@ namespace ResponseV.Callouts.Any
         public override bool OnCalloutAccepted()
         {
             m_Vehicle = new Vehicle((m_bIsAirplane ? Utils.GetRandValue(m_AirplaneModels) : Utils.GetRandValue(m_HelicopterModels)), g_SpawnPoint);
+            m_Vehicle.IsPersistent = true;
 
-            End();
 
-            //GameFiber.StartNew(delegate
-            //{
-            //    GameFiber.Sleep(10000);
+            int max_vics = MathHelper.GetRandomInteger(4, 10);
+            for (int i = 0; i < max_vics; i++)
+            {
+                Vector3 pos = Extensions.AroundPosition(g_SpawnPoint, Utils.GetRandInt(25, 60));
+                g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), pos, Utils.GetRandInt(0, 360)));
+            }
 
-            //    LSPDFR.RequestBackup(g_SpawnPoint, 2);
+            g_Victims.ForEach(v =>
+            {
+                v.ApplyDamagePack(DamagePack.BigHitByVehicle, Utils.GetRandInt(50, 100), 0.0f);
+                v.IsPersistent = true;
 
-            //    GameFiber.Sleep(1000);
-            //    LSPDFR.RequestEMS(g_SpawnPoint);
+                if (Utils.GetRandBool())
+                {
+                    v.Kill();
+                }
+            });
 
-            //    GameFiber.Sleep(1000);
-            //    LSPDFR.RequestFire(g_SpawnPoint);
-                
-            //});
+            GameFiber.StartNew(delegate
+            {
+                LSPDFR.RequestBackup(g_SpawnPoint, 2);
+
+                GameFiber.Sleep(10000);
+                LSPDFR.RequestEMS(g_SpawnPoint);
+
+                GameFiber.Sleep(1000);
+                LSPDFR.RequestFire(g_SpawnPoint);
+
+            }, "AircraftCrashBackupFiber");
 
             return base.OnCalloutAccepted();
         }
@@ -66,20 +90,49 @@ namespace ResponseV.Callouts.Any
 
             if (g_bOnScene)
             {
-                // spawn plane/heli
-                // spawn peds and kill
-                // decorate peds with blood
+                if (m_bIsExploded)
+                {
+                    m_Vehicle.Explode(true);
+                }
+
+                g_Suspects.ForEach(v =>
+                {
+                    if (v.IsAlive)
+                    {
+                        v.Tasks.Flee(v, Utils.GetRandInt(10, 25), 6);
+                    }
+                });
+
+                SceneCreation();
             }
         }
 
         void SceneCreation()
         {
-
+            // spawn fire
+            g_Logger.Log("AircraftCrash: SceneCreation");
+            m_ExplosionFiber = GameFiber.StartNew(delegate
+            {
+                if (m_bIsExploded)
+                {
+                    for (int i = 0; i < Utils.GetRandInt(5, 12); i++)
+                    {
+                        World.SpawnExplosion(Extensions.AroundPosition(g_SpawnPoint, Utils.GetRandInt(25, 60)), Utils.GetRandValue(3, 6, 9), Utils.GetRandInt(5, 12), false, false, 0.0f);
+                    }
+                }
+                
+            }, "AircraftCrashFireFiber");
         }
 
         public override void End()
         {
-            m_Vehicle.Dismiss();
+            GameFiber.StartNew(delegate
+            {
+                GameFiber.Sleep(30000);
+                m_Vehicle.Delete();
+            });
+
+            m_ExplosionFiber?.Abort();
 
             base.End();
         }

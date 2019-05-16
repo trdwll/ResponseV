@@ -47,7 +47,10 @@ namespace ResponseV.Callouts
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));
+            if (g_SpawnPoint == new Vector3(0.0f, 0.0f, 0.0f))
+            {
+                g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));
+            }
 
             if (g_SpawnPoint.DistanceTo(Game.LocalPlayer.Character.Position) <= 500)
             {

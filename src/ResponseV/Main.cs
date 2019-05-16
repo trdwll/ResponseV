@@ -34,8 +34,6 @@ namespace ResponseV
                 Game.DisplayNotification(WelcomeMessage);
             }
 
-            
-
             if (Configuration.config.CheckForUpdates)
             {
                 m_UpdateAvailable = Updater.CheckForUpdates();

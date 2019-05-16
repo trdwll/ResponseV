@@ -5,7 +5,7 @@ namespace ResponseV.GTAV
     internal class SpawnPoints
     {
         // TODO: Add spawnpoints on the lake near Trevor's house
-        public static readonly Vector3[] BlaineNearWaterSpawnPoints = 
+        public static readonly Vector3[] BlaineNearWaterSpawnPoints =
         {
             // dam
             //Vinewood Hills, Lake Vinewood Est
@@ -189,9 +189,6 @@ namespace ResponseV.GTAV
 
         public static readonly Vector3[] LosSantosNearWaterSpawnPoints =
         {
-            //
-            //Pacific Ocean, Bay City Ave
-
             //
             //Pacific Ocean, Red Desert Ave
             new Vector3(-1252.286f, -1838.032f, 1.650646f),
@@ -557,6 +554,123 @@ namespace ResponseV.GTAV
             //new Vector3(-532.0417f, -1531.54f, 0.8166721f),
             //new Vector3(-497.0389f, -1550.402f, 0.8214154f),
             //new Vector3(-465.1331f, -1567.832f, 0.8182413f),
+        };
+
+        public static readonly Vector3[] m_AirplaneCrashSpawnPoints =
+        {
+            //
+            //Los Santos International Airport, Greenwich Pkwy
+            new Vector3(-1325.271f, -2206.473f, 13.6515f),
+            new Vector3(-1351.604f, -2249.536f, 13.6325f),
+            new Vector3(-1379.459f, -2297.119f, 13.62973f),
+            new Vector3(-1422.119f, -2366.419f, 13.62782f),
+            new Vector3(-1468.354f, -2447.271f, 13.62585f),
+            new Vector3(-1511.891f, -2522.614f, 13.62356f),
+            new Vector3(-1574.65f, -2626.166f, 13.62324f),
+            new Vector3(-1621.138f, -2706.486f, 13.62222f),
+            new Vector3(-1676.964f, -2799.6f, 13.62238f),
+            new Vector3(-1725.607f, -2883.792f, 13.62309f),
+            new Vector3(-1676.969f, -2862.719f, 13.62712f),
+            new Vector3(-1627.039f, -2784.977f, 13.62707f),
+            new Vector3(-1558.713f, -2755.204f, 13.6356f),
+            new Vector3(-1305.693f, -2227.65f, 14.49358f),
+            new Vector3(-1350.527f, -2302.514f, 14.48476f),
+            new Vector3(-1399.365f, -2388.668f, 14.4638f),
+            new Vector3(-1430.972f, -2444.786f, 14.48245f),
+            new Vector3(-1479.137f, -2529.465f, 14.44114f),
+            new Vector3(-1525.808f, -2609.47f, 14.48315f),
+            new Vector3(-1567.34f, -2679.698f, 14.46758f),
+            new Vector3(-1566.117f, -2798.204f, 13.6481f),
+            new Vector3(-1582.471f, -2848.825f, 13.98293f),
+            new Vector3(-1603.414f, -2906.59f, 13.62707f),
+            new Vector3(-1578.405f, -3004.605f, 13.63565f),
+            new Vector3(-1520.225f, -3042.178f, 13.63144f),
+            new Vector3(-1479.09f, -3051.644f, 13.63066f),
+            new Vector3(-1446.184f, -3081.993f, 13.63119f),
+            new Vector3(-1402.542f, -3109.816f, 13.62708f),
+            new Vector3(-1353.148f, -3129.598f, 13.62616f),
+            new Vector3(-1280.371f, -3174.005f, 13.62572f),
+            new Vector3(-1193.258f, -3225.782f, 13.62547f),
+            new Vector3(-1142.238f, -3260.804f, 13.62395f),
+            new Vector3(-1089.96f, -3282.683f, 13.62471f),
+            new Vector3(-1029.229f, -3324.423f, 13.62336f),
+            new Vector3(-955.7508f, -3361.332f, 13.62375f),
+            new Vector3(-860.994f, -3361.354f, 13.84475f),
+            new Vector3(-880.644f, -3307.54f, 13.94193f),
+            new Vector3(-855.3543f, -3220.57f, 13.64944f),
+            new Vector3(-905.4816f, -3192.577f, 13.63266f),
+            new Vector3(-989.5089f, -3147.044f, 13.62691f),
+            new Vector3(-1079.985f, -3098.052f, 13.62558f),
+            new Vector3(-1170.504f, -3043.837f, 13.6238f),
+            new Vector3(-1231.496f, -3009.827f, 13.62347f),
+            new Vector3(-1298.485f, -2974.962f, 13.62252f),
+            new Vector3(-1378.536f, -2921.766f, 13.62443f),
+            new Vector3(-1458.111f, -2877.884f, 13.6223f),
+            new Vector3(-1524.498f, -2838.778f, 13.62497f),
+            new Vector3(-1537.243f, -2884.539f, 14.04712f),
+            new Vector3(-1458.021f, -2933.213f, 13.99349f),
+            new Vector3(-1377.218f, -2979.014f, 13.59319f),
+            new Vector3(-1315.657f, -3009.069f, 13.97856f),
+            new Vector3(-1265.266f, -3041.456f, 13.59302f),
+            new Vector3(-1207.817f, -3078.423f, 13.73454f),
+            new Vector3(-1098.43f, -3151.392f, 13.96907f),
+            new Vector3(-1028.034f, -3197.355f, 13.52383f),
+            new Vector3(-950.6411f, -3235.465f, 13.98791f),
+            new Vector3(-972.0344f, -3295.545f, 13.72967f),
+            new Vector3(-1064.49f, -3245.011f, 13.95991f),
+            new Vector3(-1129.377f, -3207.001f, 13.97675f),
+            new Vector3(-1203.841f, -3169.449f, 14.03312f),
+            new Vector3(-1263.418f, -3127.983f, 13.98441f),
+            new Vector3(-1349.718f, -3080.91f, 13.97244f),
+            new Vector3(-1410.262f, -3039.238f, 13.62189f),
+            new Vector3(-1450.13f, -3011.136f, 13.98437f),
+            new Vector3(-1518.122f, -2979.756f, 13.99352f), 
+
+            //
+            //Los Santos International Airport, Runway1
+            new Vector3(-1637.804f, -2650.468f, 14.75312f),
+            new Vector3(-1621.348f, -2612.45f, 14.06867f),
+            new Vector3(-1593.865f, -2565.684f, 14.11228f),
+            new Vector3(-1553.052f, -2499.232f, 14.34495f),
+            new Vector3(-1521.302f, -2437.637f, 13.98019f),
+            new Vector3(-1492.718f, -2382.667f, 13.67361f),
+            new Vector3(-1469.073f, -2342.673f, 13.7318f),
+            new Vector3(-1440.615f, -2294.041f, 13.74485f),
+            new Vector3(-1417.234f, -2251.051f, 13.6228f),
+            new Vector3(-1393.885f, -2214.502f, 13.63388f),
+            new Vector3(-1724.44f, -2813.519f, 14.82041f), 
+
+            //
+            //Grand Senora Desert, Panorama Dr
+            new Vector3(1686.904f, 3247.257f, 40.52492f),
+            new Vector3(1634.322f, 3234.117f, 40.0839f),
+            new Vector3(1582.915f, 3219.741f, 40.094f),
+            new Vector3(1523.596f, 3204.232f, 40.09095f),
+            new Vector3(1452.627f, 3187.082f, 40.09277f),
+            new Vector3(1394.341f, 3171.315f, 40.09397f),
+            new Vector3(1325.004f, 3153.926f, 40.09348f),
+            new Vector3(1261.391f, 3137.955f, 40.10025f),
+            new Vector3(1208.114f, 3124.393f, 40.10724f),
+            new Vector3(1149.08f, 3107.303f, 40.09652f),
+            new Vector3(1069.295f, 3083.506f, 40.51984f),
+            new Vector3(1014.806f, 3069.071f, 40.50319f),
+            new Vector3(1083.898f, 3016.966f, 40.78072f),
+            new Vector3(1143.32f, 3039.574f, 40.06263f),
+            new Vector3(1214.435f, 3054.435f, 40.21726f),
+            new Vector3(1286.289f, 3070.771f, 40.21603f),
+            new Vector3(1358.608f, 3088.684f, 40.21491f),
+            new Vector3(1427.568f, 3106.157f, 40.22897f),
+            new Vector3(1493.407f, 3123.082f, 40.2141f),
+            new Vector3(1548.883f, 3137.429f, 40.21556f),
+        };
+
+        public static readonly Vector3[] m_HelicopterCrashSpawnPoints =
+        {
+            //
+            //Los Santos International Airport, Runway1
+            new Vector3(-1179.134f, -2845.629f, 13.65284f),
+            new Vector3(-1145.796f, -2864.16f, 13.65404f),
+            new Vector3(-1112.338f, -2883.984f, 13.65461f), 
         };
     }
 }
