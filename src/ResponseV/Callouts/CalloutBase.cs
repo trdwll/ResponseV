@@ -25,6 +25,7 @@ namespace ResponseV.Callouts
 
         protected bool g_bOnScene;
         protected bool g_bIsPursuit;
+        protected bool g_bCustomSpawn;
 
         protected List<Ped> g_Victims = new List<Ped>();
         protected List<Ped> g_Suspects = new List<Ped>();
@@ -47,15 +48,17 @@ namespace ResponseV.Callouts
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            if (g_SpawnPoint == new Vector3(0.0f, 0.0f, 0.0f))
+            if (g_SpawnPoint == new Vector3(0.0f, 0.0f, 0.0f) && !g_bCustomSpawn)
             {
                 g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));
             }
 
-            if (g_SpawnPoint.DistanceTo(Game.LocalPlayer.Character.Position) <= 500)
+            // if (g_SpawnPoint.DistanceTo(Game.LocalPlayer.Character.Position) <= 500)
             {
                 ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 25f);
             }
+
+            g_Logger.Log($"CalloutBase: Spawn Point {g_SpawnPoint.ToString()}");
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -70,7 +73,7 @@ namespace ResponseV.Callouts
             g_CallBlip.EnableRoute(System.Drawing.Color.Blue);
             g_CallBlip.Color = System.Drawing.Color.Blue;
 
-            g_Logger.Log("RVCallout: Callout was accepted");
+            g_Logger.Log("CalloutBase: Callout was accepted");
 
             return base.OnCalloutAccepted();
         }
@@ -88,14 +91,16 @@ namespace ResponseV.Callouts
             {
                 g_bOnScene = true;
                 g_CallBlip.IsRouteEnabled = false;
-                g_Logger.Log("RVCallout: DistanceTo(g_SpawnPoint) < 35 so hide g_CallBlip");
+                g_Logger.Log("CalloutBase: DistanceTo(g_SpawnPoint) < 35 so hide g_CallBlip");
+
+                Utils.NotifyPlayerTo("Dispatch", Utils.GetRandValue("I'm on scene.", "on scene"));
             }
 
             if (Game.LocalPlayer.IsDead)
             {
                 Functions.PlayScannerAudio($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_DOWN)} OFFICER_NEEDS_IMMEDIATE_ASSISTANCE");
                 End();
-                g_Logger.Log("RVCallout: Player is dead so force end call.");
+                g_Logger.Log("CalloutBase: Player is dead so force end call.");
             }
         }
 
@@ -105,7 +110,7 @@ namespace ResponseV.Callouts
 
             try
             {
-                g_Logger.Log("RVCallout: Callout ended");
+                g_Logger.Log("CalloutBase: Callout ended");
 
                 g_CallBlip?.Delete();
 
@@ -114,6 +119,7 @@ namespace ResponseV.Callouts
 
                 g_bOnScene = false;
                 g_bIsPursuit = false;
+                g_bCustomSpawn = false;
             }
             catch (Exception e)
             {

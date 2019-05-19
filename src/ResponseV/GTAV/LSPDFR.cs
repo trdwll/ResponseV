@@ -50,6 +50,7 @@ namespace ResponseV
             if (Main.g_bArrestManager)
             {
                 Arrest_Manager.API.Functions.CallCoroner(location, true);
+                Utils.NotifyPlayerTo("Dispatch", Utils.GetRandValue("send a coroner.", "we need a coroner."));
             }
         }
 
@@ -70,6 +71,7 @@ namespace ResponseV
             public static readonly string[] PARKING = { "CRIME_ILLEGAL_PARKING_01", "CRIME_ILLEGAL_PARKING_02", "PARKING_VIOLATION" };
             public static readonly string[] VEHICLE_FIRE = { "CRIME_CAR_FIRE_01", "CRIME_CAR_FIRE_02", "CRIME_CAR_FIRE_03" };
             public static readonly string[] ARMED_CAR_ROBBERY = { "CRIME_ARMED_CAR_ROBBERY_01", "CRIME_ARMED_CAR_ROBBERY_02" };
+            public static readonly string[] ANIMAL_ATTACK = { "CITIZENS_REPORT_01" };
 
             public static string GetRandomSound(string[] sounds)
             {

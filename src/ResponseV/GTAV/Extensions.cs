@@ -7,11 +7,35 @@ using System.IO;
 
 using Rage;
 using Rage.Native;
+using LSPD_First_Response.Mod.Callouts;
+using LSPD_First_Response.Engine.Scripting;
 
 namespace ResponseV.GTAV
 {
     internal static class Extensions
     {
+        public static void MakePedReadyToSwim(Ped p)
+        {
+            NativeFunction.Natives.SET_PED_DIES_IN_WATER(p, false);
+            NativeFunction.Natives.SET_PED_MAX_TIME_IN_WATER(p, 10000);
+            NativeFunction.Natives.SET_PED_MAX_TIME_UNDERWATER(p, 10000);
+            NativeFunction.Natives.SET_PED_DIES_INSTANTLY_IN_WATER(p, false);
+            NativeFunction.Natives.xF35425A4204367EC(p, true); // SET_PED_PATHS_WIDTH_PLANT or SET_PED_PATH_MAY_ENTER_WATER
+            NativeFunction.Natives.SET_PED_PATH_PREFER_TO_AVOID_WATER(p, false);
+        }
+
+        public static Callout getCurrentRunningCallout()
+        {
+            foreach (Callout callout in ScriptComponent.GetAllByType<Callout>())
+            {
+                if (callout != null && callout.AcceptanceState == CalloutAcceptanceState.Running)
+                {
+                    return callout;
+                }
+            }
+            return null;
+        }
+
         #region alexguirre
         // Credits to alexguirre
         public enum EWorldArea

@@ -6,7 +6,21 @@ using System.Threading.Tasks;
 
 namespace ResponseV.Callouts.Any
 {
-    class AssaultOnOfficer
+    internal class AssaultOnOfficer : CalloutBase
     {
+        public override bool OnBeforeCalloutDisplayed()
+        {
+            return base.OnBeforeCalloutDisplayed();
+        }
+
+        public override bool OnCalloutAccepted()
+        {
+            return base.OnCalloutAccepted();
+        }
+
+        public override void Process()
+        {
+            base.Process();
+        }
     }
 }

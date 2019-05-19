@@ -18,6 +18,8 @@ namespace ResponseV
         public static bool m_bCheckingEMS = false;
         public static bool m_bEMSOnScene = false;
 
+        public static GameFiber m_CheckEMSFiber;
+
         public static int GetRandInt(int min, int max)
         {
             return RANDOM.Next(min, max);
@@ -120,34 +122,44 @@ namespace ResponseV
         {
             m_bEMSOnScene = false;
             m_bCheckingEMS = true;
-            GameFiber CheckEMSFiber = GameFiber.StartNew(delegate
+            m_CheckEMSFiber = GameFiber.StartNew(delegate
             {
                 while (!m_bEMSOnScene)
                 {
                     GameFiber.Yield();
                     List<Vehicle> vehicles = Game.LocalPlayer.Character.GetNearbyVehicles(16).ToList();
 
-                    vehicles.ForEach(v =>
+                    // can't use break in a lambda :(
+                    foreach (Vehicle v in vehicles)
                     {
                         if (v.Model.Name == "AMBULANCE")
                         {
                             m_bEMSOnScene = true;
                             Main.MainLogger.Log($"{CalloutName} Utils.CheckEMSOnScene: EMS is on scene");
+                            Notify($"{GetRandValue("EMS", "Med", "Medic", "RA")}-{GetRandInt(1, 100)} on scene Dispatch.");
+                            break;
                         }
-                    });
+                    }
 
-                    GameFiber.Sleep(10000);
-                    Main.MainLogger.Log($"{CalloutName} Utils.CheckEMSOnScene: Checking for nearby EMS");
+                    if (m_bEMSOnScene)
+                    {
+                        if (m_CheckEMSFiber.IsAlive)
+                        {
+                            m_CheckEMSFiber.Abort();
+                            Main.MainLogger.Log($"{CalloutName} Utils.CheckEMSOnScene: Aborted CheckEMSFiber");
+                        }
+
+                        break;
+                    }
+                    else
+                    {
+                        GameFiber.Sleep(10000);
+                        Main.MainLogger.Log($"{CalloutName} Utils.CheckEMSOnScene: Checking for nearby EMS");
+                    }
                     vehicles.Clear();
                 }
 
             }, "CheckEMSFiber");
-
-            if (m_bEMSOnScene && CheckEMSFiber.IsAlive)
-            {
-                CheckEMSFiber.Abort();
-                Main.MainLogger.Log($"{CalloutName} Utils.CheckEMSOnScene: Aborted CheckEMSFiber");
-            }
         }
     }
 }

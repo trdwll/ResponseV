@@ -24,13 +24,17 @@ namespace ResponseV.Callouts.Any
 
         private bool m_bIsAirplane = Utils.GetRandBool();
         private bool m_bIsExploded = Utils.GetRandBool();
+        private bool m_bSceneSetup;
 
         private GameFiber m_ExplosionFiber;
 
         public override bool OnBeforeCalloutDisplayed()
         {
+            g_bCustomSpawn = true;
+
             Vector3[] HeliSpawns = Utils.MergeArrays(SpawnPoints.m_AirplaneCrashSpawnPoints, SpawnPoints.m_HelicopterCrashSpawnPoints);
 
+            // TODO: if in blaine then choose from blaine points
             g_SpawnPoint = m_bIsAirplane ? Utils.GetRandValue(SpawnPoints.m_AirplaneCrashSpawnPoints) : Utils.GetRandValue(HeliSpawns);
 
             CalloutMessage = "Reports of an " + (m_bIsAirplane ? Utils.GetRandValue("Aircraft", "Airplane") : "Helicopter") + " Crash";
@@ -47,9 +51,8 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_Vehicle = new Vehicle((m_bIsAirplane ? Utils.GetRandValue(m_AirplaneModels) : Utils.GetRandValue(m_HelicopterModels)), g_SpawnPoint);
+            m_Vehicle = new Vehicle(m_bIsAirplane ? Utils.GetRandValue(m_AirplaneModels) : Utils.GetRandValue(m_HelicopterModels), g_SpawnPoint);
             m_Vehicle.IsPersistent = true;
-
 
             int max_vics = MathHelper.GetRandomInteger(4, 10);
             for (int i = 0; i < max_vics; i++)
@@ -90,8 +93,9 @@ namespace ResponseV.Callouts.Any
 
             if (g_bOnScene)
             {
-                if (m_bIsExploded)
+                if (m_bIsExploded && !m_bSceneSetup)
                 {
+                    SceneCreation();
                     m_Vehicle.Explode(true);
                 }
 
@@ -100,27 +104,40 @@ namespace ResponseV.Callouts.Any
                     if (v.IsAlive)
                     {
                         v.Tasks.Flee(v, Utils.GetRandInt(10, 25), 6);
+                        v.KeepTasks = true;
                     }
                 });
 
-                SceneCreation();
+                if (!Utils.m_bCheckingEMS)
+                {
+                    g_Logger.Log("AircraftCrash: Checking for EMS");
+                    Utils.CheckEMSOnScene(g_SpawnPoint, "AircraftCrash");
+                }
+
+                if (Utils.m_bEMSOnScene)
+                {
+                    g_Logger.Log("AircraftCrash: EMS on Scene, end call.");
+                    if (g_Victims.Exists(v => v.IsDead))
+                    {
+                        LSPDFR.RequestCoroner(g_SpawnPoint);
+                    }
+
+                    End();
+                }
             }
         }
 
         void SceneCreation()
         {
-            // spawn fire
             g_Logger.Log("AircraftCrash: SceneCreation");
+            m_bSceneSetup = true;
             m_ExplosionFiber = GameFiber.StartNew(delegate
             {
-                if (m_bIsExploded)
+                for (int i = 0; i < Utils.GetRandInt(5, 12); i++)
                 {
-                    for (int i = 0; i < Utils.GetRandInt(5, 12); i++)
-                    {
-                        World.SpawnExplosion(Extensions.AroundPosition(g_SpawnPoint, Utils.GetRandInt(25, 60)), Utils.GetRandValue(3, 6, 9), Utils.GetRandInt(5, 12), false, false, 0.0f);
-                    }
+                    World.SpawnExplosion(Extensions.AroundPosition(g_SpawnPoint, Utils.GetRandInt(5, 15)), Utils.GetRandValue(3, 6, 9), Utils.GetRandInt(5, 12), false, false, 0.0f);
                 }
-                
+
             }, "AircraftCrashFireFiber");
         }
 

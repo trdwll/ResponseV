@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 
 /**
- * This class isn't implementing the RVCallout abstract class due to issues with Functions.GetCalloutName(Functions.GetCurrentCallout())
+ * This class isn't implementing the CalloutBase abstract class due to issues with Functions.GetCalloutName(Functions.GetCurrentCallout())
  */
 namespace ResponseV.Callouts.Fed
 {
