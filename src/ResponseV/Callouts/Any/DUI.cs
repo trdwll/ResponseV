@@ -67,9 +67,9 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(m_Suspect) > 300 && g_bOnScene)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(m_Suspect) > 400 && g_bOnScene)
             {
-                g_Logger.Log("DUI: Suspect got away (your distance from the suspect was greater than 300), end call");
+                g_Logger.Log("DUI: Suspect got away (your distance from the suspect was greater than 400), end call");
                 Utils.Notify("Suspect got away.");
                 End();
             }

@@ -13,5 +13,27 @@ namespace ResponseV
         {
             return Updater.m_AppVersion;
         }
+
+
+        public class Callout
+        {
+            /// <summary>
+            /// Request a game warden to the scene
+            /// </summary>
+            /// <param name="location"></param>
+            public static void RequestGameWarden(Rage.Vector3 location)
+            {
+                Callouts.Roles.GameWarden.Request(location);
+            }
+
+            /// <summary>
+            /// Request animal control to the scene
+            /// </summary>
+            /// <param name="location"></param>
+            public static void RequestAnimalControl(Rage.Vector3 location)
+            {
+                Callouts.Roles.AnimalControl.Request(location);
+            }
+        }
     }
 }

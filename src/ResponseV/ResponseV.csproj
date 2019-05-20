@@ -113,12 +113,15 @@
     <Compile Include="Callouts\Fed\TerroristPlot.cs" />
     <Compile Include="Callouts\Fed\UnionDepository.cs" />
     <Compile Include="Callouts\Any\GangActivity.cs" />
+    <Compile Include="Callouts\Roles\AnimalControl.cs" />
+    <Compile Include="Callouts\Roles\GameWarden.cs" />
     <Compile Include="Callouts\LSSD\PrisonBreak.cs" />
     <Compile Include="Callouts\LSSD\PrisonRiot.cs" />
     <Compile Include="Callouts\Nature\AnimalVsVehicle.cs" />
     <Compile Include="Callouts\Nature\IllegalHunting.cs" />
     <Compile Include="Callouts\Nature\OverKillLimit.cs" />
     <Compile Include="Callouts\Nature\Poaching.cs" />
+    <Compile Include="Callouts\Roles\RoleBase.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="GTAV\DamagePacks.cs" />

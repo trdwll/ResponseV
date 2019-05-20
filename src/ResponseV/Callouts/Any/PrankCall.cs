@@ -39,7 +39,7 @@ namespace ResponseV.Callouts.Any
                 break;
             case ECallType.CT_DROWNING:
                 // TODO: Get the nearest one to the player rather than having it spawn 4m away lol
-                m_SpawnPoint = LocalPos.GetArea() == Extensions.EWorldArea.Blaine_County ? Utils.GetRandValue(SpawnPoints.BlaineNearWaterSpawnPoints) : Utils.GetRandValue(SpawnPoints.LosSantosNearWaterSpawnPoints);
+                m_SpawnPoint = LocalPos.GetArea() == Extensions.EWorldArea.Blaine_County ? Utils.GetRandValue(SpawnPoints.BlaineDrowningSpawnPoints) : Utils.GetRandValue(SpawnPoints.LosSantosDrowningSpawnPoints);
                 Main.MainLogger.Log($"PrankCall: SpawnPoint fixed for drowning.");
                 break;
             }

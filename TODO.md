@@ -2,6 +2,7 @@
 - Extract audio from GTAV for the callouts
 - Optimize, Optimize, and Optimize!
 - Logging for pretty much everything
+- Allow players to change dialog
 
 
 # Callouts

@@ -55,13 +55,13 @@ namespace ResponseV
             // Rage.GameFiber AmbientEvents = Rage.GameFiber.StartNew(new System.Threading.ThreadStart(AmbientEvent.Initialize), "AmbientEventsFiber");
 
             // Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash)); // needs more testing and work
-            Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack));
+            // Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack)); // needs more testing and work
             //Functions.RegisterCallout(typeof(Callouts.Any.Assault));
             //Functions.RegisterCallout(typeof(Callouts.Any.AssaultOnOfficer));
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedMurder));
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedSuicide));
             //Functions.RegisterCallout(typeof(Callouts.Any.BarFight));
-            //Functions.RegisterCallout(typeof(Callouts.Any.BeachParty));
+            Functions.RegisterCallout(typeof(Callouts.Any.BeachParty));
             // Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
             //Functions.RegisterCallout(typeof(Callouts.Any.Drowning));
             //Functions.RegisterCallout(typeof(Callouts.Any.DrugBust));

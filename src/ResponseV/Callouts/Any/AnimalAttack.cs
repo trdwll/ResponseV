@@ -53,11 +53,10 @@ namespace ResponseV.Callouts.Any
 
             if (g_bOnScene)
             {
-                // TODO: call for Animal Control (add this in or use a 3rd party plugin)
-                // Utils.NotifyPlayerTo("Dispatch", Utils.GetRandValue("notify animal control.", "I need animal control on scene."));
-
                 if (m_Victim.IsInjured || m_Victim.IsDead)
                 {
+                    LSPDFR.RequestEMS(g_SpawnPoint);
+
                     g_Logger.Log("AnimalAttack: On scene and victim is injured/dead so call EMS");
                     if (!Utils.m_bCheckingEMS)
                     {
@@ -76,10 +75,12 @@ namespace ResponseV.Callouts.Any
                         End();
                     }
                 }
-                //else
-                //{
-                //    End();
-                //}
+                else
+                {
+                    // TODO: call for Animal Control (add this in or use a 3rd party plugin)
+                    // Utils.NotifyPlayerTo("Dispatch", Utils.GetRandValue("notify animal control.", "I need animal control on scene.")); 
+                    End();
+                }
             }
         }
 

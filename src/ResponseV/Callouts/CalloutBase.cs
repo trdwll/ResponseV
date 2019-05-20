@@ -15,7 +15,7 @@ using System.Reflection;
 
 namespace ResponseV.Callouts
 {
-    internal class CalloutBase : Callout
+    internal abstract class CalloutBase : Callout
     {
         protected Logger g_Logger = new Logger();
 
