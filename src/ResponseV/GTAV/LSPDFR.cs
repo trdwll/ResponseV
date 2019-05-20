@@ -53,23 +53,42 @@ namespace ResponseV
 
         public class Radio
         {
-            public static readonly string[] WE_HAVE = { "CITIZENS_REPORT_01", "CITIZENS_REPORT_02", "CITIZENS_REPORT_03", "CITIZENS_REPORT_04", "WE_HAVE_01", "WE_HAVE_02" };
-            public static readonly string[] OFFICERS_REPORT = { "OFFICERS_REPORT_01", "OFFICERS_REPORT_02", "OFFICERS_REPORT_03" };
-            public static readonly string[] GANG = { "CRIME_GANG_01", "CRIME_GANG_02", "CRIME_GANG_03", "CRIME_GANG_04", "CRIME_GANG_05" };
-            public static readonly string[] OVERDOSE = { "OVERDOSE_01", "OVERDOSE_02", "OVERDOSE_03", "OVERDOSE_04", "OVERDOSE_05" };
-            public static readonly string[] DUI = { "CRIME_DUI_01", "CRIME_DUI_02", "CRIME_DUI_03", "CRIME_DUI_04" };
-            public static readonly string[] AIRCRAFT_CRASH = { "CRIME_AIRCRAFT_CRASH_01", "CRIME_AIRCRAFT_CRASH_02", "CRIME_AIRCRAFT_CRASH_03" };
-            public static readonly string[] HELICOPTER_CRASH = { "CRIME_HELICOPTER_DOWN_01", "CRIME_HELICOPTER_DOWN_02" };
-            public static readonly string[] DEADBODY = { "DECEASED_PERSON_01", "DECEASED_PERSON_02" };
-            public static readonly string[] OFFICER_DOWN = { "CRIME_OFFICER_DOWN_01", "CRIME_OFFICER_DOWN_02", "CRIME_OFFICER_DOWN_03", "CRIME_OFFICER_DOWN_04" };
-            public static readonly string[] OFFICERS_DOWN = { "CRIME_MULTIPLE_OFFICERS_DOWN_01", "CRIME_MULTIPLE_OFFICERS_DOWN_02" };
-            public static readonly string[] OFFICER_SHOT = { "CRIME_OFFICER_HOMICIDE", "CRIME_OFFICER_HOMICIDE_02", "CRIME_OFFICER_FATALITY", "CRIME_OFFICER_SHOT", "CRIME_OFFICER_UNDER_FIRE", "CRIME_SHOTS_FIRED_OFFICER_01", "CRIME_SHOTS_FIRED_OFFICER_02", "CRIME_SHOTS_FIRED_OFFICER_03" };
-            public static readonly string[] SPEEDING = { "CRIME_SPEEDING_01", "CRIME_SPEEDING_02", "CRIME_SPEEDING_03" };
-            public static readonly string[] PARKING = { "CRIME_ILLEGAL_PARKING_01", "CRIME_ILLEGAL_PARKING_02", "PARKING_VIOLATION" };
-            public static readonly string[] VEHICLE_FIRE = { "CRIME_CAR_FIRE_01", "CRIME_CAR_FIRE_02", "CRIME_CAR_FIRE_03" };
-            public static readonly string[] ARMED_CAR_ROBBERY = { "CRIME_ARMED_CAR_ROBBERY_01", "CRIME_ARMED_CAR_ROBBERY_02" };
-            public static readonly string[] ANIMAL_ATTACK = { "CITIZENS_REPORT_01" };
-            public static readonly string[] BEACH_PARTY = { "CITIZENS_REPORT_01" };
+            public static readonly string[] WE_HAVE = { "0x0ACF391D", "0x1D1D5DBA", "0x1F72E264", "0x07F7F36D", "0x0662DE99", "0x1823821B" };
+            public static readonly string[] OFFICERS_REPORT = { "0x03E3086B", "0x1628ACF6", "0x128465AD" };
+
+            public static readonly string[] _1099 = { "0x02A890D4", "0x108A6C97", "0x029C50BE", "0x149B34B9" };
+            public static readonly string[] ACCIDENT = { "0x0AC0DB4B" };
+            public static readonly string[] AIRCRAFT_CRASH = { "0x04A51B94", "0x183EC2CD", "0x190D4464" };
+            public static readonly string[] AIRCRAFT_HELICOPTER_CRASH = { "0x1DB63742", "0x1F6ABAA8" };
+            public static readonly string[] ANIMAL_CRUELTY = { "0x12BA7967", "0x16DD41AE", "0x0383DAFA" };
+            public static readonly string[] ANIMAL_KILLED = { "0x0BAACC73", "0x0F3A9393" };
+            public static readonly string[] ARMED_AND_DANGEROUS = { "0x08E2DF46" };
+            public static readonly string[] ARMED_ROBBERY = { "0x1E842DC8", "0x07B6402C", "0x19F9E4B3" };
+            public static readonly string[] ARMORED_CAR_ROBBERY = { "0x0E8B5D1D", "0x1D40BA88" };
+            public static readonly string[] ARSON = { "0x040FE61D", "0x124D0298" };
+            public static readonly string[] ASSAULT = { "0x1E4332B2", "0x15AA986C", "0x058AC21E", "0x0458F5C8", "0x1009963F" };
+            public static readonly string[] ASSAULT_BATTERY = { "0x0C4A5075", "0x1AF12DC3" };
+            public static readonly string[] ASSAULT_DEADLY_WEAPON = { "0x0B1C964E", "0x0C3E8856", "0x1E1A2C0D", "0x032B7620", "0x1909F229" };
+            public static readonly string[] ASSAULT_ON_OFFICER = { "0x1F80BD56", "0x05D1A54E", "0x162AEAAA", "0x11374E1D" };
+            public static readonly string[] ASSAULT_ON_OFFICER_KNIFE = { "0x18674968" };
+            public static readonly string[] ATTACK_ON_VEHICLE = { "0x0BCD234E", "0x05B29DBA" };
+            public static readonly string[] ATTEMPTED_MURDER = { "0x0AFA345E", "0x1A5C9323", "0x137F395C" };
+            public static readonly string[] ATTEMPTED_SUICIDE = { "0x1AE16488", "0x08A0C007", "0x037FB5C7", "0x0765BD91", "0x1141114A" };
+            public static readonly string[] BANK_ROBBERY = { "0x0D703F9D", "0x1B249B06", "0x18C2D609", "0x08797576", "0x12590970" };
+            public static readonly string[] BATTERY = { "0x13C5AA66", "0x039009FB" };
+            public static readonly string[] BREAKING_AND_ENTERING = { "0x0FDFC35A", "0x1E81A09D", "0x061DEFD6", "0x13790A8D" };
+            public static readonly string[] BURGLARY = { "0x065CDE1D" };
+            public static readonly string[] CAR_FIRE = { "0x18138D5F", "0x065069D8", "0x13964464" };
+            public static readonly string[] CIV_DOWN = { "0x0320C921", "0x00445298" };
+            public static readonly string[] CIV_GSW = { "0x0382F686", "0x15439A09", "0x11579233" };
+            public static readonly string[] CIV_NEEDS_ASSISTANCE = { "0x0B380179", "0x09EF3EE7" };
+            public static readonly string[] CIV_ON_FIRE = { "0x0CCE003C" };
+            public static readonly string[] CIVIL_DISTURBANCE = { "0x16A9B4AA" };
+
+
+
+
+
 
             public static string GetRandomSound(string[] sounds)
             {
