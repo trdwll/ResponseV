@@ -6,7 +6,7 @@ using LSPD_First_Response.Mod.Callouts;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("IndecentExposure", CalloutProbability.Low)]
-    internal class IndecentExposure : CalloutBase
+    internal sealed class IndecentExposure : CalloutBase
     {
         public override bool OnBeforeCalloutDisplayed()
         {

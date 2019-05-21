@@ -29,7 +29,7 @@ namespace ResponseV
 
             if (Configuration.config.Roleplay.RealismEnabled)
             {
-                string Area = GTAV.Extensions.GetAreaName(Rage.Game.LocalPlayer.Character.Position);
+                string Area = GTAV.WorldZone.GetAreaName(Rage.Game.LocalPlayer.Character.Position);
                 string WelcomeMessage = $"Welcome {Configuration.config.Roleplay.OfficerName}, to the " + (Utils.IsNight() ? "night" : "day") + $" shift in {Area}. Stay safe out there.";
                 Game.DisplayNotification(WelcomeMessage);
             }
@@ -61,7 +61,7 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedMurder));
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedSuicide));
             //Functions.RegisterCallout(typeof(Callouts.Any.BarFight));
-            Functions.RegisterCallout(typeof(Callouts.Any.BeachParty));
+            //Functions.RegisterCallout(typeof(Callouts.Any.BeachParty));
             // Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
             //Functions.RegisterCallout(typeof(Callouts.Any.Drowning));
             //Functions.RegisterCallout(typeof(Callouts.Any.DrugBust));
@@ -87,7 +87,7 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
             //Functions.RegisterCallout(typeof(Callouts.Any.SearchWarrant));
             //Functions.RegisterCallout(typeof(Callouts.Any.SexOffender));
-            // Functions.RegisterCallout(typeof(Callouts.Any.SpeedingVehicle));
+            Functions.RegisterCallout(typeof(Callouts.Any.SpeedingVehicle));
             //Functions.RegisterCallout(typeof(Callouts.Any.StreetPerformerFight));
             //Functions.RegisterCallout(typeof(Callouts.Any.SuspiciousItem));
             //Functions.RegisterCallout(typeof(Callouts.Any.Trespassing));

@@ -7,7 +7,7 @@ using ResponseV.GTAV;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("OfficerDown", CalloutProbability.Low)]
-    internal class OfficerDown : CalloutBase
+    internal sealed class OfficerDown : CalloutBase
     {
         private LHandle m_Pursuit;
 

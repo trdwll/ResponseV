@@ -5,17 +5,17 @@ using Rage;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("AnimalAttack", CalloutProbability.VeryHigh)]
-    internal class AnimalAttack : CalloutBase
+    internal sealed class AnimalAttack : CalloutBase
     {
         private Ped m_Animal;
         private Ped m_Victim;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = $"Reports of an animal attack";
+            CalloutMessage = $"Reports of {Utils.GetRandValue("an animal attack", "vicious animal", "vicious animal on the loose")}";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.ANIMAL_ATTACK)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.VICIOUS_ANIMAL)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

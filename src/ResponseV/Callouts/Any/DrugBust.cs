@@ -1,6 +1,6 @@
 ﻿namespace ResponseV.Callouts.Any
 {
-    internal class DrugBust
+    internal sealed class DrugBust
     {
     }
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("BeachParty", CalloutProbability.VeryHigh)]
-    internal class BeachParty : CalloutBase
+    internal sealed class BeachParty : CalloutBase
     {
         public override bool OnBeforeCalloutDisplayed()
         {
@@ -22,7 +22,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = $"Reports of a beach party";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.BEACH_PARTY)} IN_OR_ON_POSITION", g_SpawnPoint);
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

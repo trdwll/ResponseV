@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResponseV.Callouts.Roles
 {
-    internal class AnimalControl : RoleBase
+    internal sealed class AnimalControl : RoleBase
     {
         public static void Request(Rage.Vector3 location)
         {

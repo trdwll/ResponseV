@@ -7,7 +7,7 @@ using LSPD_First_Response.Mod.Callouts;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("SpeedingVehicle", CalloutProbability.VeryHigh)]
-    internal class SpeedingVehicle : CalloutBase
+    internal sealed class SpeedingVehicle : CalloutBase
     {
         private Vehicle m_Vehicle;
         private LHandle m_Pursuit;
@@ -35,6 +35,8 @@ namespace ResponseV.Callouts.Any
             m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), g_SpawnPoint);
             m_Driver = m_Vehicle.CreateRandomDriver();
             g_Suspects.Add(m_Driver);
+
+            m_Vehicle.AnnounceVehicleDetails();
 
             m_SpeedingVehicleBlip = m_Vehicle.AttachBlip();
             m_SpeedingVehicleBlip.Color = System.Drawing.Color.Green;

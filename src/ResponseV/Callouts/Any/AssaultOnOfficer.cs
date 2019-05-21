@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResponseV.Callouts.Any
 {
-    internal class AssaultOnOfficer : CalloutBase
+    internal sealed class AssaultOnOfficer : CalloutBase
     {
         public override bool OnBeforeCalloutDisplayed()
         {

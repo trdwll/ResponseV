@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 // z=65.63
 namespace ResponseV.Callouts.Any
 {
-    class SexOffender
+    internal sealed class SexOffender
     {
     }
 }

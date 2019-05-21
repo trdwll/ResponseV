@@ -12,7 +12,7 @@ using LSPD_First_Response.Engine.Scripting;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("GangActivity", CalloutProbability.VeryHigh)]
-    internal class GangActivity : Callout
+    internal sealed class GangActivity : Callout
     {
         private Vector3 g_SpawnPoint;
  
@@ -28,12 +28,29 @@ namespace ResponseV.Callouts.Any
 
             ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 25f);
 
-            CalloutMessage = "Reports of Gang Activity";
+            string str = "";
+            string radio = "";
+            int rand = MathHelper.GetRandomInteger(3);
+            if (rand == 1)
+            {
+                str = "Gang Activity";
+                radio = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.GANG_ACTIVITY);
+            }
+            else if (rand == 2)
+            {
+                str = "Gang Disturbance";
+                radio = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.GANG_DISTURBANCE);
+            }
+            else
+            {
+                str = "Gang Violence";
+                radio = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.GANG_VIOLENCE);
+            }
+
+            CalloutMessage = $"Reports of {str}";
             CalloutPosition = g_SpawnPoint;
             
-            Functions.PlayScannerAudioUsingPosition(
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " +
-                $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.GANG)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {radio} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

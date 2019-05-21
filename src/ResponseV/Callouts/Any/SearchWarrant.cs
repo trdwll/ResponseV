@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResponseV.Callouts.Any
 {
-    class SearchWarrant
+    internal sealed class SearchWarrant
     {
     }
 }

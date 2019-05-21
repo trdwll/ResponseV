@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 // Multi jurisdiction (FBI ...)
 namespace ResponseV.Callouts.Any
 {
-    class Pursuit
+    internal sealed class Pursuit
     {
     }
 }

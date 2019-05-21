@@ -7,7 +7,7 @@ using Rage;
 
 namespace ResponseV.Callouts.Any
 {
-    class GraffitiArtist
+    internal sealed class GraffitiArtist
     {
         private Model[] m_PedModels = { "u_m_m_streetart_01" };
     }

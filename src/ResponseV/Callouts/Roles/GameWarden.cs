@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResponseV.Callouts.Roles
 {
-    internal class GameWarden : RoleBase
+    internal sealed class GameWarden : RoleBase
     {
         public static void Request(Rage.Vector3 location)
         {

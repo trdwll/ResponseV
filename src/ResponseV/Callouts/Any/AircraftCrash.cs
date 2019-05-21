@@ -15,7 +15,7 @@ using ResponseV.GTAV;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("AircraftCrash", CalloutProbability.VeryHigh)]
-    internal class AircraftCrash : CalloutBase
+    internal sealed class AircraftCrash : CalloutBase
     {
         private Vehicle m_Vehicle;
 

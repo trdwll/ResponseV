@@ -1,6 +1,6 @@
 ﻿namespace ResponseV.Callouts.Nature
 {
-    internal class OverKillLimit
+    internal sealed class OverKillLimit
     {
     }
 }

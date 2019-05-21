@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResponseV.Callouts.Fed
 {
-    internal class Forgery
+    internal sealed class Forgery
     {
     }
 }

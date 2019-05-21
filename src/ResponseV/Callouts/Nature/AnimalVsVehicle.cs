@@ -1,6 +1,6 @@
 ﻿namespace ResponseV.Callouts.Nature
 {
-    internal class AnimalVsVehicle
+    internal sealed class AnimalVsVehicle
     {
     }
 }

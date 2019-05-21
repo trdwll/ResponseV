@@ -13,7 +13,7 @@ using LSPD_First_Response.Engine.Scripting;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("DeadBody", CalloutProbability.VeryHigh)]
-    internal class DeadBody : CalloutBase
+    internal sealed class DeadBody : CalloutBase
     {
         public override bool OnBeforeCalloutDisplayed()
         {

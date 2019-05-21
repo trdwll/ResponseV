@@ -34,6 +34,11 @@ namespace ResponseV
             {
                 Callouts.Roles.AnimalControl.Request(location);
             }
+
+            public static void Notify1099(Rage.Vector3 location)
+            {
+
+            }
         }
     }
 }

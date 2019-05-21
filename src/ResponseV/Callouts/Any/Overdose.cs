@@ -7,7 +7,7 @@ using System.Linq;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("Overdose", CalloutProbability.Medium)]
-    internal class Overdose : CalloutBase
+    internal sealed class Overdose : CalloutBase
     {
         public override bool OnBeforeCalloutDisplayed()
         {

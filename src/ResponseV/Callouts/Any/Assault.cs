@@ -1,6 +1,6 @@
 ﻿namespace ResponseV.Callouts.Any
 {
-    internal class Assault : CalloutBase
+    internal sealed class Assault : CalloutBase
     {
         public override bool OnBeforeCalloutDisplayed()
         {

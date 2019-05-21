@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResponseV.Callouts.Nature
 {
-    internal class IllegalHunting
+    internal sealed class IllegalHunting
     {
     }
 }

@@ -5,7 +5,7 @@ using LSPD_First_Response.Mod.Callouts;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("VehicleFire", CalloutProbability.Medium)]
-    internal class VehicleFire : CalloutBase
+    internal sealed class VehicleFire : CalloutBase
     {
         private Vehicle m_Vehicle;
 

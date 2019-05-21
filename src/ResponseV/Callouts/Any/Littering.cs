@@ -1,6 +1,6 @@
 ﻿namespace ResponseV.Callouts.Any
 {
-    internal class Littering
+    internal sealed class Littering
     {
     }
 }

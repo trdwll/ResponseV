@@ -14,6 +14,38 @@ namespace ResponseV.GTAV
 {
     internal static class Extensions
     {
+        public static readonly int[] BlackListedNodeTypes = new int[] { 0, 8, 9, 10, 12, 40, 42, 136 };
+
+        public static int GetNearestNodeType(this Vector3 pos)
+        {
+            uint node_prop_p1;
+            int found_node_type;
+            bool get_property_success = NativeFunction.Natives.GET_VEHICLE_NODE_PROPERTIES<bool>(pos.X, pos.Y, pos.Z, out node_prop_p1, out found_node_type);
+
+            return get_property_success ? found_node_type : -1;
+        }
+
+        public static bool IsNodeSafe(this Vector3 pos)
+        {
+            return !BlackListedNodeTypes.Contains(GetNearestNodeType(pos));
+        }
+
+        public static bool IsPointOnWater(this Vector3 position)
+        {
+            float height;
+            return NativeFunction.Natives.GET_WATER_HEIGHT<bool>(position.X, position.Y, position.Z, out height);
+        }
+
+        public static void RegisterHatedTargetsAroundPed(this Ped ped, float radius)
+        {
+            Rage.Native.NativeFunction.Natives.REGISTER_HATED_TARGETS_AROUND_PED(ped, radius);
+        }
+
+        public static float DistanceTo(this Vector3 start, Vector3 end)
+        {
+            return (end - start).Length();
+        }
+
         public static void MakePedReadyToSwim(Ped p)
         {
             NativeFunction.Natives.SET_PED_DIES_IN_WATER(p, false);
@@ -24,7 +56,7 @@ namespace ResponseV.GTAV
             NativeFunction.Natives.SET_PED_PATH_PREFER_TO_AVOID_WATER(p, false);
         }
 
-        public static Callout getCurrentRunningCallout()
+        public static Callout GetCurrentRunningCallout()
         {
             foreach (Callout callout in ScriptComponent.GetAllByType<Callout>())
             {
@@ -35,111 +67,7 @@ namespace ResponseV.GTAV
             }
             return null;
         }
-
-        #region alexguirre
-        // Credits to alexguirre
-        public enum EWorldArea
-        {
-            Los_Santos = -289320599,
-            Blaine_County = 2072609373,
-            Oceana = 385094880,
-        }
-
-        public enum EWorldZone
-        {
-            NULL,
-            PROL,
-            AIRP,
-            ALAMO,
-            ALTA,
-            ARMYB,
-            BANHAMC,
-            BANNING,
-            BEACH,
-            BHAMCA,
-            BRADP,
-            BRADT,
-            BURTON,
-            CALAFB,
-            CANNY,
-            CCREAK,
-            CHAMH,
-            CHIL,
-            CHU,
-            CMSW,
-            CYPRE,
-            DAVIS,
-            DELBE,
-            DELPE,
-            DELSOL,
-            DESRT,
-            DOWNT,
-            DTVINE,
-            EAST_V,
-            EBURO,
-            ELGORL,
-            ELYSIAN,
-            GALFISH,
-            golf,
-            GRAPES,
-            GREATC,
-            HARMO,
-            HAWICK,
-            HORS,
-            HUMLAB,
-            JAIL,
-            KOREAT,
-            LACT,
-            LAGO,
-            LDAM,
-            LEGSQU,
-            LMESA,
-            LOSPUER,
-            MIRR,
-            MORN,
-            MOVIE,
-            MTCHIL,
-            MTGORDO,
-            MTJOSE,
-            MURRI,
-            NCHU,
-            NOOSE,
-            OCEANA,
-            PALCOV,
-            PALETO,
-            PALFOR,
-            PALHIGH,
-            PALMPOW,
-            PBLUFF,
-            PBOX,
-            PROCOB,
-            RANCHO,
-            RGLEN,
-            RICHM,
-            ROCKF,
-            RTRAK,
-            SanAnd,
-            SANCHIA,
-            SANDY,
-            SKID,
-            SLAB,
-            STAD,
-            STRAW,
-            TATAMO,
-            TERMINA,
-            TEXTI,
-            TONGVAH,
-            TONGVAV,
-            VCANA,
-            VESP,
-            VINE,
-            WINDF,
-            WVINE,
-            ZANCUDO,
-            ZP_ORT,
-            ZQ_UAR
-        }
-
+        
         /// <summary>
         /// Gets a random position inside the defined radius
         /// </summary>
@@ -166,7 +94,6 @@ namespace ResponseV.GTAV
             return outHeading;
         }
 
-
         /// <summary>
         /// Gets the heading towards an entity
         /// </summary>
@@ -178,7 +105,6 @@ namespace ResponseV.GTAV
             return GetHeadingTowards(spatial, towards.Position);
         }
 
-
         /// <summary>
         /// Gets the heading towards a position
         /// </summary>
@@ -189,7 +115,6 @@ namespace ResponseV.GTAV
         {
             return GetHeadingTowards(spatial.Position, towardsPosition);
         }
-
 
         /// <summary>
         /// Gets the heading towards an entity
@@ -268,56 +193,6 @@ namespace ResponseV.GTAV
                 ped.Kill();
             }
         }
-
-        /// <summary>
-        /// Returns the enum of the area
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns>the name of the area</returns>
-        public static EWorldArea GetArea(this Vector3 position)
-        {
-            return WorldZone.GetArea(position);
-        }
-        /// <summary>
-        /// Returns the name of the zone
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns>the name of the zone</returns>
-        public static string GetAreaName(this Vector3 position)
-        {
-            return WorldZone.GetAreaName(WorldZone.GetArea(position));
-        }
-
-        /// <summary>
-        /// Returns the enum of the zone
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns>the name of the zone</returns>
-        public static EWorldZone GetZone(this Vector3 position)
-        {
-            return WorldZone.GetZone(position);
-        }
-
-        /// <summary>
-        /// Returns the name of the zone
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns>the name of the zone</returns>
-        public static string GetZoneName(this Vector3 position)
-        {
-            return WorldZone.GetZoneName(WorldZone.GetZone(position));
-        }
-
-        /// <summary>
-        /// Gets the street name
-        /// </summary>
-        /// <param name="position">Position</param>
-        /// <returns>the street name</returns>
-        public static string GetStreetName(this Vector3 position)
-        {
-            return World.GetStreetName(position);
-        }
-        #endregion alexguirre
     }
 
     // Credits to Albo1125 for these extensions 

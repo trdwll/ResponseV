@@ -9,7 +9,7 @@ using ResponseV.GTAV;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("PrankCall", CalloutProbability.VeryHigh)]
-    internal class PrankCall : Callout
+    internal sealed class PrankCall : Callout
     {
         private Vector3 m_SpawnPoint;
 
@@ -39,7 +39,7 @@ namespace ResponseV.Callouts.Any
                 break;
             case ECallType.CT_DROWNING:
                 // TODO: Get the nearest one to the player rather than having it spawn 4m away lol
-                m_SpawnPoint = LocalPos.GetArea() == Extensions.EWorldArea.Blaine_County ? Utils.GetRandValue(SpawnPoints.BlaineDrowningSpawnPoints) : Utils.GetRandValue(SpawnPoints.LosSantosDrowningSpawnPoints);
+                m_SpawnPoint = LocalPos.GetArea() == GTAV.WorldZone.EWorldArea.Blaine_County ? Utils.GetRandValue(SpawnPoints.BlaineDrowningSpawnPoints) : Utils.GetRandValue(SpawnPoints.LosSantosDrowningSpawnPoints);
                 Main.MainLogger.Log($"PrankCall: SpawnPoint fixed for drowning.");
                 break;
             }

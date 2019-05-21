@@ -12,7 +12,7 @@ using LSPD_First_Response.Engine.Scripting;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("Robbery", CalloutProbability.VeryHigh)]
-    internal class Robbery : CalloutBase
+    internal sealed class Robbery : CalloutBase
     {
         private Vehicle m_Vehicle;
         private LHandle m_Pursuit;

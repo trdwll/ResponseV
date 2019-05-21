@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Arrest Manager">
@@ -125,14 +127,15 @@
     <Compile Include="Callouts\Roles\RoleBase.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="GTAV\DamagePacks.cs" />
-    <Compile Include="GTAV\Extensions.cs" />
+    <Compile Include="GTAV\Extensions\DamagePacks.cs" />
+    <Compile Include="GTAV\Extensions\Extensions.cs" />
+    <Compile Include="GTAV\Extensions\VehicleExtensions.cs" />
     <Compile Include="GTAV\SpawnPoints.cs" />
-    <Compile Include="GTAV\WorldZone.cs" />
+    <Compile Include="GTAV\Extensions\WorldZone.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="GTAV\LSPDFR.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="GTAV\Native.cs" />
+    <Compile Include="GTAV\Extensions\Native.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GTAV\RageMethods.cs" />
     <Compile Include="Serialization.cs" />

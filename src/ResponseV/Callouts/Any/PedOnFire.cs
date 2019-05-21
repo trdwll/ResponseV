@@ -5,7 +5,7 @@ using LSPD_First_Response.Mod.Callouts;
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("PedOnFire", CalloutProbability.VeryHigh)]
-    internal class PedOnFire : CalloutBase
+    internal sealed class PedOnFire : CalloutBase
     {
         private bool m_bCallPursuit = Utils.GetRandBool();
         private bool m_bSpawnedFire;

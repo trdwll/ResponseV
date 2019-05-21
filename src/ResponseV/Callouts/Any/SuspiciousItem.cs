@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResponseV.Callouts.Any
 {
-    class SuspiciousItem
+    internal sealed class SuspiciousItem
     {
     }
 }

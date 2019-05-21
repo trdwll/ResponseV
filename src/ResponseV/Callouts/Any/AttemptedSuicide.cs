@@ -1,6 +1,6 @@
 ﻿namespace ResponseV.Callouts.Any
 {
-    internal class AttemptedSuicide : CalloutBase
+    internal sealed class AttemptedSuicide : CalloutBase
     {
         public override bool OnBeforeCalloutDisplayed()
         {

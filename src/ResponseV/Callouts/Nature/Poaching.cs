@@ -1,6 +1,6 @@
 ﻿namespace ResponseV.Callouts.Nature
 {
-    internal class Poaching
+    internal sealed class Poaching
     {
     }
 }
