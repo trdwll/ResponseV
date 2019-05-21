@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using ResponseV.Ambient;
 using Rage;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace ResponseV
 {
@@ -15,6 +17,8 @@ namespace ResponseV
         public static bool g_bBetterEMS;
         public static bool g_bArrestManager;
         public static bool g_bTrafficPolicer;
+
+        public static List<GameFiber> g_GameFibers = new List<GameFiber>();
 
         private static bool m_UpdateAvailable;
 
@@ -29,7 +33,7 @@ namespace ResponseV
 
             if (Configuration.config.Roleplay.RealismEnabled)
             {
-                string Area = GTAV.WorldZone.GetAreaName(Rage.Game.LocalPlayer.Character.Position);
+                string Area = GTAV.WorldZoneMethods.GetAreaName(Rage.Game.LocalPlayer.Character.Position);
                 string WelcomeMessage = $"Welcome {Configuration.config.Roleplay.OfficerName}, to the " + (Utils.IsNight() ? "night" : "day") + $" shift in {Area}. Stay safe out there.";
                 Game.DisplayNotification(WelcomeMessage);
             }
@@ -39,9 +43,14 @@ namespace ResponseV
                 m_UpdateAvailable = Updater.CheckForUpdates();
             }
 
-            if (Configuration.config.Extensions.TurnWheels)
+            if (Configuration.config.Plugins.TurnWheels)
             {
-                TurnWheels();
+                Plugins.TurnWheels.TurnWheelsImpl();
+            }
+
+            if (Configuration.config.Plugins.KeepDoorOpen)
+            {
+                Plugins.KeepDoorOpen.KeepDoorOpenImpl();
             }
         }
 
@@ -138,7 +147,26 @@ namespace ResponseV
             });
         }
 
-        public override void Finally() { }
+        public override void Finally()
+        {
+            MainLogger.Log("Shutting down.");
+
+            foreach (GameFiber fiber in g_GameFibers)
+            {
+                if (fiber.IsAlive)
+                {
+                    MainLogger.Log($"Aborting GameFiber '{fiber.Name}'");
+                    fiber.Abort();
+                }
+            }
+
+            g_GameFibers.Clear();
+
+            //foreach (ProcessThread thread in Process.GetCurrentProcess().Threads)
+            //{
+            //    thread.Dispose();
+            //}
+        }
 
         public static Assembly LSPDFR(object sender, ResolveEventArgs e)
         {
@@ -157,45 +185,6 @@ namespace ResponseV
             {
                 e.Graphics.DrawText($"Version {Updater.m_VersionAvailable?.ToString()} Available!", "Verdana", 10.0f, new System.Drawing.PointF(2f, 12f), System.Drawing.Color.Orange);
             }
-        }
-
-        private void TurnWheels()
-        {
-            MainLogger.Log("TurnWheels: Initialized");
-            float SteeringAngle = 0f;
-            GameFiber.StartNew(delegate
-            {
-                for (;;)
-                {
-                    GameFiber.Yield();
-                    try
-                    {
-                        Vehicle LastVehicle = Game.LocalPlayer.Character.LastVehicle;
-                        if (LastVehicle && LastVehicle.Speed == 0f)
-                        {
-                            if (LastVehicle.SteeringAngle > 20f)
-                            {
-                                SteeringAngle = 40f;
-                            }
-                            else if (LastVehicle.SteeringAngle < -20f)
-                            {
-                                SteeringAngle = -40f;
-                            }
-                            else if (LastVehicle.SteeringAngle > 5f || LastVehicle.SteeringAngle < -5f)
-                            {
-                                SteeringAngle = LastVehicle.SteeringAngle;
-                            }
-
-                            LastVehicle.SteeringAngle = SteeringAngle;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MainLogger.Log($"TurnWheels: {ex.Message}");
-                        Utils.CrashNotify();
-                    }
-                }
-            });
         }
     }
 }

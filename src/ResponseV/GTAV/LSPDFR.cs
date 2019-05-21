@@ -54,11 +54,21 @@ namespace ResponseV
 
         public static void AnnounceVehicleDetails(this Vehicle vehicle)
         {
-            string SoundName = $"MODEL_{vehicle.Model.Name.ToUpper()}_01";
+            GameFiber.StartNew(delegate 
+            {
+                GameFiber.Sleep(3000);
+                string SoundName = $"MODEL_{vehicle.Model.Name.ToUpper()}_01";
 
-            Functions.PlayScannerAudio(SoundName);
+                Functions.PlayScannerAudio(SoundName);
 
-            Main.MainLogger.Log($"AnnounceVehicleDetails - Name: {vehicle.Model.Name.ToUpper()}, Color: {vehicle.PrimaryColor.ToString()}");
+                // string VehicleColor = GTAV.VehicleExtensions.GetColors(vehicle).PrimaryColor;
+
+                string VehicleColor = vehicle.PrimaryColor.Name;
+
+                string str = $"AnnounceVehicleDetails - Name: {vehicle.Model.Name.ToUpper()}, Color: {VehicleColor}, SoundName: {SoundName}";
+                Utils.Notify(str);
+                Main.MainLogger.Log(str);
+            });
         }
 
         public class Radio
@@ -66,6 +76,7 @@ namespace ResponseV
             public static readonly string[] WE_HAVE = { "0x0ACF391D", "0x1D1D5DBA", "0x1F72E264", "0x07F7F36D", "0x0662DE99", "0x1823821B" };
             public static readonly string[] OFFICERS_REPORT = { "0x03E3086B", "0x1628ACF6", "0x128465AD" };
 
+            // Crime
             public static readonly string[] _1099 = { "0x02A890D4", "0x108A6C97", "0x029C50BE", "0x149B34B9" };
             public static readonly string[] ACCIDENT = { "0x0AC0DB4B" };
             public static readonly string[] AIRCRAFT_CRASH = { "0x04A51B94", "0x183EC2CD", "0x190D4464" };
@@ -221,6 +232,7 @@ namespace ResponseV
             public static readonly string[] VICIOUS_ANIMAL = { "0x03A4A365", "0x00029C1B" };
             public static readonly string[] WARRANT_ISSUED = { "0x09926678" };
 
+            // Weapons
             public static readonly string[] RPG = { "0x1F6F3AA8", "0x01007DCB" };
             public static readonly string[] GRENADE_LAUNCHER = { "0x00FE11D6", "0x0EDCED90" };
             public static readonly string[] EXPLOSIVE = { "0x0B56F594", "0x1A8453EF", "0x01948EA6" };
@@ -238,6 +250,45 @@ namespace ResponseV
             public static readonly string[] FIREARM = { "0x10B1C1E8", "0x164D0D1F" };
             public static readonly string[] ASSAULT_RIFLE = { "0x087FD323" };
             public static readonly string[] ASSAULT_SHOTGUN = { "0x0872CE5F", "0x133223DD" };
+
+            // Speeds
+            public static readonly string DOING_40 = "0x1CCDF2A2";
+            public static readonly string DOING_50 = "0x13559E06";
+            public static readonly string DOING_60 = "0x18545449";
+            public static readonly string DOING_70 = "0x0EB2AEE4";
+            public static readonly string DOING_80 = "0x1A1E8187";
+            public static readonly string DOING_90 = "0x1F166F61";
+            public static readonly string DOING_100 = "0x082AF3B3";
+            public static readonly string DOING_100_PLUS = "0x10BF0162";
+
+            // Misc
+            public static readonly string[] ALL_IN_CUSTODY = { "0x0DAB6838", "0x1BD6048E", "0x08CC5E87" };
+
+            // Ages
+            public static readonly string AGE_YOUNG = "0x057E03E3";
+            public static readonly string AGE_TEENAGER = "0x1D5268E6";
+            public static readonly string AGE_EARLY_20 = "0x028E8E07";
+            public static readonly string AGE_EARLY_30 = "0x18ECC893";
+            public static readonly string AGE_EARLY_40 = "0x1F9A8632";
+            public static readonly string AGE_EARLY_50 = "0x00617E13";
+            public static readonly string AGE_LATE_20 = "0x0F4F6D73";
+            public static readonly string AGE_LATE_30 = "0x1A9DE131";
+            public static readonly string AGE_LATE_40 = "0x1C74AC5A";
+            public static readonly string AGE_LATE_50 = "0x11BC4434";
+            public static readonly string AGE_MID_20 = "0x028E8E07";
+            public static readonly string AGE_MID_30 = "0x198138E7";
+            public static readonly string AGE_MID_40 = "0x16B57506";
+            public static readonly string AGE_MID_50 = "0x164F5F0E";
+            public static readonly string AGE_ELDERLY = "0x09B1D180";
+
+            // Ped Build
+            public static readonly string BUILD_ATHLETIC = "BUILD_ATHLETIC_01";
+            public static readonly string BUILD_AVERAGE = "BUILD_AVERAGE_01";
+            public static readonly string BUILD_HEAVY = "BUILD_HEAVY_01";
+            public static readonly string BUILD_MUSCULAR = "BUILD_MUSCULAR_01";
+            public static readonly string BUILD_OBESE = "BUILD_OBESE_01";
+            public static readonly string BUILD_SLENDER = "BUILD_SLENDER_01";
+            public static readonly string BUILD_THIN = "BUILD_THIN_01";
 
 
             public static string GetRandomSound(string[] sounds)

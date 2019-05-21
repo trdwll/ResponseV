@@ -174,7 +174,7 @@ namespace ResponseV.Callouts.Fed
         void Pursuit()
         {
             m_bIsPursuit = true;
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 m_Logger.Log("UnionDepository: Started pursuit");
                 m_Pursuit = Functions.CreatePursuit();
@@ -206,8 +206,10 @@ namespace ResponseV.Callouts.Fed
 
             }, "UnionDepositoryPursuitFiber");
 
+            Main.g_GameFibers.Add(fiber);
 
-            //GameFiber.StartNew(delegate
+
+            //GameFiber fiber2 = GameFiber.StartNew(delegate
             //{
             //    m_Logger.Log("UnionDepository: Checking nearby vehicles and turning on their lighting");
             //    for (;;)
@@ -249,6 +251,8 @@ namespace ResponseV.Callouts.Fed
             //        GameFiber.Sleep(10000);
             //    }
             //}, "UnionDepositoryPoliceLightingFiber");
+            
+            // Main.g_GameFibers.Add(fiber2);
         }
 
         public override void End()

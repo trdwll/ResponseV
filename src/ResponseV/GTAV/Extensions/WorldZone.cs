@@ -6,6 +6,58 @@ using static ResponseV.GTAV.Extensions;
 namespace ResponseV.GTAV
 {
     // Credits to alexguirre
+    internal static class WorldZoneMethods
+    {
+        /// <summary>
+        /// Returns the enum of the area
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns>the name of the area</returns>
+        public static WorldZone.EWorldArea GetArea(this Vector3 position)
+        {
+            return WorldZone.GetArea(position);
+        }
+        /// <summary>
+        /// Returns the name of the zone
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns>the name of the zone</returns>
+        public static string GetAreaName(this Vector3 position)
+        {
+            return WorldZone.GetAreaName(WorldZone.GetArea(position));
+        }
+
+        /// <summary>
+        /// Returns the enum of the zone
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns>the name of the zone</returns>
+        public static WorldZone.EWorldZone GetZone(this Vector3 position)
+        {
+            return WorldZone.GetZone(position);
+        }
+
+        /// <summary>
+        /// Returns the name of the zone
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns>the name of the zone</returns>
+        public static string GetZoneName(this Vector3 position)
+        {
+            return WorldZone.GetZoneName(WorldZone.GetZone(position));
+        }
+
+        /// <summary>
+        /// Gets the street name
+        /// </summary>
+        /// <param name="position">Position</param>
+        /// <returns>the street name</returns>
+        public static string GetStreetName(this Vector3 position)
+        {
+            return World.GetStreetName(position);
+        }
+    }
+
     internal static class WorldZone
     {
         public enum EWorldArea
@@ -111,63 +163,61 @@ namespace ResponseV.GTAV
         }
 
         /// <summary>
+        /// Returns the position zone, Los Santos or Blaine County
+        /// </summary>
+        /// <param name="position">Position</param>
+        /// <returns>the position zone </returns>
+        public static EWorldArea GetArea(Vector3 position)
+        {
+
+            EWorldArea zone = (EWorldArea)NativeFunction.Natives.x7ee64d51e8498728<int>(position.X, position.Y, position.Z); //GetMapZoneAtCoords
+            return zone;
+        }
+
+
+        /// <summary>
+        /// Returns the name of the zone
+        /// </summary>
+        /// <param name="position">Zone</param>
+        /// <returns>the name of the zone</returns>
+        public static EWorldZone GetZone(Vector3 Position)
+        {
+            string zoneId = (string)NativeFunction.Natives.GET_NAME_OF_ZONE<string>(Position.X, Position.Y, Position.Z);
+
+            EWorldZone result;
+            if (Enum.TryParse<EWorldZone>(zoneId, true, out result))
+            {
+                return result;
+            }
+            else
+            {
+                return EWorldZone.NULL;
+            }
+        }
+
+
+        ///// <summary>
+        ///// Returns a ExtendedPosition
+        ///// </summary>
+        ///// <param name="position">Position</param>
+        ///// <returns>a ExtendedPosition</returns>
+        //public static ExtendedPosition GetExtendedPosition(Vector3 position)
+        //{
+        //    ExtendedPosition z = new ExtendedPosition();
+        //    z.Position = position;
+        //    return z;
+        //}
+
+
+        /// <summary>
         /// Gets the area name
         /// </summary>
         /// <param name="area">Area</param>
         /// <returns>the area name</returns>
         public static string GetAreaName(EWorldArea area)
         {
-            string name = Enum.GetName(typeof(EWorldArea), area);
+            String name = Enum.GetName(typeof(EWorldArea), area);
             return name.Replace("_", " ");
-        }
-
-        /// <summary>
-        /// Returns the enum of the area
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns>the name of the area</returns>
-        public static EWorldArea GetArea(this Vector3 position)
-        {
-            return GetArea(position);
-        }
-        /// <summary>
-        /// Returns the name of the zone
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns>the name of the zone</returns>
-        public static string GetAreaName(this Vector3 position)
-        {
-            return GetAreaName(GetArea(position));
-        }
-
-        /// <summary>
-        /// Returns the enum of the zone
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns>the name of the zone</returns>
-        public static EWorldZone GetZone(this Vector3 position)
-        {
-            return GetZone(position);
-        }
-
-        /// <summary>
-        /// Returns the name of the zone
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns>the name of the zone</returns>
-        public static string GetZoneName(this Vector3 position)
-        {
-            return GetZoneName(GetZone(position));
-        }
-
-        /// <summary>
-        /// Gets the street name
-        /// </summary>
-        /// <param name="position">Position</param>
-        /// <returns>the street name</returns>
-        public static string GetStreetName(this Vector3 position)
-        {
-            return World.GetStreetName(position);
         }
 
         /// <summary>

@@ -136,6 +136,8 @@
     <Compile Include="GTAV\LSPDFR.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="GTAV\Extensions\Native.cs" />
+    <Compile Include="Plugins\KeepDoorOpen.cs" />
+    <Compile Include="Plugins\TurnWheels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GTAV\RageMethods.cs" />
     <Compile Include="Serialization.cs" />

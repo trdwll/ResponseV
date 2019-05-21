@@ -84,7 +84,7 @@ namespace ResponseV.Callouts.Any
         private void StartVehicleDUI()
         {
             g_Logger.Log("DUI: StartVehicleDUI Fiber");
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 try
                 {
@@ -103,10 +103,12 @@ namespace ResponseV.Callouts.Any
                 catch (System.Exception e)
                 {
                     Utils.CrashNotify();
-                    g_Logger.Log(e.Message, Logger.ELogLevel.LL_TRACE);
+                    g_Logger.Log(e.StackTrace, Logger.ELogLevel.LL_TRACE);
                     End();
                 }
-            });
+            }, "DUIStartVehicleDUIFiber");
+
+            Main.g_GameFibers.Add(fiber);
         }
 
         public override void End()

@@ -32,9 +32,10 @@ namespace ResponseV
                 public bool PedCrimes;
             }
 
-            public struct Extensions
+            public struct Plugins
             {
                 public bool TurnWheels { get; set; }
+                public bool KeepDoorOpen { get; set; }
             }
 
             public class RootObject
@@ -42,7 +43,7 @@ namespace ResponseV
                 public bool CheckForUpdates { get; set; }
                 public Roleplay Roleplay;
                 public Ambient AmbientEvents;
-                public Extensions Extensions;
+                public Plugins Plugins;
                 public Callouts Callouts = new Callouts();
             }
 

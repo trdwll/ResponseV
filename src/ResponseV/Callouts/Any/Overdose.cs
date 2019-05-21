@@ -40,11 +40,13 @@ namespace ResponseV.Callouts.Any
                 }
             });
 
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 GameFiber.Sleep(3000);
                 LSPDFR.RequestEMS(g_SpawnPoint);
             }, "OverdoseRequestEMSFiber");
+
+            Main.g_GameFibers.Add(fiber);
 
             return base.OnCalloutAccepted();
         }

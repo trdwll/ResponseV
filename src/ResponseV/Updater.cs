@@ -28,7 +28,7 @@ namespace ResponseV
             }
             catch (System.Net.NetworkInformation.NetworkInformationException ex)
             {
-                Main.MainLogger.Log(ex.Message, Logger.ELogLevel.LL_TRACE);
+                Main.MainLogger.Log(ex.StackTrace, Logger.ELogLevel.LL_TRACE);
             }
 
             return false;

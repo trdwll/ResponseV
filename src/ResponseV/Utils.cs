@@ -159,7 +159,9 @@ namespace ResponseV
                     vehicles.Clear();
                 }
 
-            }, "CheckEMSFiber");
+            }, $"{CalloutName}CheckEMSFiber");
+
+            Main.g_GameFibers.Add(m_CheckEMSFiber);
         }
     }
 }

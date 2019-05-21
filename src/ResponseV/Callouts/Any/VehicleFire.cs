@@ -29,13 +29,15 @@ namespace ResponseV.Callouts.Any
             g_Victims.Add(m_Vehicle.CreateRandomDriver());
             g_Victims.ForEach(v => v.Tasks.LeaveVehicle(m_Vehicle, LeaveVehicleFlags.LeaveDoorOpen));
 
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 GameFiber.Sleep(5000);
                 LSPDFR.RequestFire(g_SpawnPoint);
                 GameFiber.Sleep(2000);
                 LSPDFR.RequestEMS(g_SpawnPoint);
             }, "VehicleFireRequestEMSFireFiber");
+
+            Main.g_GameFibers.Add(fiber);
 
             return base.OnCalloutAccepted();
         }

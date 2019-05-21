@@ -79,7 +79,7 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("SpeedingVehicle: Started pursuit");
             g_bIsPursuit = true;
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
 
@@ -91,8 +91,10 @@ namespace ResponseV.Callouts.Any
                 Functions.SetPursuitIsActiveForPlayer(m_Pursuit, true);
 
                 GameFiber.Sleep(10000);
-                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 1, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
-            });
+                LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 2, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
+            }, "SpeedingVehicleFiber");
+
+            Main.g_GameFibers.Add(fiber);
         }
 
         public override void End()

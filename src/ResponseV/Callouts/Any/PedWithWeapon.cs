@@ -92,7 +92,7 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("PedWithWeapon: Create pursuit");
             g_bIsPursuit = true;
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
                 g_Suspects.ForEach(s =>
@@ -120,7 +120,9 @@ namespace ResponseV.Callouts.Any
                     GameFiber.Sleep(5000);
                     LSPDFR.RequestBackup(g_SpawnPoint, Utils.GetRandInt(1, 3), LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
                 }
-            });
+            }, "PedWithWeaponPursuitFiber");
+
+            Main.g_GameFibers.Add(fiber);
         }
     }
 }

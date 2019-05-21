@@ -72,7 +72,7 @@ namespace ResponseV.Callouts.Any
                 }
             });
 
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 LSPDFR.RequestBackup(g_SpawnPoint, 2);
 
@@ -83,6 +83,8 @@ namespace ResponseV.Callouts.Any
                 LSPDFR.RequestFire(g_SpawnPoint);
 
             }, "AircraftCrashBackupFiber");
+
+            Main.g_GameFibers.Add(fiber);
 
             return base.OnCalloutAccepted();
         }
@@ -139,15 +141,19 @@ namespace ResponseV.Callouts.Any
                 }
 
             }, "AircraftCrashFireFiber");
+
+            Main.g_GameFibers.Add(m_ExplosionFiber);
         }
 
         public override void End()
         {
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 GameFiber.Sleep(30000);
                 m_Vehicle.Delete();
             });
+
+            Main.g_GameFibers.Add(fiber);
 
             m_ExplosionFiber?.Abort();
 

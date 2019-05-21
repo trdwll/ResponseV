@@ -53,7 +53,7 @@ namespace ResponseV.Callouts.Any
                 }
             });
 
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 GameFiber.Sleep(6000);
                 g_Logger.Log("PedOnFire: Calling for EMS and Fire");
@@ -61,6 +61,8 @@ namespace ResponseV.Callouts.Any
                 GameFiber.Sleep(3000);
                 LSPDFR.RequestEMS(g_SpawnPoint);
             }, "PedOnFireRequestEMSFireFiber");
+
+            Main.g_GameFibers.Add(fiber);
 
             return base.OnCalloutAccepted();
         }
@@ -112,7 +114,7 @@ namespace ResponseV.Callouts.Any
 
             g_Logger.Log("PedOnFire: Starting pursuit");
 
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
 
@@ -130,6 +132,8 @@ namespace ResponseV.Callouts.Any
 
                 Functions.SetPursuitIsActiveForPlayer(m_Pursuit, true);
             }, "PedOnFirePursuitFiber");
+
+            Main.g_GameFibers.Add(fiber);
         }
     }
 }

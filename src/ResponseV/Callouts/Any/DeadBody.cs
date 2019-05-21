@@ -49,12 +49,14 @@ namespace ResponseV.Callouts.Any
                 v.Kill();
             });
 
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 GameFiber.Sleep(3000);
                 LSPDFR.RequestEMS(g_SpawnPoint);
                 LSPDFR.RequestBackup(g_SpawnPoint, 1);
             });
+            
+            Main.g_GameFibers.Add(fiber);
 
             return base.OnCalloutAccepted();
         }

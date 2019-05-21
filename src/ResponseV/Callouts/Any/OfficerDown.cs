@@ -152,7 +152,7 @@ namespace ResponseV.Callouts.Any
             g_Logger.Log("OfficerDown: Starting pursuit");
 
             g_bIsPursuit = true;
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
                 g_Suspects.ForEach(suspect =>
@@ -173,6 +173,8 @@ namespace ResponseV.Callouts.Any
                     LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 2, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
                 }
             }, "OfficerDownPursuitFiber");
+
+            Main.g_GameFibers.Add(fiber);
         }
 
         public override void End()

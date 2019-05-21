@@ -67,7 +67,7 @@ namespace ResponseV.Callouts.Any
         void Pursuit()
         {
             g_bIsPursuit = true;
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 m_Pursuit = Functions.CreatePursuit();
 
@@ -87,7 +87,9 @@ namespace ResponseV.Callouts.Any
 
                 GameFiber.Sleep(5000);
                 LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 3, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
-            });
+            }, "RobberyPursuitFiber");
+
+            Main.g_GameFibers.Add(fiber);
         }
     }
 }

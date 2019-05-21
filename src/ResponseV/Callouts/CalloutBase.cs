@@ -126,7 +126,7 @@ namespace ResponseV.Callouts
             catch (Exception e)
             {
                 Utils.CrashNotify();
-                g_Logger.Log(e.Message, Logger.ELogLevel.LL_TRACE);
+                g_Logger.Log(e.StackTrace, Logger.ELogLevel.LL_TRACE);
             }
         }
     }

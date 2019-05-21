@@ -37,7 +37,7 @@ namespace ResponseV.Callouts.Any
 
             m_SuspectBlip = m_Suspect.AttachBlip();
 
-            StartVehicleDUI();
+            RecklessDrivingFiber();
 
             if (Main.g_bTrafficPolicer && Utils.GetRandBool())
             {
@@ -66,10 +66,10 @@ namespace ResponseV.Callouts.Any
             }
         }
 
-        private void StartVehicleDUI()
+        private void RecklessDrivingFiber()
         {
-            g_Logger.Log("DUI: StartVehicleDUI Fiber");
-            GameFiber.StartNew(delegate
+            g_Logger.Log("RecklessDriving: StartVehicleReckless Fiber");
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 try
                 {
@@ -88,10 +88,12 @@ namespace ResponseV.Callouts.Any
                 catch (System.Exception e)
                 {
                     Utils.CrashNotify();
-                    g_Logger.Log(e.Message, Logger.ELogLevel.LL_TRACE);
+                    g_Logger.Log(e.StackTrace, Logger.ELogLevel.LL_TRACE);
                     End();
                 }
-            });
+            }, "RecklessDrivingFiber");
+
+            Main.g_GameFibers.Add(fiber);
         }
 
         public override void End()
