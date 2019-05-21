@@ -1,4 +1,7 @@
-﻿namespace ResponseV
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace ResponseV
 {
     internal class Logger
     {
@@ -14,13 +17,16 @@
 
         public Logger()
         {
+#if DEBUG
             if (System.IO.File.Exists(m_LogFile))
             {
                 System.IO.File.Delete(m_LogFile);
             }
+#endif
+            // TODO: if m_AppVersion > what's in the log then delete the log
 
             WriteLog("--------------------");
-            WriteLog($"ResponseV {Updater.m_AppVersion?.ToString()}");
+            WriteLog($"ResponseV v{Updater.m_AppVersion?.ToString()}");
             WriteLog("Initialized Log");
             WriteLog("--------------------");
         }

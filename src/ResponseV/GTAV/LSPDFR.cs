@@ -54,21 +54,35 @@ namespace ResponseV
 
         public static void AnnounceVehicleDetails(this Vehicle vehicle)
         {
-            GameFiber.StartNew(delegate 
+            GameFiber fiber = GameFiber.StartNew(delegate 
             {
+                GTAV.VehicleExtensions.RandomizeLicensePlate(vehicle);
                 GameFiber.Sleep(3000);
-                string SoundName = $"MODEL_{vehicle.Model.Name.ToUpper()}_01";
+
+                string VehicleName = vehicle.Model.Name.ToUpper();
+                string SoundName = $"MODEL_{VehicleName}_01";
 
                 Functions.PlayScannerAudio(SoundName);
 
-                // string VehicleColor = GTAV.VehicleExtensions.GetColors(vehicle).PrimaryColor;
+                string VehicleColor = GTAV.VehicleExtensions.GetColors(vehicle).PrimaryColorName;
+                string VehiclePlate = vehicle.LicensePlate;
 
-                string VehicleColor = vehicle.PrimaryColor.Name;
+                {
+                    string DispatchString = $"The RP reported the vehicle as a ~o~{VehicleName} ~s~in ~o~{VehicleColor} ~s~color.";
 
-                string str = $"AnnounceVehicleDetails - Name: {vehicle.Model.Name.ToUpper()}, Color: {VehicleColor}, SoundName: {SoundName}";
-                Utils.Notify(str);
-                Main.MainLogger.Log(str);
-            });
+                    if (Utils.GetRandBool())
+                    {
+                        DispatchString += $"~n~The RP also wrote down a plate ~o~{VehiclePlate}~s~.";
+                    }
+
+                    Utils.NotifyDispatchTo("Player", DispatchString);
+                }
+
+                Main.MainLogger.Log($"AnnounceVehicleDetails - Name: {VehicleName}, Color: {VehicleColor}, License Plate Full: {vehicle.LicensePlate}");
+
+            }, "AnnounceVehicleDetailsFiber");
+
+            Main.g_GameFibers.Add(fiber);
         }
 
         public class Radio
@@ -289,6 +303,42 @@ namespace ResponseV
             public static readonly string BUILD_OBESE = "BUILD_OBESE_01";
             public static readonly string BUILD_SLENDER = "BUILD_SLENDER_01";
             public static readonly string BUILD_THIN = "BUILD_THIN_01";
+
+
+            // ew
+            public static string GetSpeedSound(uint Speed)
+            {
+                if (Speed >= 50 && Speed < 60)
+                {
+                    return DOING_50;
+                }
+                else if (Speed >= 60 && Speed < 70)
+                {
+                    return DOING_60;
+                }
+                else if (Speed >= 70 && Speed < 80)
+                {
+                    return DOING_70;
+                }
+                else if (Speed >= 80 && Speed < 90)
+                {
+                    return DOING_80;
+                }
+                else if (Speed >= 90 && Speed < 100)
+                {
+                    return DOING_90;
+                }
+                else if (Speed == 100 && Speed < 105)
+                {
+                    return DOING_100;
+                }
+                else if (Speed >= 106)
+                {
+                    return DOING_100_PLUS;
+                }
+
+                return DOING_40;
+            }
 
 
             public static string GetRandomSound(string[] sounds)

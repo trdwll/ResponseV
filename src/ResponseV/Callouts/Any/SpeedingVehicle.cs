@@ -12,6 +12,8 @@ namespace ResponseV.Callouts.Any
         private Vehicle m_Vehicle;
         private LHandle m_Pursuit;
 
+        private uint m_Speed;
+
         private bool m_bIsPursuit = Utils.GetRandBool();
 
         private Ped m_Driver;
@@ -20,10 +22,12 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
+            m_Speed = (uint)MathHelper.GetRandomInteger(40, 120);
+
             CalloutMessage = "Reports of a speeding vehicle";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} {LSPDFR.Radio.GetSpeedSound(m_Speed)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -36,13 +40,12 @@ namespace ResponseV.Callouts.Any
             m_Driver = m_Vehicle.CreateRandomDriver();
             g_Suspects.Add(m_Driver);
 
-            m_Vehicle.AnnounceVehicleDetails();
 
             m_SpeedingVehicleBlip = m_Vehicle.AttachBlip();
             m_SpeedingVehicleBlip.Color = System.Drawing.Color.Green;
             m_SpeedingVehicleBlip.Scale = 0.5f;
 
-            // TODO: Notify a description, random will display license plate (partials), colors, etc
+            m_Vehicle.AnnounceVehicleDetails();
 
             return base.OnCalloutAccepted();
         }
@@ -54,7 +57,7 @@ namespace ResponseV.Callouts.Any
             if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 50 && !g_bOnScene)
             {
                 m_Vehicle.Driver.KeepTasks = true;
-                m_Vehicle.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(50, 80));
+                m_Vehicle.Driver.Tasks.CruiseWithVehicle(m_Speed);
             }
 
             if (g_bOnScene && !g_bIsPursuit)

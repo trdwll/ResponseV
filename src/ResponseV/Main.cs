@@ -126,7 +126,7 @@ namespace ResponseV
 
             Utils.Notify("Please wait around 30 seconds before going on patrol/receiving calls to allow Response~y~V~w~ to load fully.");
             // So we put it on a new thread so we can sleep for 20 seconds to allow other plugins to be loaded fully before we start messing with them
-            GameFiber.StartNew(delegate
+            GameFiber fiber = GameFiber.StartNew(delegate
             {
                 GameFiber.Sleep(20000);
 
@@ -144,7 +144,9 @@ namespace ResponseV
                 }
 
                 Utils.Notify("You can go on duty now. Thanks for waiting. :)");
-            });
+            }, "DutyFiber");
+
+            g_GameFibers.Add(fiber);
         }
 
         public override void Finally()
@@ -161,11 +163,6 @@ namespace ResponseV
             }
 
             g_GameFibers.Clear();
-
-            //foreach (ProcessThread thread in Process.GetCurrentProcess().Threads)
-            //{
-            //    thread.Dispose();
-            //}
         }
 
         public static Assembly LSPDFR(object sender, ResolveEventArgs e)
@@ -179,11 +176,11 @@ namespace ResponseV
 
         private static void OnRawFrameRender(object sender, Rage.GraphicsEventArgs e)
         {
-            e.Graphics.DrawText($"ResponseV v{Updater.m_AppVersion?.ToString()}", "Verdana", 10.0f, new System.Drawing.PointF(2f, 2f), System.Drawing.Color.White);
+            e.Graphics.DrawText($"ResponseV v{Updater.m_AppVersion?.ToString()}", "Verdana", 8.0f, new System.Drawing.PointF(2f, 2f), System.Drawing.Color.White);
 
             if (m_UpdateAvailable)
             {
-                e.Graphics.DrawText($"Version {Updater.m_VersionAvailable?.ToString()} Available!", "Verdana", 10.0f, new System.Drawing.PointF(2f, 12f), System.Drawing.Color.Orange);
+                e.Graphics.DrawText($"Version {Updater.m_VersionAvailable?.ToString()} Available!", "Verdana", 8.0f, new System.Drawing.PointF(2f, 12f), System.Drawing.Color.Orange);
             }
         }
     }

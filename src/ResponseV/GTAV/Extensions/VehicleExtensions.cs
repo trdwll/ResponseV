@@ -6,7 +6,8 @@ using Rage.Native;
 namespace ResponseV.GTAV
 {
     /// <summary>
-    /// Class created by alexguirre
+    /// Class (VehicleColor) created by alexguirre
+    /// RandomizeLicensePlate method by PeterU
     /// </summary>
     internal static class VehicleExtensions
     {
@@ -199,6 +200,22 @@ namespace ResponseV.GTAV
             colors.SecondaryColor = (EPaint)colorSecondaryInt;
 
             return colors;
+        }
+
+        /// <summary>
+        /// Randomize the license plate to avoid excessively frequent debug plates from showing.
+        /// </summary>
+        internal static void RandomizeLicensePlate(this Vehicle vehicle)
+        {
+            vehicle.LicensePlate = $"{MathHelper.GetRandomInteger(0, 9).ToString()}" +
+                $"{MathHelper.GetRandomInteger(0, 9).ToString()}" +
+                $"{Convert.ToChar(Convert.ToInt32(Math.Floor(26 * MathHelper.GetRandomDouble(0, 1) + 65)))}" +
+                $"{Convert.ToChar(Convert.ToInt32(Math.Floor(26 * MathHelper.GetRandomDouble(0, 1) + 65)))}" +
+                $"{Convert.ToChar(Convert.ToInt32(Math.Floor(26 * MathHelper.GetRandomDouble(0, 1) + 65)))}" +
+                $"{MathHelper.GetRandomInteger(0, 9).ToString()}" +
+                $"{MathHelper.GetRandomInteger(0, 9).ToString()}" +
+                $"{MathHelper.GetRandomInteger(0, 9).ToString()}";
+
         }
     }
 }
