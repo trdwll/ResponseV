@@ -58,12 +58,9 @@ namespace ResponseV
                 Plugins.KeepDoorOpen.KeepDoorOpenImpl();
             }
 
-            // if (Configuration.config.Plugins.BaitCar)
+            if (Configuration.config.Plugins.BaitCar)
             {
                 Plugins.BaitCar.BaitCarImpl();
-                /*GameFiber.StartNew(delegate
-                {
-                });*/
             }
         }
 
@@ -110,7 +107,7 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
             //Functions.RegisterCallout(typeof(Callouts.Any.SearchWarrant));
             //Functions.RegisterCallout(typeof(Callouts.Any.SexOffender));
-            Functions.RegisterCallout(typeof(Callouts.Any.SpeedingVehicle));
+            // Functions.RegisterCallout(typeof(Callouts.Any.SpeedingVehicle));
             //Functions.RegisterCallout(typeof(Callouts.Any.StreetPerformerFight));
             //Functions.RegisterCallout(typeof(Callouts.Any.SuspiciousItem));
             //Functions.RegisterCallout(typeof(Callouts.Any.Trespassing));
@@ -188,7 +185,7 @@ namespace ResponseV
             return null;
         }
 
-        private static void OnRawFrameRender(object sender, Rage.GraphicsEventArgs e)
+        private static void OnRawFrameRender(object sender, GraphicsEventArgs e)
         {
             e.Graphics.DrawText($"ResponseV v{Updater.m_AppVersion?.ToString()}", "Verdana", 8.0f, new System.Drawing.PointF(2f, 2f), System.Drawing.Color.White);
 

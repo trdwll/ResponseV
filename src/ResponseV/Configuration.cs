@@ -36,6 +36,7 @@ namespace ResponseV
             {
                 public bool TurnWheels { get; set; }
                 public bool KeepDoorOpen { get; set; }
+                public bool BaitCar { get; set; }
             }
 
             public class RootObject

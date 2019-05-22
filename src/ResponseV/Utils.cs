@@ -60,7 +60,7 @@ namespace ResponseV
             // NotifyPlayerTo("Player", "Respond to xxx for ...")
             // NotifyPlayerTo("Player", "We've received multiple calls regarding this.")
 
-            var cfg = Configuration.config.Roleplay;
+            Configuration.Cfg.Roleplay cfg = Configuration.config.Roleplay;
             if (Unit == "Player" && cfg.RealismEnabled)
             {
                 Game.DisplayNotification($"Dispatch to {cfg.OfficerUnit}-{cfg.OfficerNumber}: {Message}");
@@ -75,7 +75,7 @@ namespace ResponseV
         {
             // NotifyPlayerTo("Dispatch", "I'll be code 4")
 
-            var cfg = Configuration.config.Roleplay;
+            Configuration.Cfg.Roleplay cfg = Configuration.config.Roleplay;
             if (Unit == "Dispatch" && cfg.RealismEnabled)
             {
                 Game.DisplayNotification($"{cfg.OfficerUnit}-{cfg.OfficerNumber} to Dispatch: {Message}");

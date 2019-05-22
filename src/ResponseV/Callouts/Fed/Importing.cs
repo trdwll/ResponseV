@@ -60,7 +60,7 @@ sports drift tampa
 
             ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 40f);
 
-            var types = Enum.GetValues(typeof(EType));
+            Array types = Enum.GetValues(typeof(EType));
 
             CalloutMessage = $"Reports of illegal importing of {(EType)types.GetValue(new Random().Next(0, types.Length))}";
             CalloutPosition = g_SpawnPoint;

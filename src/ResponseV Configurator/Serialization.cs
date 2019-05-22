@@ -60,7 +60,7 @@ namespace ResponseV_Configurator
             // https://stackoverflow.com/a/23828858
             public static string Pretty(string jsonString)
             {
-                var stringBuilder = new StringBuilder();
+                StringBuilder stringBuilder = new StringBuilder();
 
                 bool escaping = false;
                 bool inQuotes = false;
