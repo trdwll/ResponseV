@@ -29,7 +29,7 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("DeadBody: Callout accepted");
 
-            g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360)));
+            g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
             g_Victims.ForEach(v =>
             {
                 if (Native.GetSafeCoordForPed(g_SpawnPoint, out Vector3 pos))

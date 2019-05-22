@@ -20,7 +20,7 @@ namespace ResponseV.Callouts.Fed
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(400, 600)));
+            g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(MathHelper.GetRandomInteger(400, 600)));
 
             ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 30f);
 

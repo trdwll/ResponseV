@@ -74,7 +74,7 @@ namespace ResponseV.Callouts.Any
 
                     m_Officers.Add(veh);
 
-                    suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
+                    suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
 
                     if (m_CalloutType == Enums.CalloutType.Stabbing)
                     {
@@ -87,16 +87,16 @@ namespace ResponseV.Callouts.Any
                     if (m_bMultiple)
                     {
                         // Spawn suspects
-                        for (int i = 0; i < Utils.GetRandInt(1, 5); i++)
+                        for (int i = 0; i < MathHelper.GetRandomInteger(1, 5); i++)
                         {
-                            Ped sus = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
-                            sus.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)Utils.GetRandInt(10, 60), true);
+                            Ped sus = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+                            sus.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
                             sus.Tasks.FightAgainstClosestHatedTarget(30f);
                             g_Suspects.Add(sus);
                         }
 
                         // Spawn police
-                        for (int j = 0; j < Utils.GetRandInt(2, 5); j++)
+                        for (int j = 0; j < MathHelper.GetRandomInteger(2, 5); j++)
                         {
                             Vehicle veh2 = new Vehicle(Utils.GetRandValue(g_PoliceVehicleModels), g_SpawnPoint.Around(10f));
                             veh2.CreateRandomDriver();
@@ -116,8 +116,8 @@ namespace ResponseV.Callouts.Any
 
                         m_Officers.Add(veh);
 
-                        suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360));
-                        suspect.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)Utils.GetRandInt(10, 60), true);
+                        suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+                        suspect.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
                         g_Suspects.Add(suspect);
                     }
                     break;

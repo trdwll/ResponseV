@@ -24,12 +24,12 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("AnimalAttack: Callout accepted");
 
-            m_Animal = new Ped(Utils.GetRandValue("a_c_husky", "a_c_rottweiler", "a_c_poodle", "a_c_shepherd", "a_c_westy", "a_c_retriever"), g_SpawnPoint, Utils.GetRandInt(1, 360))
+            m_Animal = new Ped(Utils.GetRandValue("a_c_husky", "a_c_rottweiler", "a_c_poodle", "a_c_shepherd", "a_c_westy", "a_c_retriever"), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360))
             {
                 IsPersistent = true
             };
 
-            m_Victim = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360))
+            m_Victim = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360))
             {
                 IsPersistent = true
             };

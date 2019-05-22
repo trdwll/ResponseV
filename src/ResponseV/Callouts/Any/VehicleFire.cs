@@ -57,7 +57,7 @@ namespace ResponseV.Callouts.Any
                     }
                     else
                     {
-                        v.Tasks.Flee(v, Utils.GetRandInt(25, 50), 5);
+                        v.Tasks.Flee(v, MathHelper.GetRandomInteger(25, 50), 5);
                     }
                 });
 

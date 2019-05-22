@@ -49,7 +49,7 @@ namespace ResponseV.Callouts.Any
 
             if (m_bMultiple)
             {
-                for (int i = 0; i < Utils.GetRandInt(1, 3); i++)
+                for (int i = 0; i < MathHelper.GetRandomInteger(1, 3); i++)
                 {
                     g_Suspects.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, 360));
                 }
@@ -67,7 +67,7 @@ namespace ResponseV.Callouts.Any
                 }
 
                 s.RelationshipGroup = !m_bOpenCarry ? RelationshipGroup.HatesPlayer : RelationshipGroup.AmbientFriendEmpty;
-                s.Inventory.GiveNewWeapon(m_Weapon, (short)Utils.GetRandInt(30, 90), true);
+                s.Inventory.GiveNewWeapon(m_Weapon, (short)MathHelper.GetRandomInteger(30, 90), true);
             });
 
             return base.OnCalloutAccepted();
@@ -127,7 +127,7 @@ namespace ResponseV.Callouts.Any
                 if (Utils.GetRandBool())
                 {
                     GameFiber.Sleep(5000);
-                    LSPDFR.RequestBackup(g_SpawnPoint, Utils.GetRandInt(1, 3), LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
+                    LSPDFR.RequestBackup(g_SpawnPoint, MathHelper.GetRandomInteger(1, 3), LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
                 }
             }, "PedWithWeaponPursuitFiber");
 

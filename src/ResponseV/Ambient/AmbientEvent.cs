@@ -33,7 +33,7 @@ namespace ResponseV.Ambient
                 }
 
                 GameFiber.Sleep(100000);
-                // GameFiber.Sleep(Utils.GetRandInt(60000, 300000));
+                // GameFiber.Sleep(MathHelper.GetRandomInteger(60000, 300000));
             }
         }
     }

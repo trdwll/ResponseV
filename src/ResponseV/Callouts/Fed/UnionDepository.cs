@@ -68,8 +68,8 @@ namespace ResponseV.Callouts.Fed
             m_CallBlip.Color = System.Drawing.Color.Blue;
 
             m_Vehicle1 = new Vehicle("STOCKADE", new Vector3(-94.28f, -671.04f, 35.05f), 69.04f);//new Vector3(29.37f, -658.82f, 31.23f), 313.50f);
-            Ped suspect = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
-            Ped suspect2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
+            Ped suspect = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+            Ped suspect2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
             m_Suspects.Add(suspect);
             m_Suspects.Add(suspect2);
 
@@ -80,8 +80,8 @@ namespace ResponseV.Callouts.Fed
             if (Utils.GetRandBool())
             {
                 m_Vehicle2 = new Vehicle("STOCKADE", new Vector3(-85.70f, -674.37f, 34.94f), 67.71f);//new Vector3(38.77f, -649.90f, 31.23f), 313.50f);
-                Ped sus = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
-                Ped sus2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
+                Ped sus = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+                Ped sus2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
                 m_Suspects.Add(sus);
                 m_Suspects.Add(sus2);
 
@@ -93,8 +93,8 @@ namespace ResponseV.Callouts.Fed
             if (Utils.GetRandBool())
             {
                 m_Vehicle3 = new Vehicle("STOCKADE", new Vector3(-76.98f, -677.95f, 33.95f), 67.48f);//new Vector3(52.94f, -632.16f, 31.25f), 331.61f);
-                Ped sus = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
-                Ped sus2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, Utils.GetRandInt(1, 360));
+                Ped sus = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+                Ped sus2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
                 m_Suspects.Add(sus);
                 m_Suspects.Add(sus2);
 
@@ -105,9 +105,9 @@ namespace ResponseV.Callouts.Fed
             // Spawn a possible group of people that shoot police on sight
             if (Utils.GetRandBool())
             {
-                for (int i = 0; i < Utils.GetRandInt(2, 6); i++)
+                for (int i = 0; i < MathHelper.GetRandomInteger(2, 6); i++)
                 {
-                    Ped p = new Ped(Utils.GetRandValue(m_PedModels), new Vector3(-84.27f, -661.55f, 35.94f), Utils.GetRandInt(1, 360));
+                    Ped p = new Ped(Utils.GetRandValue(m_PedModels), new Vector3(-84.27f, -661.55f, 35.94f), MathHelper.GetRandomInteger(1, 360));
                     m_Suspects.Add(p);
                 }
 
@@ -138,9 +138,9 @@ namespace ResponseV.Callouts.Fed
                 m_CallBlip.IsRouteEnabled = false;
                 m_Logger.Log("UnionDepository: DistanceTo(m_SpawnPoint) < 100 so hide m_CallBlip");
 
-                m_Vehicle1.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(45, 70), VehicleDrivingFlags.IgnorePathFinding);
-                m_Vehicle2?.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(45, 70), VehicleDrivingFlags.IgnorePathFinding);
-                m_Vehicle3?.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(45, 70), VehicleDrivingFlags.IgnorePathFinding);
+                m_Vehicle1.Driver.Tasks.CruiseWithVehicle(MathHelper.GetRandomInteger(45, 70), VehicleDrivingFlags.IgnorePathFinding);
+                m_Vehicle2?.Driver.Tasks.CruiseWithVehicle(MathHelper.GetRandomInteger(45, 70), VehicleDrivingFlags.IgnorePathFinding);
+                m_Vehicle3?.Driver.Tasks.CruiseWithVehicle(MathHelper.GetRandomInteger(45, 70), VehicleDrivingFlags.IgnorePathFinding);
 
                 m_Logger.Log("UnionDepository: Making vehicles start to cruise.");
             }

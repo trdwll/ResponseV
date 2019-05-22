@@ -57,13 +57,13 @@ namespace ResponseV.Callouts.Any
             int max_vics = MathHelper.GetRandomInteger(4, 10);
             for (int i = 0; i < max_vics; i++)
             {
-                Vector3 pos = Extensions.AroundPosition(g_SpawnPoint, Utils.GetRandInt(25, 60));
-                g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), pos, Utils.GetRandInt(0, 360)));
+                Vector3 pos = Extensions.AroundPosition(g_SpawnPoint, MathHelper.GetRandomInteger(25, 60));
+                g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), pos, MathHelper.GetRandomInteger(0, 360)));
             }
 
             g_Victims.ForEach(v =>
             {
-                v.ApplyDamagePack(DamagePack.BigHitByVehicle, Utils.GetRandInt(50, 100), 0.0f);
+                v.ApplyDamagePack(DamagePack.BigHitByVehicle, MathHelper.GetRandomInteger(50, 100), 0.0f);
                 v.IsPersistent = true;
 
                 if (Utils.GetRandBool())
@@ -105,7 +105,7 @@ namespace ResponseV.Callouts.Any
                 {
                     if (v.IsAlive)
                     {
-                        v.Tasks.Flee(v, Utils.GetRandInt(10, 25), 6);
+                        v.Tasks.Flee(v, MathHelper.GetRandomInteger(10, 25), 6);
                         v.KeepTasks = true;
                     }
                 });
@@ -135,9 +135,9 @@ namespace ResponseV.Callouts.Any
             m_bSceneSetup = true;
             m_ExplosionFiber = GameFiber.StartNew(delegate
             {
-                for (int i = 0; i < Utils.GetRandInt(5, 12); i++)
+                for (int i = 0; i < MathHelper.GetRandomInteger(5, 12); i++)
                 {
-                    World.SpawnExplosion(Extensions.AroundPosition(g_SpawnPoint, Utils.GetRandInt(5, 15)), Utils.GetRandValue(3, 6, 9), Utils.GetRandInt(5, 12), false, false, 0.0f);
+                    World.SpawnExplosion(Extensions.AroundPosition(g_SpawnPoint, MathHelper.GetRandomInteger(5, 15)), Utils.GetRandValue(3, 6, 9), MathHelper.GetRandomInteger(5, 12), false, false, 0.0f);
                 }
 
             }, "AircraftCrashFireFiber");

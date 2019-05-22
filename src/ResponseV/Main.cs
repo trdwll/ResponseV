@@ -48,12 +48,6 @@ namespace ResponseV
             {
                 m_UpdateAvailable = Updater.CheckForUpdates();
             }
-        }
-
-        private void OnDutyStateChangedEvent(bool onDuty)
-        {
-            if (!onDuty) return;
-
             if (Configuration.config.Plugins.TurnWheels)
             {
                 Plugins.TurnWheels.TurnWheelsImpl();
@@ -67,7 +61,16 @@ namespace ResponseV
             // if (Configuration.config.Plugins.BaitCar)
             {
                 Plugins.BaitCar.BaitCarImpl();
+                /*GameFiber.StartNew(delegate
+                {
+                });*/
             }
+        }
+
+        private void OnDutyStateChangedEvent(bool onDuty)
+        {
+            if (!onDuty) return;
+
 
             // TODO: clean up this fucking mess
             // I was thinking an array to iterate over, but what if someone wants to disable a callout? /shrug

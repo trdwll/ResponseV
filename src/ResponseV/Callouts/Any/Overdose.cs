@@ -23,7 +23,7 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("Overdose: Callout accepted");
 
-            g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360)));
+            g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
 
             if (Native.GetSafeCoordForPed(g_SpawnPoint, out Vector3 pos))
             {
@@ -36,7 +36,7 @@ namespace ResponseV.Callouts.Any
 
                 if (Main.g_bBetterEMS)
                 {
-                    BetterEMS.API.EMSFunctions.OverridePedDeathDetails(v, "", "Overdose", Game.GameTime, (float)Utils.GetRandDouble()+.1f);
+                    BetterEMS.API.EMSFunctions.OverridePedDeathDetails(v, "", "Overdose", Game.GameTime, (float)MathHelper.GetRandomDouble(0.0, 1.0) + .1f);
                 }
             });
 

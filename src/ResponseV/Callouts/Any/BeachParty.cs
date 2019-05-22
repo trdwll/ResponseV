@@ -31,7 +31,7 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("BeachParty: Callout accepted");
 
-            //g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360)));
+            //g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
 
             return base.OnCalloutAccepted();
         }

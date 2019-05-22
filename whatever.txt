@@ -1,0 +1,16 @@
+﻿~r~ = Red
+~b~ = Blue
+~g~ = Green
+~y~ = Yellow
+~p~ = Purple
+~o~ = Orange
+~c~ = Grey?
+~m~ = Darker Grey
+~u~ = Black
+~n~ = New Line
+~s~ = Default White
+~h~ = Bold Text
+-----------------------------------------------------------------------------------------------------
+¦ = Rockstar Verified Icon
+÷ = Rockstar Icon
+∑ = Rockstar Icon 2

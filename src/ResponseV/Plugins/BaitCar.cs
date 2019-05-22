@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LSPD_First_Response.Mod.API;
 using Rage;
 
 using RAGENativeUI;
@@ -20,17 +21,18 @@ namespace ResponseV.Plugins
         private static GameFiber s_BaitCarFiber;
 
         private static bool s_bCanBeStolen;
+        private static bool s_bIsStolen;
 
         public static void BaitCarImpl()
         {
             Main.MainLogger.Log("BaitCar: Initialized");
             BaitCarMenu.Menu();
         }
-
         static void StartBaitCar()
         {
             s_BaitCarFiber = GameFiber.StartNew(delegate
             {
+                Ped ped = null;
                 for (;;)
                 {
                     GameFiber.Yield();
@@ -41,30 +43,40 @@ namespace ResponseV.Plugins
                             s_bCanBeStolen = true;
 
                             // if only we could use GetNearbyPeds(16)
-                            List<Ped> peds = World.GetAllPeds().Where(p => p.DistanceTo(s_BaitCar) <= 20 && p.IsHuman && p.IsAlive).Take(30).ToList();
+                            List<Ped> peds = World.GetAllPeds().Where(p => p.DistanceTo(s_BaitCar) <= 60 && p.IsHuman && p.IsAlive && !p.IsInAnyVehicle(true)).Take(30).ToList();
                             Main.MainLogger.Log($"BaitCar: Found {peds.Count} possible suspects.");
 
-                            Ped ped = peds[new Random().Next(peds.Count)];
-                            peds.Remove(ped);
-                            ped.BlockPermanentEvents = true;
-                            ped.IsPersistent = true;
-
-                            Main.MainLogger.Log("BaitCar: Selected a suspect, assigning a task to GoToOffsetFromEntity");
-
-                            ped.Tasks.GoToOffsetFromEntity(s_BaitCar, 5.0f, 3.0f, 1.2f).WaitForCompletion(MathHelper.GetRandomInteger(10000, 25000));
-
-                            Main.MainLogger.Log("BaitCar: GoToOffsetFromEntity complete");
-
-                            if (Utils.GetRandBool())
+                            if (peds.Count > 0)
                             {
-                                ped.Tasks.EnterVehicle(s_BaitCar, -1).WaitForCompletion();
-                            }
-                            else
-                            {
-                                // Ped didn't enter the vehicle so let's just dismiss them and get another ped nearby
-                                GameFiber.Sleep(MathHelper.GetRandomInteger(3000, 8000));
-                                ped.Dismiss();
-                                Main.MainLogger.Log("BaitCar: Suspect didn't enter the car");
+                                ped = peds[new Random().Next(peds.Count)];
+                                peds.Remove(ped);
+                                ped.BlockPermanentEvents = true;
+                                ped.IsPersistent = true;
+
+                                Main.MainLogger.Log("BaitCar: Selected a suspect, assigning a task to GoToOffsetFromEntity");
+
+                                // Sleep for some time so the ped doesn't immediately go towards the car before we get back to ours.
+                                GameFiber.Sleep(MathHelper.GetRandomInteger(25000, 45000));
+
+                                ped.Tasks.GoToOffsetFromEntity(s_BaitCar, 5.0f, 3.0f, 1.2f).WaitForCompletion(MathHelper.GetRandomInteger(10000, 25000));
+
+                                Main.MainLogger.Log("BaitCar: GoToOffsetFromEntity complete");
+
+                                if (Utils.GetRandBool())
+                                {
+                                    ped.Tasks.EnterVehicle(s_BaitCar, -1).WaitForCompletion();
+                                    ped.Tasks.CruiseWithVehicle(MathHelper.GetRandomInteger(30, 60), VehicleDrivingFlags.Normal);
+                                    Main.MainLogger.Log("BaitCar: suspect is stealing the vehicle");
+                                    s_bIsStolen = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    // Ped didn't enter the vehicle so let's just dismiss them and get another ped nearby
+                                    GameFiber.Sleep(MathHelper.GetRandomInteger(3000, 8000));
+                                    ped.Dismiss();
+                                    Main.MainLogger.Log("BaitCar: Suspect didn't enter the car");
+                                }
                             }
                         }
                     }
@@ -74,21 +86,50 @@ namespace ResponseV.Plugins
                         Utils.CrashNotify();
                     }
                 }
+
+                for (;;)
+                {
+                    GameFiber.Yield();
+                    try
+                    {
+                        if (!s_bIsStolen)
+                        {
+                            Game.DisplaySubtitle($"You are ~g~{Game.LocalPlayer.Character.Position.DistanceTo(s_BaitCar)}m ~s~away from the ~r~Bait Car~s~.", 1000);
+                        }
+
+                        if (s_bIsStolen && s_BaitCarBlip.Exists())
+                        {
+                            s_BaitCarBlip.Color = Color.Red;
+                        }
+
+                        if (Functions.IsPlayerPerformingPullover() && Functions.GetPulloverSuspect(Functions.GetCurrentPullover()) == ped && s_BaitCarBlip.Exists())
+                        {
+                            s_BaitCarBlip?.Delete();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Main.MainLogger.Log($"BaitCar: {ex.StackTrace}");
+                        Utils.CrashNotify();
+                    }
+                }
+
             }, "BaitCarFiber");
         }
 
         static void EndBaitCar()
         {
-            Utils.Notify("Bait Car: Cleared the ~r~Bait Car ~s~from the world!");
+            /*
             if (s_BaitCar.IsAlive)
             {
+                Utils.Notify("Bait Car: Cleared the ~r~Bait Car ~s~from the world!");
                 s_BaitCar?.GetAttachedBlip()?.Delete();
                 s_BaitCar?.Delete();
-            }
+            }*/
 
             if (s_BaitCarFiber.IsAlive)
             {
-                s_BaitCarFiber.Abort();
+                s_BaitCarFiber?.Abort();
                 s_BaitCarFiber = null;
             }
         }
@@ -110,7 +151,7 @@ namespace ResponseV.Plugins
             private static UIMenuItem s_LockDoorsItem;
             private static UIMenuItem s_UnlockDoorsItem;
 
-            private static List<UIMenuListItem> s_CarsList = new List<UIMenuListItem>()
+            private static readonly List<UIMenuListItem> s_CarsList = new List<UIMenuListItem>()
             {
                 new UIMenuListItem("Cars Models (Super)", "Choose a vehicle that you want to spawn as the bait car.",
                     "EMPTY",
@@ -166,6 +207,8 @@ namespace ResponseV.Plugins
             };
 
             private static MenuPool s_MenuPool;
+
+            private static Vehicle s_PreviewCar;
 
             public static void Menu()
             {
@@ -250,19 +293,21 @@ namespace ResponseV.Plugins
 
             private static void BaitCarMenu_OnItemSelect(UIMenu sender, UIMenuItem selectedItem, int index)
             {
-                if (sender != s_BaitCarMenu) return;
+                if (sender != s_BaitCarMenu || s_BaitCar == null) return;
 
                 if (selectedItem == s_ShutOffEngineItem)
                 {
-                    s_BaitCar.IsEngineOn = !true;
-                    s_BaitCar.IsDriveable = !true;
-                    if (!s_BaitCar.IsEngineOn)
+                    if (s_BaitCar.IsEngineOn)
                     {
+                        s_BaitCar.IsEngineOn = false;
+                        s_BaitCar.IsDriveable = false;
                         s_BaitCar.AlarmTimeLeft = new TimeSpan(0, 1, 0);
                         s_BaitCar.IndicatorLightsStatus = VehicleIndicatorLightsStatus.Both;
                     }
                     else
                     {
+                        s_BaitCar.IsEngineOn = true;
+                        s_BaitCar.IsDriveable = true;
                         s_BaitCar.AlarmTimeLeft = new TimeSpan(0, 0, 0);
                         s_BaitCar.IndicatorLightsStatus = VehicleIndicatorLightsStatus.Off;
                     }
@@ -287,13 +332,22 @@ namespace ResponseV.Plugins
                     {*/
                     try
                     {
-                        UIMenuListItem vehicle = s_CarsList.Where(list => list.Index != 0).First();
-                        s_BaitCar = new Vehicle(vehicle.SelectedValue.ToString(), Game.LocalPlayer.Character.GetOffsetPositionFront(6f));
-                        s_BaitCar.IsPersistent = true;
-                        
-                        GTAV.VehicleExtensions.RandomizeLicensePlate(s_BaitCar);
+                        // TODO: Make sure no vehicles are in the location of spawning
+                        if (s_BaitCar == null)
+                        {
+                            UIMenuListItem vehicle = s_CarsList.Where(list => list.Index != 0).First();
+                            s_BaitCar = new Vehicle(vehicle.SelectedValue.ToString(), Game.LocalPlayer.Character.GetOffsetPositionFront(6f))
+                            {
+                                IsPersistent = true
+                            };
 
-                        Utils.Notify($"Spawned a {vehicle.SelectedValue.ToString()} as a Bait Car");
+                            Functions.SetVehicleOwnerName(s_BaitCar, Functions.GetCurrentAgencyScriptName());
+
+                            GTAV.VehicleExtensions.RandomizeLicensePlate(s_BaitCar);
+
+                            Utils.Notify($"Spawned a {vehicle.SelectedValue.ToString()} as a Bait Car");
+                            StartBaitCar();
+                        }
                     }
                     catch (System.ArgumentNullException ex)
                     {
@@ -301,7 +355,7 @@ namespace ResponseV.Plugins
                         Utils.CrashNotify();
                     }
 
-                    if (s_TrackerCheckbox.Checked)
+                    if (s_TrackerCheckbox.Checked && s_BaitCar != null)
                     {
                         s_BaitCarBlip = s_BaitCar?.AttachBlip();
                         s_BaitCarBlip.Color = Color.Yellow;
@@ -316,21 +370,27 @@ namespace ResponseV.Plugins
                     {
                         try
                         {
-                            UIMenuListItem vehicle = s_CarsList.Where(list => list.Index != 0).First();
-                            Vehicle BaitCar = new Vehicle(vehicle.SelectedValue.ToString(), Game.LocalPlayer.Character.GetOffsetPositionFront(6f));
-                            GTAV.VehicleExtensions.RandomizeLicensePlate(BaitCar);
+                            // TODO: Make sure no vehicles are in the location of spawning
+                            // TODO: FIX if you press preview car without choosing one then it crashes
+                            if (s_PreviewCar == null)
+                            {
+                                UIMenuListItem vehicle = s_CarsList.Where(list => list.Index != 0).First();
+                                s_PreviewCar = new Vehicle(vehicle.SelectedValue.ToString(), Game.LocalPlayer.Character.GetOffsetPositionFront(6f));
+                                GTAV.VehicleExtensions.RandomizeLicensePlate(s_PreviewCar);
 
-                            Utils.Notify($"Spawned a {vehicle.SelectedValue.ToString()} as a Preview Bait Car");
+                                Utils.Notify($"Spawned a {vehicle.SelectedValue.ToString()} as a Preview Bait Car");
 
-                            GameFiber.Sleep(3000);
-                            BaitCar?.Delete();
+                                GameFiber.Sleep(3000);
+                                s_PreviewCar?.Delete();
+                                s_PreviewCar = null;
+                            }
                         }
                         catch (System.ArgumentNullException ex)
                         {
                             Main.MainLogger.Log($"{ex.StackTrace}", Logger.ELogLevel.LL_TRACE);
                             Utils.CrashNotify();
                         }
-                    });
+                    }, "BaitCarPreviewVehicle");
                 }
             }
 
@@ -351,7 +411,13 @@ namespace ResponseV.Plugins
 
                 if (selectedItem == s_CleanupBaitCarsItem)
                 {
-                    EndBaitCar();
+                    if (s_BaitCar != null)
+                    {
+                        Utils.Notify("Bait Car: Cleared the ~r~Bait Car ~s~from the world!");
+                        s_BaitCar?.GetAttachedBlip()?.Delete();
+                        s_BaitCar?.Delete();
+                        s_BaitCar = null;
+                    }
                 }
             }
 

@@ -49,7 +49,7 @@ namespace ResponseV.Callouts.Any
 
                 if (Main.g_bBetterEMS)
                 {
-                    BetterEMS.API.EMSFunctions.OverridePedDeathDetails(v, "", "Fire", Game.GameTime, (float)Utils.GetRandDouble() - .05f);
+                    BetterEMS.API.EMSFunctions.OverridePedDeathDetails(v, "", "Fire", Game.GameTime, (float)MathHelper.GetRandomDouble(0.0, 1.0) - .05f);
                 }
             });
 

@@ -33,7 +33,7 @@ namespace ResponseV.Callouts.Any
             m_Suspect = m_Vehicle.CreateRandomDriver();
             m_Suspect.IsPersistent = true;
             m_Suspect.BlockPermanentEvents = true;
-            m_Suspect.Tasks.CruiseWithVehicle(Utils.GetRandInt(5, 20));
+            m_Suspect.Tasks.CruiseWithVehicle(MathHelper.GetRandomInteger(5, 20));
 
             m_SuspectBlip = m_Suspect.AttachBlip();
 
@@ -81,7 +81,7 @@ namespace ResponseV.Callouts.Any
                         GameFiber.Sleep(500);
                         m_Suspect.Tasks.PerformDrivingManeuver(m_Vehicle, VehicleManeuver.SwerveLeft);
                         GameFiber.Sleep(500);
-                        m_Suspect.Tasks.CruiseWithVehicle(m_Vehicle, Utils.GetRandInt(5, 20), VehicleDrivingFlags.Normal);
+                        m_Suspect.Tasks.CruiseWithVehicle(m_Vehicle, MathHelper.GetRandomInteger(5, 20), VehicleDrivingFlags.Normal);
                         GameFiber.Sleep(5500);
                     }
                 }

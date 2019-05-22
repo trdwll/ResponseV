@@ -1,43 +1,28 @@
-﻿using LSPD_First_Response.Engine.Scripting;
-using LSPD_First_Response.Mod.API;
+﻿using LSPD_First_Response.Mod.API;
 using Rage;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
-using WorldZone = ResponseV.GTAV.WorldZone;
 
 namespace ResponseV
 {
     internal class Utils
     {
-        private static Random RANDOM = new Random();
-
         public static bool m_bCheckingEMS = false;
         public static bool m_bEMSOnScene = false;
 
         public static GameFiber m_CheckEMSFiber;
 
-        public static int GetRandInt(int min, int max)
-        {
-            return RANDOM.Next(min, max);
-        }
-
         public static T GetRandValue<T>(params T[] args)
         {
-            return args[GetRandInt(0, args.Length)];
+            return args[MathHelper.GetRandomInteger(0, args.Length)];
         }
 
         public static bool GetRandBool()
         {
-            return RANDOM.Next(2) == 0;
-        }
-
-        public static double GetRandDouble()
-        {
-            return RANDOM.NextDouble();
+            return MathHelper.GetRandomDouble(0.0, 1.0) >= 0.5;
         }
 
         public static T[] MergeArrays<T>(T[] array1, T[] array2)
@@ -67,7 +52,7 @@ namespace ResponseV
 
         public static void CrashNotify()
         {
-            Game.DisplayNotification($"Response~y~V~w~ has had an error. Please report to developer.");
+            Game.DisplayNotification($"Response~y~V~w~ has had an error. Please report crash to developer.");
         }
 
         public static void NotifyDispatchTo(string Unit, string Message)
@@ -135,7 +120,7 @@ namespace ResponseV
                         {
                             m_bEMSOnScene = true;
                             Main.MainLogger.Log($"{CalloutName} Utils.CheckEMSOnScene: EMS is on scene");
-                            Notify($"{GetRandValue("EMS", "Med", "Medic", "RA")}-{GetRandInt(1, 100)} on scene Dispatch.");
+                            Notify($"{GetRandValue("EMS", "Med", "Medic", "RA")}-{MathHelper.GetRandomInteger(1, 100)} on scene Dispatch.");
                             break;
                         }
                     }

@@ -34,9 +34,9 @@ namespace ResponseV.Callouts.Any
 
             if (Utils.GetRandBool())
             {
-                for (int i = 0; i < Utils.GetRandInt(1, 2); i++)
+                for (int i = 0; i < MathHelper.GetRandomInteger(1, 2); i++)
                 {
-                    g_Suspects.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, Utils.GetRandInt(1, 360)));
+                    g_Suspects.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
                 }
 
                 g_Suspects.ForEach(s => s.Tasks.EnterVehicle(m_Vehicle, -2)); // Doesn't work for some reason
@@ -53,7 +53,7 @@ namespace ResponseV.Callouts.Any
             {
                 g_bOnScene = true;
 
-                m_Vehicle.Driver.Tasks.CruiseWithVehicle(Utils.GetRandInt(40, 80));
+                m_Vehicle.Driver.Tasks.CruiseWithVehicle(MathHelper.GetRandomInteger(40, 80));
 
                 Pursuit();
             }

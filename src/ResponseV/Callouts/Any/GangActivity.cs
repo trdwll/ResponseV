@@ -24,7 +24,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(/*Utils.getRandInt(300, 350)*/150f));
+            g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(/*MathHelper.GetRandomInteger(300, 350)*/150f));
 
             ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 25f);
 
@@ -57,11 +57,11 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            LSPDFR.RequestBackup(g_SpawnPoint, Utils.GetRandInt(2, 3), LSPD_First_Response.EBackupResponseType.Code3, LSPD_First_Response.EBackupUnitType.LocalUnit);
+            LSPDFR.RequestBackup(g_SpawnPoint, MathHelper.GetRandomInteger(2, 3), LSPD_First_Response.EBackupResponseType.Code3, LSPD_First_Response.EBackupUnitType.LocalUnit);
 
-            for (int i = 0; i < Utils.GetRandInt(4, 10); i++)
+            for (int i = 0; i < MathHelper.GetRandomInteger(4, 10); i++)
             {
-                Ped ped = new Ped(Utils.GetRandValue(m_Models), g_SpawnPoint, Utils.GetRandInt(1, 360));
+                Ped ped = new Ped(Utils.GetRandValue(m_Models), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
                 Blip blip = new Blip(ped)
                 {
                     IsFriendly = false
@@ -75,7 +75,7 @@ namespace ResponseV.Callouts.Any
                 ped.RelationshipGroup = RelationshipGroup.AmbientGangBallas;
                 ped.CanAttackFriendlies = true;
 
-                ped.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)Utils.GetRandInt(10, 60), true);
+                ped.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
             }
 
             return base.OnCalloutAccepted();

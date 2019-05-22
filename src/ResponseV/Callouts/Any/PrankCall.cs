@@ -22,7 +22,7 @@ namespace ResponseV.Callouts.Any
 
         private Ped m_Suspect;
         private Blip m_SuspectBlip;
-        private bool m_bCreateSuspect = Utils.GetRandInt(1, 3) == 1;
+        private bool m_bCreateSuspect = MathHelper.GetRandomInteger(1, 3) == 1;
 
         public override bool OnBeforeCalloutDisplayed()
         {
@@ -30,7 +30,7 @@ namespace ResponseV.Callouts.Any
             m_CallTypeString = LSPDFR.Radio.GetCallTypeFromEnum_PrankCall(m_CallType);
 
             Vector3 LocalPos = Game.LocalPlayer.Character.Position;
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(MathHelper.GetRandomInteger(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));
 
             string CallAudio = $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} ";
 
