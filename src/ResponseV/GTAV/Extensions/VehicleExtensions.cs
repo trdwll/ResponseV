@@ -176,6 +176,15 @@ namespace ResponseV.GTAV
             Chrome = 120,
         }
 
+        public static string DetermineVehicleName(Vehicle vehicle)
+        {
+            switch (vehicle.Model.Name.ToUpper())
+            {
+            default:
+            return "Not Found";
+            }
+        }
+
         /// <summary>
         /// Gets the primary and secondary colors of this instance of Rage.Vehicle
         /// </summary>

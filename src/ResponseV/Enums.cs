@@ -64,6 +64,7 @@ namespace ResponseV
             CT_PEDWITHWEAPON,
             CT_PRANKCALL,
             CT_PURSUIT,
+            CT_RECKLESSDRIVING,
             CT_ROBBERY,
             CT_SEARCHWARRANT,
             CT_SEXOFFENDER,

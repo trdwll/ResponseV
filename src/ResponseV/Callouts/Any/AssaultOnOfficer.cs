@@ -10,6 +10,9 @@ namespace ResponseV.Callouts.Any
     {
         public override bool OnBeforeCalloutDisplayed()
         {
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_ASSAULTONOFFICER, true)}", g_SpawnPoint); // Knife attack
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_ASSAULTONOFFICER, false)}", g_SpawnPoint); // attack
+
             return base.OnBeforeCalloutDisplayed();
         }
 

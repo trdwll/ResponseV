@@ -21,6 +21,15 @@ namespace ResponseV.Callouts.Any
         {
             m_bMultiple = Utils.GetRandBool();
 
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 1)}", g_SpawnPoint); // officer down
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 2)}", g_SpawnPoint); // hit by vehicle
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 3)}", g_SpawnPoint); // injured
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 4)}", g_SpawnPoint); // shot
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 5)}", g_SpawnPoint); // stabbed
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 6)}", g_SpawnPoint); // under fire
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 7)}", g_SpawnPoint); // on fire
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 10)}", g_SpawnPoint); // officers down
+
             CalloutMessage = "Reports of " + (m_bMultiple ? "Multiple Officers": "an Officer") + " Down";
             CalloutPosition = g_SpawnPoint;
 

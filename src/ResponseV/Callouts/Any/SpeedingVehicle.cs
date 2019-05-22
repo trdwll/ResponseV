@@ -27,7 +27,9 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = "Reports of a speeding vehicle";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} {LSPDFR.Radio.GetSpeedSound(m_Speed)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_SPEEDINGVEHICLE, m_Speed)}", g_SpawnPoint);
+
+            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} {LSPDFR.Radio.GetSpeedSound(m_Speed)} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -39,7 +41,6 @@ namespace ResponseV.Callouts.Any
             m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), g_SpawnPoint);
             m_Driver = m_Vehicle.CreateRandomDriver();
             g_Suspects.Add(m_Driver);
-
 
             m_SpeedingVehicleBlip = m_Vehicle.AttachBlip();
             m_SpeedingVehicleBlip.Color = System.Drawing.Color.Green;
@@ -54,8 +55,11 @@ namespace ResponseV.Callouts.Any
         {
             base.Process();
 
-            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 50 && !g_bOnScene)
+            if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) < 150 && !g_bOnScene)
             {
+                g_bOnScene = true;
+                g_CallBlip.IsRouteEnabled = false;
+
                 m_Vehicle.Driver.KeepTasks = true;
                 m_Vehicle.Driver.Tasks.CruiseWithVehicle(m_Speed);
             }
@@ -84,14 +88,23 @@ namespace ResponseV.Callouts.Any
             g_bIsPursuit = true;
             GameFiber fiber = GameFiber.StartNew(delegate
             {
+                GameFiber.Yield();
+
                 m_Pursuit = Functions.CreatePursuit();
 
-                g_Suspects.ForEach(s =>
+                //g_Suspects.ForEach(s =>
+                //{
+                //    Functions.AddPedToPursuit(m_Pursuit, s);
+                //});
+
+                if (m_Driver != null)
                 {
-                    Functions.AddPedToPursuit(m_Pursuit, s);
-                });
+                    Functions.AddPedToPursuit(m_Pursuit, m_Driver);
+                    g_Logger.Log("SpeedingVehicle: Added ped to pursuit");
+                }
 
                 Functions.SetPursuitIsActiveForPlayer(m_Pursuit, true);
+                Functions.SetPursuitCopsCanJoin(m_Pursuit, true);
 
                 GameFiber.Sleep(10000);
                 LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 2, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);

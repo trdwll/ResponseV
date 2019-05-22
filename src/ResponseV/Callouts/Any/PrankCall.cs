@@ -30,12 +30,20 @@ namespace ResponseV.Callouts.Any
             m_CallTypeString = LSPDFR.Radio.GetCallTypeFromEnum_PrankCall(m_CallType);
 
             Vector3 LocalPos = Game.LocalPlayer.Character.Position;
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));
+
+            string CallAudio = $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} ";
 
             switch (m_CallType)
             {
             default:
-                m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(Utils.GetRandInt(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));
                 Main.MainLogger.Log($"PrankCall: SpawnPoint defaulted.");
+                break;
+            case ECallType.CT_AIRCRAFTCRASH:
+                CallAudio += $"";
+                break;
+            case ECallType.CT_SPEEDINGVEHICLE:
+                CallAudio += $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} {LSPDFR.Radio.GetSpeedSound((uint)MathHelper.GetRandomInteger(40, 120))}";
                 break;
             case ECallType.CT_DROWNING:
                 // TODO: Get the nearest one to the player rather than having it spawn 4m away lol
@@ -46,6 +54,8 @@ namespace ResponseV.Callouts.Any
 
             CalloutMessage = $"(PRANKCALL DEBUG) - Reports of {m_CallTypeString}";
             CalloutPosition = m_SpawnPoint;
+
+            Functions.PlayScannerAudioUsingPosition(CallAudio, m_SpawnPoint);
 
             ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
 
@@ -89,7 +99,7 @@ namespace ResponseV.Callouts.Any
 
             if (m_bOnScene)
             {
-                Utils.NotifyPlayerTo("Dispatch", "the call was a prank, returning to patrol.");
+                Utils.NotifyPlayerTo("Dispatch", "The call was a prank, returning to patrol.");
 
                 if (m_bCreateSuspect)
                 {
@@ -97,7 +107,7 @@ namespace ResponseV.Callouts.Any
                     m_SuspectBlip.Color = System.Drawing.Color.White;
                     m_SuspectBlip.Scale = 0.5f;
 
-                    Utils.NotifyDispatchTo("Player", $"be advised we've traced the caller and they should be nearby.");
+                    Utils.NotifyDispatchTo("Player", $"Be advised we've traced the caller and they should be nearby.");
                 }
                 else
                 {

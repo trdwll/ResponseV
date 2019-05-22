@@ -70,7 +70,6 @@ namespace ResponseV
             Game.DisplayNotification($"Response~y~V~w~ has had an error. Please report to developer.");
         }
 
-
         public static void NotifyDispatchTo(string Unit, string Message)
         {
             // NotifyPlayerTo("Player", "Respond to xxx for ...")

@@ -7,6 +7,7 @@ using Rage;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ResponseV
 {
@@ -24,10 +25,15 @@ namespace ResponseV
 
         public override void Initialize()
         {
+            //foreach (Model c in Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle && !v.IsEmergencyVehicle && !v.IsBigVehicle).ToArray())
+            //{
+            //    MainLogger.Log($"Vehicle: {c.Name.ToUpper()}");
+            //}
+
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LSPDFR);
             Functions.OnOnDutyStateChanged += OnDutyStateChangedEvent;
 
-            Game.DisplayNotification($"Response~y~V~w~ ~b~{Updater.m_AppVersion?.ToString()} ~w~by ~b~trdwll ~w~loaded successfully.");
+            // Game.DisplayNotification($"Response~y~V~w~ ~b~{Updater.m_AppVersion?.ToString()} ~w~by ~b~trdwll ~w~loaded successfully.");
 
             Game.RawFrameRender += OnRawFrameRender;
 
@@ -42,6 +48,11 @@ namespace ResponseV
             {
                 m_UpdateAvailable = Updater.CheckForUpdates();
             }
+        }
+
+        private void OnDutyStateChangedEvent(bool onDuty)
+        {
+            if (!onDuty) return;
 
             if (Configuration.config.Plugins.TurnWheels)
             {
@@ -52,11 +63,11 @@ namespace ResponseV
             {
                 Plugins.KeepDoorOpen.KeepDoorOpenImpl();
             }
-        }
 
-        private void OnDutyStateChangedEvent(bool onDuty)
-        {
-            if (!onDuty) return;
+            // if (Configuration.config.Plugins.BaitCar)
+            {
+                Plugins.BaitCar.BaitCarImpl();
+            }
 
             // TODO: clean up this fucking mess
             // I was thinking an array to iterate over, but what if someone wants to disable a callout? /shrug
@@ -90,7 +101,7 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.PedHitByVehicle));
             //Functions.RegisterCallout(typeof(Callouts.Any.PedMissing));
             // Functions.RegisterCallout(typeof(Callouts.Any.PedOnFire));
-            // Functions.RegisterCallout(typeof(Callouts.Any.PedWithWeapon));
+            //Functions.RegisterCallout(typeof(Callouts.Any.PedWithWeapon));
             // Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
             //Functions.RegisterCallout(typeof(Callouts.Any.Pursuit));
             //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));

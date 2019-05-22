@@ -29,7 +29,16 @@ namespace ResponseV.Callouts.Any
             }
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetWeaponSound(m_Weapon)} IN_OR_ON_POSITION", g_SpawnPoint);
+            if (m_Weapon == WeaponHash.Knife)
+            {
+                Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_PEDWITHWEAPON, false, m_Weapon)}", g_SpawnPoint);
+            }
+            else
+            {
+                Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_PEDWITHWEAPON, true, m_Weapon)}", g_SpawnPoint);
+            }
+
+            //Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetWeaponSound(m_Weapon)} IN_OR_ON_POSITION", g_SpawnPoint);
             
             return base.OnBeforeCalloutDisplayed();
         }

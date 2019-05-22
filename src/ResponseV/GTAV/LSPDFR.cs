@@ -47,7 +47,7 @@ namespace ResponseV
         {
             if (Main.g_bArrestManager)
             {
-                Utils.NotifyPlayerTo("Dispatch", Utils.GetRandValue("send a coroner.", "we need a coroner."));
+                Utils.NotifyPlayerTo("Dispatch", Utils.GetRandValue("Send a coroner.", "We need a coroner."));
                 Arrest_Manager.API.Functions.CallCoroner(location, true);
             }
         }
@@ -59,7 +59,7 @@ namespace ResponseV
                 GTAV.VehicleExtensions.RandomizeLicensePlate(vehicle);
                 GameFiber.Sleep(3000);
 
-                string VehicleName = vehicle.Model.Name.ToUpper();
+                string VehicleName = vehicle.Model.Name.ToUpper(); //GTAV.VehicleExtensions.DetermineVehicleName(vehicle);
                 string SoundName = $"MODEL_{VehicleName}_01";
 
                 Functions.PlayScannerAudio(SoundName);
@@ -379,53 +379,111 @@ namespace ResponseV
                 }
             }
 
-            public static string GetCallSoundFromEnum_PrankCall(ECallType CallType)
+            /// <summary>
+            /// Return a string for Functions.PlayScannerAudioUsingPosition
+            /// </summary>
+            /// <param name="CallType"></param>
+            /// <param name="args"></param>
+            /// <returns></returns>
+            public static string GetCalloutAudio(ECallType CallType, params object[] args)
             {
-                string ret;
+                string ret = $"{GetRandomSound(WE_HAVE)} ";
                 switch (CallType)
                 {
                 default:
-                case ECallType.CT_AIRCRAFTCRASH: ret = "blah"; break;
-                case ECallType.CT_ANIMALATTACK: ret = "blah"; break;
-                case ECallType.CT_ASSAULT: ret = "blah"; break;
-                case ECallType.CT_ASSAULTONOFFICER: ret = "blah"; break;
-                case ECallType.CT_ATTEMPTEDMUDER: ret = "blah"; break;
-                case ECallType.CT_ATTEMPTEDSUICIDE: ret = "blah"; break;
-                case ECallType.CT_BARFIGHT: ret = "blah"; break;
-                case ECallType.CT_BEACHPARTY: ret = "blah"; break;
-                case ECallType.CT_DEADBODY: ret = "blah"; break;
-                case ECallType.CT_DROWNING: ret = "blah"; break;
-                case ECallType.CT_DRUGBUST: ret = "blah"; break;
-                case ECallType.CT_DUI: ret = "blah"; break;
-                case ECallType.CT_GANGACTIVITY: ret = "blah"; break;
-                case ECallType.CT_GRAFFITIARTIST: ret = "blah"; break;
-                case ECallType.CT_INDECENTEXPOSURE: ret = "blah"; break;
-                case ECallType.CT_KIDNAPPING: ret = "blah"; break;
-                case ECallType.CT_LITTERING: ret = "blah"; break;
-                case ECallType.CT_LOITERING: ret = "blah"; break;
-                case ECallType.CT_MVA: ret = "blah"; break;
-                case ECallType.CT_OFFICERDOWN: ret = "blah"; break;
-                case ECallType.CT_OVERDOSE: ret = "blah"; break;
-                case ECallType.CT_PAPARAZZI: ret = "blah"; break;
-                case ECallType.CT_PARKINGVIOLATION: ret = "blah"; break;
-                case ECallType.CT_PARTY: ret = "blah"; break;
-                case ECallType.CT_PEDHITBYVEHICLE: ret = "blah"; break;
-                case ECallType.CT_PEDMISSING: ret = "blah"; break;
-                case ECallType.CT_PEDONFIRE: ret = "blah"; break;
-                case ECallType.CT_PEDWITHWEAPON: ret = "blah"; break;
-                case ECallType.CT_PRANKCALL: ret = "blah"; break;
-                case ECallType.CT_PURSUIT: ret = "blah"; break;
-                case ECallType.CT_ROBBERY: ret = "blah"; break;
-                case ECallType.CT_SEARCHWARRANT: ret = "blah"; break;
-                case ECallType.CT_SEXOFFENDER: ret = "blah"; break;
-                case ECallType.CT_SPEEDINGVEHICLE: ret = "blah"; break;
-                case ECallType.CT_STREETPERFORMERFIGHT: ret = "blah"; break;
-                case ECallType.CT_SUSPICIOUSITEM: ret = "blah"; break;
-                case ECallType.CT_TRESPASSING: ret = "blah"; break;
-                case ECallType.CT_VANDALISM: ret = "blah"; break;
-                case ECallType.CT_VEHICLEFIRE: ret = "blah"; break;
+                case ECallType.CT_AIRCRAFTCRASH: ret += $"{GetRandomSound(AIRCRAFT_CRASH)}"; break;
+                case ECallType.CT_ANIMALATTACK: ret += $"{GetRandomSound(VICIOUS_ANIMAL)}"; break;
+                case ECallType.CT_ASSAULT: ret += $"{GetRandomSound(ASSAULT)}"; break;
+                case ECallType.CT_ASSAULTONOFFICER: ret += (bool)args[0] ? $"{GetRandomSound(ASSAULT_ON_OFFICER_KNIFE)}" : $"{GetRandomSound(ASSAULT_ON_OFFICER)}"; break;
+                case ECallType.CT_ATTEMPTEDMUDER: ret += $"{GetRandomSound(ATTEMPTED_MURDER)}"; break;
+                case ECallType.CT_ATTEMPTEDSUICIDE: ret += $"{GetRandomSound(ATTEMPTED_SUICIDE)}"; break;
+                case ECallType.CT_BARFIGHT: ret += $""; break;
+                case ECallType.CT_BEACHPARTY: ret += $""; break;
+                case ECallType.CT_DEADBODY: ret += $"{GetRandomSound(DEADBODY)}"; break;
+                case ECallType.CT_DROWNING: ret += $""; break;
+                case ECallType.CT_DRUGBUST: ret += $"{GetRandomSound(DRUG_DEAL)}"; break; // ???
+                case ECallType.CT_DUI: ret += $"{GetRandomSound(DUI)}"; break;
+                case ECallType.CT_GANGACTIVITY:
+                    #region Gang Activity
+                    if ((uint)args[0] == 1)
+                    {
+                        ret += $"{GetRandomSound(GANG_ACTIVITY)}";
+                    }
+                    else if ((uint)args[0] == 2)
+                    {
+                        ret += $"{GetRandomSound(GANG_DISTURBANCE)}";
+                    }
+                    else if ((uint)args[0] == 3)
+                    {
+                        ret += $"{GetRandomSound(GANG_VIOLENCE)}";
+                    }
+                    #endregion Gang Activity
+                    break;
+                case ECallType.CT_GRAFFITIARTIST: ret += $""; break;
+                case ECallType.CT_INDECENTEXPOSURE: ret += $"{GetRandomSound(INDECENT_EXPOSURE)}"; break;
+                case ECallType.CT_KIDNAPPING: ret += $"{GetRandomSound(KIDNAPPING)}"; break;
+                case ECallType.CT_LITTERING: ret += $""; break;
+                case ECallType.CT_LOITERING: ret += $"{GetRandomSound(LOITERING)}"; break;
+                case ECallType.CT_MVA: ret += $"{GetRandomSound(MVA)}"; break;
+                case ECallType.CT_OFFICERDOWN:
+                    #region Officer Down
+                    if ((uint)args[0] == 1)
+                    {
+                        ret += $"{GetRandomSound(OFFICER_DOWN)}";
+                    }
+                    else if ((uint)args[0] == 2)
+                    {
+                        ret += $"{GetRandomSound(OFFICER_HIT_BY_VEHICLE)}";
+                    }
+                    else if ((uint)args[0] == 3)
+                    {
+                        ret += $"{GetRandomSound(OFFICER_INJURED)}";
+                    }
+                    else if ((uint)args[0] == 4)
+                    {
+                        ret += $"{GetRandomSound(OFFICER_SHOT)}";
+                    }
+                    else if ((uint)args[0] == 5)
+                    {
+                        ret += $"{GetRandomSound(OFFICER_STABBED)}";
+                    }
+                    else if ((uint)args[0] == 6)
+                    {
+                        ret += $"{GetRandomSound(OFFICER_UNDER_FIRE)}";
+                    }
+                    else if ((uint)args[0] == 7)
+                    {
+                        ret += $"{GetRandomSound(OFFICER_ON_FIRE)}";
+                    }
+                    else if ((uint)args[0] == 10)
+                    {
+                        ret += $"{GetRandomSound(OFFICERS_DOWN)}";
+                    }
+                    #endregion Officer Down
+                    break;
+                case ECallType.CT_OVERDOSE: ret += $"{GetRandomSound(OVERDOSE)}"; break;
+                case ECallType.CT_PAPARAZZI: ret += $""; break;
+                case ECallType.CT_PARKINGVIOLATION: ret += $"{GetRandomSound(ILLEGALLY_PARKED_VEHICLE)}"; break;
+                case ECallType.CT_PARTY: ret += $""; break;
+                case ECallType.CT_PEDHITBYVEHICLE: ret += $"{GetRandomSound(PED_HIT_BY_VEHICLE)}"; break;
+                case ECallType.CT_PEDMISSING: ret += $""; break;
+                case ECallType.CT_PEDONFIRE: ret += $""; break;
+                case ECallType.CT_PEDWITHWEAPON: ret += ((bool)args[0] ? $"{GetRandomSound(PED_WITH_FIREARM)}" : $"{GetRandomSound(PED_WITH_KNIFE)}") + $"{LSPDFR.Radio.GetWeaponSound((WeaponHash)args[1])}"; break;
+                case ECallType.CT_PRANKCALL: ret += $""; break;
+                case ECallType.CT_PURSUIT: ret += $""; break;
+                case ECallType.CT_ROBBERY: ret += $"{GetRandomSound(ROBBERY)}"; break;
+                case ECallType.CT_RECKLESSDRIVING: ret += $"{GetRandomSound(RECKLESS_DRIVER)}"; break;
+                case ECallType.CT_SEARCHWARRANT: ret += $"{GetRandomSound(WARRANT_ISSUED)}"; break;
+                case ECallType.CT_SEXOFFENDER: ret += $""; break;
+                case ECallType.CT_SPEEDINGVEHICLE: ret += $"{GetRandomSound(SPEEDING)} {GetSpeedSound((uint)args[0])}"; break;
+                case ECallType.CT_STREETPERFORMERFIGHT: ret += $"{GetRandomSound(ASSAULT_BATTERY)}"; break;
+                case ECallType.CT_SUSPICIOUSITEM: ret += $""; break;
+                case ECallType.CT_TRESPASSING: ret = (bool)args[0] ? $"{GetRandomSound(TRESPASSING_GOV_PROPERTY)}" : $"{GetRandomSound(TRESPASSING)}"; break;
+                case ECallType.CT_VANDALISM: ret = $"{GetRandomSound(DAMAGE_TO_PROPERTY)}"; break;
+                case ECallType.CT_VEHICLEFIRE: ret = $"{GetRandomSound(VEHICLE_FIRE)}"; break;
                 }
 
+                ret += " IN_OR_ON_POSITION";
                 return ret;
             }
 
@@ -464,6 +522,7 @@ namespace ResponseV
                 case ECallType.CT_PEDWITHWEAPON: return "a person with a weapon";
                 case ECallType.CT_PRANKCALL: return GetCallTypeFromEnum_PrankCall(Enums.RandomEnumValue<ECallType>());
                 case ECallType.CT_PURSUIT: return "a pursuit";
+                case ECallType.CT_RECKLESSDRIVING: return "a reckless driver";
                 case ECallType.CT_ROBBERY: return "a robbery";
                 case ECallType.CT_SEARCHWARRANT: return "a search warrant";
                 case ECallType.CT_SEXOFFENDER: return "a sex offender";

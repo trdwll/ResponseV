@@ -17,12 +17,11 @@ namespace ResponseV
 
         public Logger()
         {
-#if DEBUG
             if (System.IO.File.Exists(m_LogFile))
             {
                 System.IO.File.Delete(m_LogFile);
             }
-#endif
+
             // TODO: if m_AppVersion > what's in the log then delete the log
 
             WriteLog("--------------------");

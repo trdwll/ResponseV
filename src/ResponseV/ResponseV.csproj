@@ -43,6 +43,9 @@
     <Reference Include="LSPD First Response">
       <HintPath>G:\Program Files\Steam\steamapps\common\Grand Theft Auto V\plugins\LSPD First Response.dll</HintPath>
     </Reference>
+    <Reference Include="RAGENativeUI">
+      <HintPath>..\..\vendor\RAGENativeUI.dll</HintPath>
+    </Reference>
     <Reference Include="RagePluginHookSDK">
       <HintPath>G:\Program Files\Steam\steamapps\common\Grand Theft Auto V\SDK\RagePluginHookSDK.dll</HintPath>
     </Reference>
@@ -136,6 +139,7 @@
     <Compile Include="GTAV\LSPDFR.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="GTAV\Extensions\Native.cs" />
+    <Compile Include="Plugins\BaitCar.cs" />
     <Compile Include="Plugins\KeepDoorOpen.cs" />
     <Compile Include="Plugins\TurnWheels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
