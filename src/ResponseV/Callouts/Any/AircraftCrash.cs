@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 using Rage;
-using LSPD_First_Response;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 
-using LSPD_First_Response.Engine.Scripting;
 using ResponseV.GTAV;
 
 namespace ResponseV.Callouts.Any
@@ -37,14 +31,10 @@ namespace ResponseV.Callouts.Any
             // TODO: if in blaine then choose from blaine points
             g_SpawnPoint = m_bIsAirplane ? Utils.GetRandValue(SpawnPoints.m_AirplaneCrashSpawnPoints) : Utils.GetRandValue(HeliSpawns);
 
-            CalloutMessage = "Reports of an " + (m_bIsAirplane ? Utils.GetRandValue("Aircraft", "Airplane") : "Helicopter") + " Crash";
+            CalloutMessage = "Reports of " + (m_bIsAirplane ? Utils.GetRandValue("an Aircraft", "an Airplane") : "a Helicopter") + " Crash";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} " + 
-                (m_bIsAirplane ? 
-                "{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.AIRCRAFT_CRASH)}" : 
-                "{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.HELICOPTER_CRASH)}") + 
-                " IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_AIRCRAFTCRASH, m_bIsAirplane)}", g_SpawnPoint); 
 
             return base.OnBeforeCalloutDisplayed();
         }

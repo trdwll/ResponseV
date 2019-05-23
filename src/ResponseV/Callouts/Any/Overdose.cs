@@ -1,8 +1,6 @@
 ﻿using Rage;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ResponseV.Callouts.Any
 {
@@ -14,7 +12,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = $"Reports of " + (Utils.GetRandBool() ? "an" : "a Possible") + " Overdose";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OVERDOSE)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OVERDOSE)}", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

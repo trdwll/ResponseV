@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Rage;
-using LSPD_First_Response;
+﻿using Rage;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
-using LSPD_First_Response.Engine.Scripting;
 
 namespace ResponseV.Callouts.Any
 {
@@ -20,7 +12,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = $"Reports of a " + (Utils.GetRandBool() ? "Deceased Person" : "Dead Body");
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DEADBODY)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_DEADBODY)}", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

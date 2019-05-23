@@ -13,7 +13,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = "Reports of Indecent Exposure";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} CRIME_INDECENT_EXPOSURE IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_INDECENTEXPOSURE)}", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

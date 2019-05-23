@@ -16,7 +16,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = "Reports of " + (Utils.GetRandBool() ? "a" : "a Possible") + " DUI";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.DUI)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_DUI)}", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

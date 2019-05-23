@@ -27,7 +27,7 @@ namespace ResponseV.Callouts.Any
         public override bool OnBeforeCalloutDisplayed()
         {
             m_CallType = RandomEnumValue<ECallType>();
-            m_CallTypeString = LSPDFR.Radio.GetCallTypeFromEnum_PrankCall(m_CallType);
+            m_CallTypeString = LSPDFR.Radio.GetCallStringFromEnum(m_CallType);
 
             Vector3 LocalPos = Game.LocalPlayer.Character.Position;
             m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(MathHelper.GetRandomInteger(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));

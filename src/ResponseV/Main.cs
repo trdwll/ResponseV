@@ -48,11 +48,12 @@ namespace ResponseV
             {
                 m_UpdateAvailable = Updater.CheckForUpdates();
             }
+
+            /** Plugins */
             if (Configuration.config.Plugins.TurnWheels)
             {
                 Plugins.TurnWheels.TurnWheelsImpl();
             }
-
             if (Configuration.config.Plugins.KeepDoorOpen)
             {
                 Plugins.KeepDoorOpen.KeepDoorOpenImpl();

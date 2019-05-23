@@ -15,7 +15,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = $"Reports of {Utils.GetRandValue("an animal attack", "vicious animal", "vicious animal on the loose")}";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.VICIOUS_ANIMAL)} IN_OR_ON_POSITION", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_ANIMALATTACK)}", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

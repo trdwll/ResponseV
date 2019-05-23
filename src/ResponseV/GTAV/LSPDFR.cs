@@ -15,7 +15,7 @@ namespace ResponseV
         {
             for (int i = 0; i < numOfUnits; i++)
             {
-                LSPD_First_Response.Mod.API.Functions.RequestBackup(pos, responseType, unitType);
+                Functions.RequestBackup(pos, responseType, unitType);
             }
         }
 
@@ -27,7 +27,7 @@ namespace ResponseV
             }
             else
             {
-                LSPD_First_Response.Mod.API.Functions.RequestBackup(location, EBackupResponseType.Code3, EBackupUnitType.Ambulance);
+                Functions.RequestBackup(location, EBackupResponseType.Code3, EBackupUnitType.Ambulance);
             }
         }
 
@@ -39,7 +39,7 @@ namespace ResponseV
             }
             else
             {
-                LSPD_First_Response.Mod.API.Functions.RequestBackup(location, EBackupResponseType.Code3, EBackupUnitType.Firetruck);
+                Functions.RequestBackup(location, EBackupResponseType.Code3, EBackupUnitType.Firetruck);
             }
         }
 
@@ -391,7 +391,7 @@ namespace ResponseV
                 switch (CallType)
                 {
                 default:
-                case ECallType.CT_AIRCRAFTCRASH: ret += $"{GetRandomSound(AIRCRAFT_CRASH)}"; break;
+                case ECallType.CT_AIRCRAFTCRASH: ret += (bool)args[0] ? $"{GetRandomSound(AIRCRAFT_CRASH)}" : $"{GetRandomSound(AIRCRAFT_HELICOPTER_CRASH)}"; break;
                 case ECallType.CT_ANIMALATTACK: ret += $"{GetRandomSound(VICIOUS_ANIMAL)}"; break;
                 case ECallType.CT_ASSAULT: ret += $"{GetRandomSound(ASSAULT)}"; break;
                 case ECallType.CT_ASSAULTONOFFICER: ret += (bool)args[0] ? $"{GetRandomSound(ASSAULT_ON_OFFICER_KNIFE)}" : $"{GetRandomSound(ASSAULT_ON_OFFICER)}"; break;
@@ -487,40 +487,75 @@ namespace ResponseV
                 return ret;
             }
 
-            public static string GetCallTypeFromEnum_PrankCall(ECallType CallType)
+            public static string GetCallStringFromEnum(ECallType CallType, params object[] args)
             {
                 switch (CallType)
                 {
                 default:
-                case ECallType.CT_AIRCRAFTCRASH: return "an aircraft crash";
-                case ECallType.CT_ANIMALATTACK: return "an animal attack";
-                case ECallType.CT_ASSAULT: return "an assault";
-                case ECallType.CT_ASSAULTONOFFICER: return "an assault on an officer";
-                case ECallType.CT_ATTEMPTEDMUDER: return "an attempted murder";
-                case ECallType.CT_ATTEMPTEDSUICIDE: return "an attempted suicide";
-                case ECallType.CT_BARFIGHT: return "a bar fight";
-                case ECallType.CT_BEACHPARTY: return "a beach party";
-                case ECallType.CT_DEADBODY: return Utils.GetRandValue("a dead body", "a dead person");
-                case ECallType.CT_DROWNING: return "a drowning";
-                case ECallType.CT_DRUGBUST: return "a drug bust";
-                case ECallType.CT_DUI: return Utils.GetRandValue("a dui", "a driver under the influence");
-                case ECallType.CT_GANGACTIVITY: return "gang activity";
-                case ECallType.CT_GRAFFITIARTIST: return "a graffiti artist";
-                case ECallType.CT_INDECENTEXPOSURE: return "indecent exposure";
-                case ECallType.CT_KIDNAPPING: return "a kidnapping";
-                case ECallType.CT_LITTERING: return "littering";
-                case ECallType.CT_LOITERING: return "loitering";
-                case ECallType.CT_MVA: return Utils.GetRandValue("a motor vehicle accident", "a mva", "a vehicle accident");
-                case ECallType.CT_OFFICERDOWN: return Utils.GetRandValue("multiple officers down", "an officer down");
+                case ECallType.CT_AIRCRAFTCRASH: return (Utils.GetRandBool() ? Utils.GetRandValue("an Aircraft", "an Airplane") : "a Helicopter") +" Crash";
+                case ECallType.CT_ANIMALATTACK: return Utils.GetRandValue("an Animal Attack", "Vicious Animal", "Vicious Animal on the Loose");
+                case ECallType.CT_ASSAULT: return "an Assault";
+                case ECallType.CT_ASSAULTONOFFICER: return "an Assault on an Officer";
+                case ECallType.CT_ATTEMPTEDMUDER: return "an Attempted Murder";
+                case ECallType.CT_ATTEMPTEDSUICIDE: return "an Attempted Suicide";
+                case ECallType.CT_BARFIGHT: return "a Bar Fight";
+                case ECallType.CT_BEACHPARTY: return "a Beach Party";
+                case ECallType.CT_DEADBODY: return Utils.GetRandValue("a Dead body", "a Dead Person", "a Deceased Person");
+                case ECallType.CT_DROWNING: return Utils.GetRandValue("a Drowning", "a Possible Drowning");
+                case ECallType.CT_DRUGBUST: return "a Drug Bust";
+                case ECallType.CT_DUI: return Utils.GetRandValue("a DUI", "a Driver Under the Influence");
+                case ECallType.CT_GANGACTIVITY: return "Gang Activity";
+                case ECallType.CT_GRAFFITIARTIST: return "a Graffiti Artist";
+                case ECallType.CT_INDECENTEXPOSURE: return "Indecent Exposure";
+                case ECallType.CT_KIDNAPPING: return "a Kidnapping";
+                case ECallType.CT_LITTERING: return "Littering";
+                case ECallType.CT_LOITERING: return "Loitering";
+                case ECallType.CT_MVA: return Utils.GetRandValue("a Motor Vehicle Accident", "a MVA", "a Vehicle Accident", "a Vehicle Collision", "a MVC", "a Motor Vehicle Collision");
+                case ECallType.CT_OFFICERDOWN:
+                    #region Officer Down
+                    if ((uint)args[0] == 1)
+                    {
+                        return "an Officer Down";
+                    }
+                    else if ((uint)args[0] == 2)
+                    {
+                        return "an Officer Hit by a Vehicle";
+                    }
+                    else if ((uint)args[0] == 3)
+                    {
+                        return "an Officer Injured";
+                    }
+                    else if ((uint)args[0] == 4)
+                    {
+                        return "an Officer Shot";
+                    }
+                    else if ((uint)args[0] == 5)
+                    {
+                        return "an Officer Stabbed";
+                    }
+                    else if ((uint)args[0] == 6)
+                    {
+                        return "an Officer Under Fire";
+                    }
+                    else if ((uint)args[0] == 7)
+                    {
+                        return "an Officer on Fire";
+                    }
+                    else if ((uint)args[0] == 10)
+                    {
+                        return Utils.GetRandValue("Multiple Officers Down", "Officers Down");
+                    }
+                    return "";
+                    #endregion Officer Down
                 case ECallType.CT_OVERDOSE: return Utils.GetRandValue("an overdose", "a possible overdose");
                 case ECallType.CT_PAPARAZZI: return "paparazzi";
                 case ECallType.CT_PARKINGVIOLATION: return "a parking violation";
                 case ECallType.CT_PARTY: return "a party";
                 case ECallType.CT_PEDHITBYVEHICLE: return "a person hit by vehicle";
                 case ECallType.CT_PEDMISSING: return "a person missing";
-                case ECallType.CT_PEDONFIRE: return "a person on fire";
+                case ECallType.CT_PEDONFIRE: return "a Person on Fire";
                 case ECallType.CT_PEDWITHWEAPON: return "a person with a weapon";
-                case ECallType.CT_PRANKCALL: return GetCallTypeFromEnum_PrankCall(Enums.RandomEnumValue<ECallType>());
+                case ECallType.CT_PRANKCALL: return GetCallStringFromEnum(Enums.RandomEnumValue<ECallType>());
                 case ECallType.CT_PURSUIT: return "a pursuit";
                 case ECallType.CT_RECKLESSDRIVING: return "a reckless driver";
                 case ECallType.CT_ROBBERY: return "a robbery";
