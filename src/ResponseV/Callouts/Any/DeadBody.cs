@@ -9,7 +9,7 @@ namespace ResponseV.Callouts.Any
     {
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = $"Reports of a " + (Utils.GetRandBool() ? "Deceased Person" : "Dead Body");
+            CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_DEADBODY)}";
             CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_DEADBODY)}", g_SpawnPoint);

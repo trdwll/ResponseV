@@ -12,7 +12,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = $"Reports of {Utils.GetRandValue("an animal attack", "vicious animal", "vicious animal on the loose")}";
+            CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_ANIMALATTACK)}";
             CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_ANIMALATTACK)}", g_SpawnPoint);

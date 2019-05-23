@@ -10,7 +10,7 @@ namespace ResponseV.Callouts.Any
     {
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = "Reports of Indecent Exposure";
+            CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_INDECENTEXPOSURE)}";
             CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_INDECENTEXPOSURE)}", g_SpawnPoint);

@@ -9,7 +9,7 @@ namespace ResponseV.Callouts.Any
     {
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = $"Reports of " + (Utils.GetRandBool() ? "an" : "a Possible") + " Overdose";
+            CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_OVERDOSE)}";
             CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OVERDOSE)}", g_SpawnPoint);
@@ -40,7 +40,7 @@ namespace ResponseV.Callouts.Any
 
             GameFiber fiber = GameFiber.StartNew(delegate
             {
-                GameFiber.Sleep(3000);
+                GameFiber.Sleep(2000);
                 LSPDFR.RequestEMS(g_SpawnPoint);
             }, "OverdoseRequestEMSFiber");
 

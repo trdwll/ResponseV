@@ -13,7 +13,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = "Reports of " + (Utils.GetRandBool() ? "a" : "a Possible") + " DUI";
+            CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_DUI)}";//" + (Utils.GetRandBool() ? "a" : "a Possible") + " DUI";
             CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_DUI)}", g_SpawnPoint);

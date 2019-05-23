@@ -487,6 +487,12 @@ namespace ResponseV
                 return ret;
             }
 
+            /// <summary>
+            /// Get the string for CalloutMessage
+            /// </summary>
+            /// <param name="CallType">The call that you're wanting to get the string for</param>
+            /// <param name="args"></param>
+            /// <returns></returns>
             public static string GetCallStringFromEnum(ECallType CallType, params object[] args)
             {
                 switch (CallType)
@@ -500,11 +506,26 @@ namespace ResponseV
                 case ECallType.CT_ATTEMPTEDSUICIDE: return "an Attempted Suicide";
                 case ECallType.CT_BARFIGHT: return "a Bar Fight";
                 case ECallType.CT_BEACHPARTY: return "a Beach Party";
-                case ECallType.CT_DEADBODY: return Utils.GetRandValue("a Dead body", "a Dead Person", "a Deceased Person");
+                case ECallType.CT_DEADBODY: return Utils.GetRandValue("a Dead Body", "a Dead Person", "a Deceased Person");
                 case ECallType.CT_DROWNING: return Utils.GetRandValue("a Drowning", "a Possible Drowning");
                 case ECallType.CT_DRUGBUST: return "a Drug Bust";
-                case ECallType.CT_DUI: return Utils.GetRandValue("a DUI", "a Driver Under the Influence");
-                case ECallType.CT_GANGACTIVITY: return "Gang Activity";
+                case ECallType.CT_DUI: return Utils.GetRandValue("a DUI", "a Driver Under the Influence", "a Possible DUI", "a Possible Driver Under the Influence");
+                case ECallType.CT_GANGACTIVITY:
+                    #region Gang Activity
+                    if ((uint)args[0] == 1)
+                    {
+                        return "Gang Activity";
+                    }
+                    else if ((uint)args[0] == 2)
+                    {
+                        return "a Gang Disturbance";
+                    }
+                    else if ((uint)args[0] == 3)
+                    {
+                        return "Gang Violence";
+                    }
+                    return "";
+                    #endregion Gang Activity
                 case ECallType.CT_GRAFFITIARTIST: return "a Graffiti Artist";
                 case ECallType.CT_INDECENTEXPOSURE: return "Indecent Exposure";
                 case ECallType.CT_KIDNAPPING: return "a Kidnapping";
@@ -547,7 +568,7 @@ namespace ResponseV
                     }
                     return "";
                     #endregion Officer Down
-                case ECallType.CT_OVERDOSE: return Utils.GetRandValue("an overdose", "a possible overdose");
+                case ECallType.CT_OVERDOSE: return Utils.GetRandValue("an Overdose", "a Possible Overdose");
                 case ECallType.CT_PAPARAZZI: return "paparazzi";
                 case ECallType.CT_PARKINGVIOLATION: return "a parking violation";
                 case ECallType.CT_PARTY: return "a party";

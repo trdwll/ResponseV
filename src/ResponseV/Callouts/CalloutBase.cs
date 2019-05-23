@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Rage;
-using Rage.Native;
-using LSPD_First_Response;
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
-using LSPD_First_Response.Engine.Scripting;
 
-using System.Reflection;
 
 namespace ResponseV.Callouts
 {
@@ -33,7 +27,8 @@ namespace ResponseV.Callouts
         protected Model[] g_PedModels = Model.PedModels.Where(p => !p.Name.StartsWith("A_C_")).ToArray();
         protected Model[] g_Vehicles = Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle && !v.IsEmergencyVehicle && !v.IsBigVehicle).ToArray();
 
-        protected Model[] g_PoliceVehicleModels = { "police", "police2", "police3", "police4", "sheriff", "sheriff2" };
+        protected Model[] g_LosSantosPoliceVehicles = { "police", "police2", "police3", "police4" };
+        protected Model[] g_BlaineCountyPoliceVehicles = { "sheriff", "sheriff2" };
 
         protected WeaponHash[] g_WeaponList = {
             WeaponHash.AdvancedRifle, WeaponHash.AssaultRifle, WeaponHash.CarbineRifle, // Assault Rifles

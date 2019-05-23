@@ -31,7 +31,7 @@ namespace ResponseV.Callouts.Any
             // TODO: if in blaine then choose from blaine points
             g_SpawnPoint = m_bIsAirplane ? Utils.GetRandValue(SpawnPoints.m_AirplaneCrashSpawnPoints) : Utils.GetRandValue(HeliSpawns);
 
-            CalloutMessage = "Reports of " + (m_bIsAirplane ? Utils.GetRandValue("an Aircraft", "an Airplane") : "a Helicopter") + " Crash";
+            CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_AIRCRAFTCRASH, m_bIsAirplane)}";
             CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_AIRCRAFTCRASH, m_bIsAirplane)}", g_SpawnPoint); 

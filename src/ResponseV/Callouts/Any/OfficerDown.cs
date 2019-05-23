@@ -4,55 +4,54 @@ using LSPD_First_Response.Mod.Callouts;
 using System.Collections.Generic;
 using ResponseV.GTAV;
 
+using System;
+
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("OfficerDown", CalloutProbability.Low)]
+    [CalloutInfo("OfficerDown", CalloutProbability.VeryHigh)]
     internal sealed class OfficerDown : CalloutBase
     {
         private LHandle m_Pursuit;
 
         private List<Vehicle> m_Officers = new List<Vehicle>();
 
-        private Enums.CalloutType m_CalloutType;
+        private ECall m_CalloutType;
         
         private bool m_bMultiple;
 
+        private Model[] m_PoliceVehicleModels;
+
+        enum ECall : uint
+        {
+            C_DOWN = 1,
+            C_HIT = 2,
+            C_INJ = 3,
+            C_SHOT = 4,
+            C_STAB = 5,
+            C_UFIRE = 6,
+            C_FIRE = 7,
+            C_MDOWN = 10
+        }
+
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_bMultiple = Utils.GetRandBool();
+            m_PoliceVehicleModels = Game.LocalPlayer.Character.Position.GetArea() == WorldZone.EWorldArea.Blaine_County ? g_BlaineCountyPoliceVehicles : g_LosSantosPoliceVehicles;
 
-            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 1)}", g_SpawnPoint); // officer down
-            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 2)}", g_SpawnPoint); // hit by vehicle
-            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 3)}", g_SpawnPoint); // injured
-            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 4)}", g_SpawnPoint); // shot
-            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 5)}", g_SpawnPoint); // stabbed
-            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 6)}", g_SpawnPoint); // under fire
-            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 7)}", g_SpawnPoint); // on fire
-            // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, 10)}", g_SpawnPoint); // officers down
+            uint choice = (uint)Enums.RandomEnumValue<ECall>();
+            Main.MainLogger.Log($"OfficerDown: choose a random enum value {choice}");
+            m_bMultiple = choice == 10;
 
-            CalloutMessage = "Reports of " + (m_bMultiple ? "Multiple Officers": "an Officer") + " Down";
+            CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_OFFICERDOWN, choice)}";
             CalloutPosition = g_SpawnPoint;
 
-            string aud;
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, m_bMultiple ? 10 : choice)}", g_SpawnPoint);
+
             if (!m_bMultiple)
             {
-                m_CalloutType = Utils.GetRandValue(Enums.CalloutType.Shooting, Enums.CalloutType.Stabbing, Enums.CalloutType.Unknown);
+                m_CalloutType = (ECall)choice;
 
-                switch (m_CalloutType)
-                {
-                    default:
-                    case Enums.CalloutType.Unknown: aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_DOWN); break;
-                    case Enums.CalloutType.Shooting: aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICER_SHOT); break;
-                    case Enums.CalloutType.Stabbing: aud = "CRIME_OFFICER_STABBED";  break;
-                }
+                Main.MainLogger.Log($"OfficerDown: Casted m_CalloutType to {m_CalloutType}");
             }
-            else
-            {
-                m_CalloutType = Enums.CalloutType.Shooting;
-                aud = LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICERS_DOWN);
-            }
-
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.OFFICERS_REPORT)} {aud} IN_OR_ON_POSITION", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -61,66 +60,71 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("OfficerDown: Callout accepted");
 
-            Ped suspect;
-            Vehicle veh;
+            Ped suspect = null;
+            if (!m_bMultiple)
+            {
+                Vehicle veh = new Vehicle(Utils.GetRandValue(m_PoliceVehicleModels), g_SpawnPoint);
+                veh.CreateRandomDriver();
+                veh.Driver.Kill();
+                m_Officers.Add(veh);
+
+                suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+                suspect.Tasks.FightAgainstClosestHatedTarget(30f);
+                g_Suspects.Add(suspect);
+            }
+
             switch (m_CalloutType)
             {
-                default:
-                case Enums.CalloutType.Unknown:
-                case Enums.CalloutType.Stabbing:
-                    veh = new Vehicle(Utils.GetRandValue(g_PoliceVehicleModels), g_SpawnPoint);
+            default:
+                // TODO: Spawn police car and kill officer
+                break;
+
+            case ECall.C_HIT:
+                Vehicle v = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint);
+                v.CreateRandomDriver();
+
+                g_Suspects.Add(v.Driver);
+                break;
+
+            case ECall.C_FIRE:
+                break;
+
+            case ECall.C_INJ:
+                break;
+
+            case ECall.C_STAB:
+                suspect.Inventory.GiveNewWeapon(WeaponHash.Knife, 1, true);
+                break;
+
+            case ECall.C_DOWN:
+            case ECall.C_SHOT:
+                suspect.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
+                break;
+
+            case ECall.C_UFIRE:
+            case ECall.C_MDOWN:
+                // Spawn suspects
+                for (int i = 0; i < MathHelper.GetRandomInteger(1, 5); i++)
+                {
+                    Ped sus = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+                    sus.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
+                    sus.Tasks.FightAgainstClosestHatedTarget(30f);
+                    g_Suspects.Add(sus);
+                }
+
+                // Spawn police
+                for (int j = 0; j < MathHelper.GetRandomInteger(2, 5); j++)
+                {
+                    Vehicle veh = new Vehicle(Utils.GetRandValue(Utils.GetRandValue(m_PoliceVehicleModels)), g_SpawnPoint.Around(10f));
                     veh.CreateRandomDriver();
-                    veh.Driver.Kill();
+                    if (Utils.GetRandBool())
+                    {
+                        veh.Driver.Kill();
+                    }
 
                     m_Officers.Add(veh);
-
-                    suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
-
-                    if (m_CalloutType == Enums.CalloutType.Stabbing)
-                    {
-                        suspect.Inventory.GiveNewWeapon(WeaponHash.Knife, 1, true);
-                        suspect.Tasks.FightAgainstClosestHatedTarget(30f);
-                    }
-                    g_Suspects.Add(suspect);
-                    break;
-                case Enums.CalloutType.Shooting:
-                    if (m_bMultiple)
-                    {
-                        // Spawn suspects
-                        for (int i = 0; i < MathHelper.GetRandomInteger(1, 5); i++)
-                        {
-                            Ped sus = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
-                            sus.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
-                            sus.Tasks.FightAgainstClosestHatedTarget(30f);
-                            g_Suspects.Add(sus);
-                        }
-
-                        // Spawn police
-                        for (int j = 0; j < MathHelper.GetRandomInteger(2, 5); j++)
-                        {
-                            Vehicle veh2 = new Vehicle(Utils.GetRandValue(g_PoliceVehicleModels), g_SpawnPoint.Around(10f));
-                            veh2.CreateRandomDriver();
-                            if (Utils.GetRandBool())
-                            {
-                                veh2.Driver.Kill();
-                            }
-
-                            m_Officers.Add(veh2);
-                        }
-                    }
-                    else
-                    {
-                        veh = new Vehicle(Utils.GetRandValue(g_PoliceVehicleModels), g_SpawnPoint);
-                        veh.CreateRandomDriver();
-                        veh.Driver.Kill();
-
-                        m_Officers.Add(veh);
-
-                        suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
-                        suspect.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
-                        g_Suspects.Add(suspect);
-                    }
-                    break;
+                }
+                break;
             }
 
             // TODO: Fix the lighting, it doesn't work atm.
