@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using LSPD_First_Response.Mod.API;
 using Rage;
 
 using RAGENativeUI;
 using RAGENativeUI.Elements;
-using Rectangle = System.Drawing.Rectangle;
 
 namespace ResponseV.Plugins
 {
@@ -47,6 +44,8 @@ namespace ResponseV.Plugins
                     GameFiber.Yield();
                     try
                     {
+                        if (!s_BaitCar.Exists()) return;
+
                         if (Game.LocalPlayer.Character.Position.DistanceTo(s_BaitCar) > 50 && (s_BaitCar.Driver == null || ped == null)) // TODO: check if police are not nearby
                         {
                             s_bCanBeStolen = true;
