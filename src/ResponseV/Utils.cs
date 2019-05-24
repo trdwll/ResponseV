@@ -17,7 +17,7 @@ namespace ResponseV
 
         public static T GetRandValue<T>(params T[] args)
         {
-            return args[MathHelper.GetRandomInteger(0, args.Length)];
+            return args[MathHelper.GetRandomInteger(args.Length - 1)];
         }
 
         public static bool GetRandBool()

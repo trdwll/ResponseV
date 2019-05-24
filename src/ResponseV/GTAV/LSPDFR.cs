@@ -459,6 +459,10 @@ namespace ResponseV
                     {
                         ret += $"{GetRandomSound(OFFICERS_DOWN)}";
                     }
+                    else
+                    {
+                        ret += "";
+                    }
                     #endregion Officer Down
                     break;
                 case ECallType.CT_OVERDOSE: ret += $"{GetRandomSound(OVERDOSE)}"; break;

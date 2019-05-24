@@ -115,6 +115,9 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.Vandalism));
             // Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
 
+            // TODO: Add a BOLO callout
+            // TODO: Add a bicycle stolen callout (near right side of map in the small community/mirror park)
+
 
             // Fed - These require more work than other callouts as we spawn specific vehicles in specific places etc
             //Functions.RegisterCallout(typeof(Callouts.Fed.TerroristPlot));
