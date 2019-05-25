@@ -47,7 +47,7 @@ namespace ResponseV
 
         public static void Notify(string Message)
         {
-            Game.DisplayNotification($"Response~y~V~w~ {Message}");
+            Game.DisplayNotification($"[Response~y~V~w~] {Message}");
         }
 
         public static void CrashNotify()

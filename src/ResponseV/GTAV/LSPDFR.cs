@@ -397,7 +397,7 @@ namespace ResponseV
                 case EResponse.R_CODE2OR3: return Utils.GetRandValue(Utils.MergeArrays(RESPOND_CODE2, RESPOND_CODE3));
                 case EResponse.R_CODE3_99: return Utils.GetRandValue(RESPOND_CODE99);
                 case EResponse.R_CODE3EMERGENCY: return Utils.GetRandValue(RESPOND_CODE99_EMERGENCY);
-                case EResponse.R_RANDOM: return GetResponseAudio(Enums.RandomEnumValue<EResponse>());
+                case EResponse.R_RANDOM: return GetResponseAudio(RandomEnumValue<EResponse>());
                 }
             }
 

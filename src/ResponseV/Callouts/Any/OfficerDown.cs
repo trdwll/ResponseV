@@ -4,11 +4,9 @@ using LSPD_First_Response.Mod.Callouts;
 using System.Collections.Generic;
 using ResponseV.GTAV;
 
-using System;
-
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("OfficerDown", CalloutProbability.Always)]
+    [CalloutInfo("OfficerDown", CalloutProbability.Low)]
     internal sealed class OfficerDown : CalloutBase
     {
         private LHandle m_Pursuit;
@@ -76,9 +74,11 @@ namespace ResponseV.Callouts.Any
 
                 if (m_CalloutType != ECall.C_HIT)
                 {
-                    suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint.Around(5f, 8f), MathHelper.GetRandomInteger(1, 360));
+                    suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint.Around(5f, 8f), MathHelper.GetRandomInteger(1, 360))
+                    {
+                        IsPersistent = true
+                    };
                     suspect.Tasks.FightAgainstClosestHatedTarget(30f);
-                    suspect.IsPersistent = true;
                     g_Suspects.Add(suspect);
 
                     g_Logger.Log("OfficerDown: Spawned suspect");
