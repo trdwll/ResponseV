@@ -8,7 +8,7 @@ namespace ResponseV
 {
     internal class Enums
     {
-        public enum Callout
+        public enum ECallout
         {
             InPursuit,
             EnRoute,
@@ -17,7 +17,7 @@ namespace ResponseV
         };
 
         // used for when we have multiple outcomes for a callout like Officer Down
-        public enum CalloutType
+        public enum ECalloutType
         {
             FailureToCheckIn,
             Stabbing,
@@ -25,11 +25,16 @@ namespace ResponseV
             Unknown
         }
 
-        public enum Response
+        public enum EResponse
         {
-            Code2,
-            Code3,
-            Silent
+            R_CODE1,
+            R_CODE2,
+            R_CODE3,
+            R_CODE2OR3,
+            R_CODE3EMERGENCY,
+            R_CODE3_99,
+            R_RANDOM,
+            R_NONE
         }
 
         public enum ECallType

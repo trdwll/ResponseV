@@ -17,7 +17,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = "Reports of a Person on Fire";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_PEDONFIRE)}", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_PEDONFIRE, Enums.EResponse.R_CODE3)}", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

@@ -34,7 +34,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_AIRCRAFTCRASH, m_bIsAirplane)}";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_AIRCRAFTCRASH, m_bIsAirplane)}", g_SpawnPoint); 
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_AIRCRAFTCRASH, Enums.EResponse.R_CODE3, m_bIsAirplane)}", g_SpawnPoint); 
 
             return base.OnBeforeCalloutDisplayed();
         }

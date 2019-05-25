@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ambient\AmbientEvent.cs" />
+    <Compile Include="Ambient\Bolo.cs" />
     <Compile Include="Ambient\Call.cs" />
     <Compile Include="Ambient\Fight.cs" />
     <Compile Include="Ambient\Patrol.cs" />
@@ -152,7 +153,9 @@
     <Compile Include="Enums.cs" />
     <Compile Include="GTAV\Extensions\DamagePacks.cs" />
     <Compile Include="GTAV\Extensions\Extensions.cs" />
+    <Compile Include="GTAV\Extensions\PedHeadshot.cs" />
     <Compile Include="GTAV\Extensions\VehicleExtensions.cs" />
+    <Compile Include="GTAV\Extensions\WeaponHashExt.cs" />
     <Compile Include="GTAV\SpawnPoints.cs" />
     <Compile Include="GTAV\Extensions\WorldZone.cs" />
     <Compile Include="Logger.cs" />

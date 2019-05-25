@@ -16,7 +16,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_DUI)}";//" + (Utils.GetRandBool() ? "a" : "a Possible") + " DUI";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_DUI)}", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_DUI, Enums.EResponse.R_CODE2)}", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

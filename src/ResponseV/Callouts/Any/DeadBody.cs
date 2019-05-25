@@ -12,7 +12,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_DEADBODY)}";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_DEADBODY)}", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_DEADBODY, Enums.EResponse.R_CODE2)}", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

@@ -48,7 +48,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_OFFICERDOWN, choice)}";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, choice)}", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, Utils.GetRandValue(Enums.EResponse.R_CODE3EMERGENCY, Enums.EResponse.R_CODE3_99), choice)}", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -80,14 +80,18 @@ namespace ResponseV.Callouts.Any
                     suspect.Tasks.FightAgainstClosestHatedTarget(30f);
                     suspect.IsPersistent = true;
                     g_Suspects.Add(suspect);
+
+                    g_Logger.Log("OfficerDown: Spawned suspect");
                 }
             }
 
             switch (m_CalloutType)
             {
             case ECall.C_HIT:
-                Vehicle v = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint);
-                v.IsPersistent = true;
+                Vehicle v = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint)
+                {
+                    IsPersistent = true
+                };
                 v.CreateRandomDriver();
                 v.Driver.IsPersistent = true;
                 g_Suspects.Add(v.Driver);
@@ -169,6 +173,8 @@ namespace ResponseV.Callouts.Any
                     }
                 }
 
+                g_Logger.Log("OfficerDown (Multiple Officers Down): Spawned suspects");
+
                 // Spawn police
                 for (int j = 0; j < MathHelper.GetRandomInteger(2, 5); j++)
                 {
@@ -192,6 +198,8 @@ namespace ResponseV.Callouts.Any
 
                     m_Officers.Add(veh);
                 }
+
+                g_Logger.Log("OfficerDown (Multiple Officers Down): Spawned officers");
                 break;
             }
 
@@ -215,6 +223,7 @@ namespace ResponseV.Callouts.Any
             {
                 GameFiber fiber = GameFiber.StartNew(delegate
                 {
+                    g_Logger.Log("OfficerDown: Requesting EMS");
                     GameFiber.Sleep(2000);
                     LSPDFR.RequestEMS(g_SpawnPoint);
 
@@ -242,6 +251,8 @@ namespace ResponseV.Callouts.Any
                     World.SpawnExplosion(m_OfficerFireLocation, 3, 10.0f, false, false, 0.0f);
                     World.SpawnExplosion(m_OfficerFireLocation, 3, 10.0f, false, false, 0.0f);
                     World.SpawnExplosion(m_OfficerFireLocation, 3, 10.0f, false, false, 0.0f);
+
+                    g_Logger.Log("OfficerDown: Spawned fire");
                 }
 
                 if (!g_bIsPursuit)

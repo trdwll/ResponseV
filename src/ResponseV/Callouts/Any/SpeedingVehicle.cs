@@ -27,7 +27,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = "Reports of a speeding vehicle";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_SPEEDINGVEHICLE, m_Speed)}", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_SPEEDINGVEHICLE, Enums.EResponse.R_CODE2OR3, m_Speed)}", g_SpawnPoint);
 
             // Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.SPEEDING)} {LSPDFR.Radio.GetSpeedSound(m_Speed)} IN_OR_ON_POSITION", g_SpawnPoint);
 

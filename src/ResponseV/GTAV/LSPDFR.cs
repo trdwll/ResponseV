@@ -304,6 +304,12 @@ namespace ResponseV
             public static readonly string BUILD_SLENDER = "BUILD_SLENDER_01";
             public static readonly string BUILD_THIN = "BUILD_THIN_01";
 
+            // Dispatch respond
+            public static readonly string[] RESPOND_CODE2 = { "0x00B0B158", "0x0B6786C0", "0x1CB5A95C", "RESPOND_CODE_2" };
+            public static readonly string[] RESPOND_CODE3 = { "0x0DD15A9F", "0x0E9C9C35", "0x1917312B", "RESPOND_CODE_3" };
+            public static readonly string[] RESPOND_CODE99 = { "0x09BEB4C8", "0x067E6E48" };
+            public static readonly string[] RESPOND_CODE99_EMERGENCY = { "0x1B01574D", "0x113C43C4" };
+
 
             // ew
             public static string GetSpeedSound(uint Speed)
@@ -379,13 +385,29 @@ namespace ResponseV
                 }
             }
 
+            public static string GetResponseAudio(EResponse response)
+            {
+                switch (response)
+                {
+                default:
+                case EResponse.R_NONE: return "";
+                case EResponse.R_CODE1: return "RESPOND_CODE_1";
+                case EResponse.R_CODE2: return "RESPOND_CODE_2";
+                case EResponse.R_CODE3: return "RESPOND_CODE_3";
+                case EResponse.R_CODE2OR3: return Utils.GetRandValue(Utils.MergeArrays(RESPOND_CODE2, RESPOND_CODE3));
+                case EResponse.R_CODE3_99: return Utils.GetRandValue(RESPOND_CODE99);
+                case EResponse.R_CODE3EMERGENCY: return Utils.GetRandValue(RESPOND_CODE99_EMERGENCY);
+                case EResponse.R_RANDOM: return GetResponseAudio(Enums.RandomEnumValue<EResponse>());
+                }
+            }
+
             /// <summary>
             /// Return a string for Functions.PlayScannerAudioUsingPosition
             /// </summary>
             /// <param name="CallType"></param>
             /// <param name="args"></param>
             /// <returns></returns>
-            public static string GetCalloutAudio(ECallType CallType, params object[] args)
+            public static string GetCalloutAudio(ECallType CallType, EResponse ResponseType = EResponse.R_NONE, params object[] args)
             {
                 string ret = $"{GetRandomSound(WE_HAVE)} ";
                 switch (CallType)
@@ -487,7 +509,7 @@ namespace ResponseV
                 case ECallType.CT_VEHICLEFIRE: ret = $"{GetRandomSound(VEHICLE_FIRE)}"; break;
                 }
 
-                ret += " IN_OR_ON_POSITION";
+                ret += $" IN_OR_ON_POSITION {GetResponseAudio(ResponseType)}";
                 return ret;
             }
 
