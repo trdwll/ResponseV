@@ -4,7 +4,7 @@ using Rage.Native;
 
 namespace ResponseVLib
 {
-    public static class VehicleExt
+    public static class Vehicle
     {
         /// <summary>
         /// Repair the vehicle nearby
@@ -14,7 +14,7 @@ namespace ResponseVLib
         /// <param name="CompletionTime"></param>
         public static void RepairVehicle(float Radius = 5.0f, bool bPlayAnimation = true, uint CompletionTime = 20000)
         {
-            Vehicle vehicle = (Vehicle)Rage.World.GetClosestEntity(Game.LocalPlayer.Character.Position, Radius, GetEntitiesFlags.ConsiderAllVehicles);
+            Rage.Vehicle vehicle = (Rage.Vehicle)Rage.World.GetClosestEntity(Game.LocalPlayer.Character.Position, Radius, GetEntitiesFlags.ConsiderAllVehicles);
 
             if (vehicle.Exists())
             {
@@ -28,7 +28,7 @@ namespace ResponseVLib
         /// <param name="vehicle"></param>
         /// <param name="bPlayAnimation"></param>
         /// <param name="CompletionTime"></param>
-        public static void RepairVehicle(this Vehicle vehicle, bool bPlayAnimation = true, uint CompletionTime = 20000)
+        public static void RepairVehicle(this Rage.Vehicle vehicle, bool bPlayAnimation = true, uint CompletionTime = 20000)
         {
             if (vehicle.Exists())
             {
@@ -36,7 +36,7 @@ namespace ResponseVLib
             }
         }
 
-        internal static void RepairVehicle_Impl(Vehicle vehicle, bool bPlayAnimation, uint CompletionTime)
+        internal static void RepairVehicle_Impl(Rage.Vehicle vehicle, bool bPlayAnimation, uint CompletionTime)
         {
             Ped ped = Game.LocalPlayer.Character;
             if (!ped.Exists() || !ped.IsOnFoot || vehicle.EngineHealth < 400.0f) return;
@@ -68,7 +68,7 @@ namespace ResponseVLib
         /// <summary>
         /// Randomize the license plate to avoid excessively frequent debug plates from showing. - by PeterU, modified by trdwll
         /// </summary>
-        public static void RandomizeLicensePlate(this Vehicle vehicle)
+        public static void RandomizeLicensePlate(this Rage.Vehicle vehicle)
         {
             vehicle.LicensePlate = $"{MathHelper.GetRandomInteger(0, 9).ToString()}" +
                 $"{MathHelper.GetRandomInteger(0, 9).ToString()}" +
@@ -253,12 +253,12 @@ namespace ResponseVLib
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
-        public static VehicleColor GetColors(this Vehicle v)
+        public static VehicleColor GetColors(this Rage.Vehicle v)
         {
             return UnsafeGetVehicleColors(v);
         }
 
-        private static unsafe VehicleColor UnsafeGetVehicleColors(Vehicle vehicle)
+        private static unsafe VehicleColor UnsafeGetVehicleColors(Rage.Vehicle vehicle)
         {
             int colorPrimaryInt;
             int colorSecondaryInt;

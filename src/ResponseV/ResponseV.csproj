@@ -69,6 +69,9 @@
     <Reference Include="RagePluginHookSDK">
       <HintPath>G:\Program Files\Steam\steamapps\common\Grand Theft Auto V\SDK\RagePluginHookSDK.dll</HintPath>
     </Reference>
+    <Reference Include="ResponseVLib">
+      <HintPath>..\ResponseVLib\bin\Release\ResponseVLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
