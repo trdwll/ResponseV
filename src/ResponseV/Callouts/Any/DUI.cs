@@ -13,7 +13,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_DUI)}";//" + (Utils.GetRandBool() ? "a" : "a Possible") + " DUI";
+            CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_DUI)}";//" + (ResponseVLib.Utils.GetRandBool() ? "a" : "a Possible") + " DUI";
             CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_DUI, Enums.EResponse.R_CODE2)}", g_SpawnPoint);
@@ -25,7 +25,7 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("DUI: Callout accepted");
 
-            m_Vehicle = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint)
+            m_Vehicle = new Vehicle(ResponseVLib.Utils.GetRandValue(g_Vehicles), g_SpawnPoint)
             {
                 IsPersistent = true
             };
@@ -41,7 +41,7 @@ namespace ResponseV.Callouts.Any
 
             if (Main.g_bTrafficPolicer)
             {
-                if (Utils.GetRandBool())
+                if (ResponseVLib.Utils.GetRandBool())
                 {
                     // DUI/drinking
                     Traffic_Policer.API.Functions.SetPedAlcoholLevel(m_Suspect, Traffic_Policer.API.Functions.GetRandomOverTheLimitAlcoholLevel());
@@ -49,11 +49,11 @@ namespace ResponseV.Callouts.Any
                 else
                 {
                     // drugs
-                    Traffic_Policer.API.Functions.SetPedDrugsLevels(m_Suspect, Utils.GetRandBool(), Utils.GetRandBool());
+                    Traffic_Policer.API.Functions.SetPedDrugsLevels(m_Suspect, ResponseVLib.Utils.GetRandBool(), ResponseVLib.Utils.GetRandBool());
 
-                    if (Utils.GetRandBool())
+                    if (ResponseVLib.Utils.GetRandBool())
                     {
-                        Traffic_Policer.API.Functions.SetPedAlcoholLevel(m_Suspect, Utils.GetRandBool() ? 
+                        Traffic_Policer.API.Functions.SetPedAlcoholLevel(m_Suspect, ResponseVLib.Utils.GetRandBool() ? 
                             Traffic_Policer.API.Functions.GetRandomOverTheLimitAlcoholLevel() : 
                             Traffic_Policer.API.Functions.GetRandomUnderTheLimitAlcoholLevel());
                     }

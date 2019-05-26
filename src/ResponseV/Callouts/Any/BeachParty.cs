@@ -17,7 +17,7 @@ namespace ResponseV.Callouts.Any
             g_bCustomSpawn = true;
 
             // TODO: if in Blaine choose those spawnpoints
-            g_SpawnPoint = Utils.GetRandValue(GTAV.SpawnPoints.m_LosSantosBeachPartySpawnPoints);
+            g_SpawnPoint = ResponseVLib.Utils.GetRandValue(GTAV.SpawnPoints.m_LosSantosBeachPartySpawnPoints);
 
             CalloutMessage = $"Reports of a beach party";
             CalloutPosition = g_SpawnPoint;
@@ -31,7 +31,7 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("BeachParty: Callout accepted");
 
-            //g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
+            //g_Victims.Add(new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
 
             return base.OnCalloutAccepted();
         }

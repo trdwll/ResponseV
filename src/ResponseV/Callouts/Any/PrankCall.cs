@@ -6,6 +6,11 @@ using static ResponseV.Enums;
 using Callout = LSPD_First_Response.Mod.Callouts.Callout;
 using ResponseV.GTAV;
 
+using World = Rage.World;
+using Ped = Rage.Ped;
+using ResponseVLib;
+using WorldZone = ResponseVLib.WorldZone;
+
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("PrankCall", CalloutProbability.VeryHigh)]
@@ -47,7 +52,7 @@ namespace ResponseV.Callouts.Any
                 break;
             case ECallType.CT_DROWNING:
                 // TODO: Get the nearest one to the player rather than having it spawn 4m away lol
-                m_SpawnPoint = LocalPos.GetArea() == GTAV.WorldZone.EWorldArea.Blaine_County ? Utils.GetRandValue(SpawnPoints.BlaineDrowningSpawnPoints) : Utils.GetRandValue(SpawnPoints.LosSantosDrowningSpawnPoints);
+                m_SpawnPoint = WorldZone.GetArea(LocalPos) == WorldZone.EWorldArea.Blaine_County ? ResponseVLib.Utils.GetRandValue(SpawnPoints.BlaineDrowningSpawnPoints) : ResponseVLib.Utils.GetRandValue(SpawnPoints.LosSantosDrowningSpawnPoints);
                 Main.MainLogger.Log($"PrankCall: SpawnPoint fixed for drowning.");
                 break;
             }
@@ -79,7 +84,7 @@ namespace ResponseV.Callouts.Any
 
             if (m_bCreateSuspect)
             {
-                m_Suspect = new Ped(Utils.GetRandValue(Model.PedModels), m_SpawnPoint, 0f);
+                m_Suspect = new Ped(ResponseVLib.Utils.GetRandValue(Model.PedModels), m_SpawnPoint, 0f);
                 Main.MainLogger.Log("PrankCall: Spawned suspect");
             }
 

@@ -29,14 +29,14 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_Vehicle = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint);
+            m_Vehicle = new Vehicle(ResponseVLib.Utils.GetRandValue(g_Vehicles), g_SpawnPoint);
             g_Suspects.Add(m_Vehicle.CreateRandomDriver());
 
-            if (Utils.GetRandBool())
+            if (ResponseVLib.Utils.GetRandBool())
             {
                 for (int i = 0; i < MathHelper.GetRandomInteger(1, 2); i++)
                 {
-                    g_Suspects.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
+                    g_Suspects.Add(new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
                 }
 
                 g_Suspects.ForEach(s => s.Tasks.EnterVehicle(m_Vehicle, -2)); // Doesn't work for some reason
@@ -74,9 +74,9 @@ namespace ResponseV.Callouts.Any
                 g_Suspects.ForEach(s =>
                 {
                     Functions.AddPedToPursuit(m_Pursuit, s);
-                    s.Inventory.GiveNewWeapon(Utils.GetRandValue(WeaponHash.AssaultRifle, WeaponHash.CombatMG, WeaponHash.MicroSMG, WeaponHash.Pistol), 200, true);
+                    s.Inventory.GiveNewWeapon(ResponseVLib.Utils.GetRandValue(WeaponHash.AssaultRifle, WeaponHash.CombatMG, WeaponHash.MicroSMG, WeaponHash.Pistol), 200, true);
 
-                    if (Utils.GetRandBool())
+                    if (ResponseVLib.Utils.GetRandBool())
                     {
                         // TODO: fix this to have the peds shoot at nearest police vehicle (or we could just make them shoot at us)
                         s.Tasks.FireWeaponAt(Vector3.RandomUnit, 10, FiringPattern.BurstFireDriveby);

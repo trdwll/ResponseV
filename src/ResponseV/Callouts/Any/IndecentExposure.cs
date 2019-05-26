@@ -23,7 +23,7 @@ namespace ResponseV.Callouts.Any
             g_Logger.Log("IndecentExposure: Callout accepted");
             Model[] PedModels = { "a_f_m_fatcult_01", "a_m_m_acult_01", "a_m_y_acult_01", "a_m_y_acult_02" };
 
-            g_Suspects.Add(new Ped(Utils.GetRandValue(PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
+            g_Suspects.Add(new Ped(ResponseVLib.Utils.GetRandValue(PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
             g_Suspects.ForEach(s => s.Tasks.Wander());
 
             return base.OnCalloutAccepted();

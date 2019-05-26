@@ -23,7 +23,7 @@ namespace ResponseV.Ambient
             for (;;)
             {
                 GameFiber.Yield();
-                s_AmbientEvent = EAmbientEvent.AE_FIGHT;// Utils.GetRandValue(EAmbientEvent.AE_CALL, EAmbientEvent.AE_PATROL);
+                s_AmbientEvent = EAmbientEvent.AE_FIGHT;// ResponseVLib.Utils.GetRandValue(EAmbientEvent.AE_CALL, EAmbientEvent.AE_PATROL);
 
                 switch (s_AmbientEvent)
                 {

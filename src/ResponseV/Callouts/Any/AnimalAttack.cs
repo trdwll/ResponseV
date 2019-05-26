@@ -24,12 +24,12 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("AnimalAttack: Callout accepted");
 
-            m_Animal = new Ped(Utils.GetRandValue("a_c_husky", "a_c_rottweiler", "a_c_poodle", "a_c_shepherd", "a_c_westy", "a_c_retriever"), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360))
+            m_Animal = new Ped(ResponseVLib.Utils.GetRandValue("a_c_husky", "a_c_rottweiler", "a_c_poodle", "a_c_shepherd", "a_c_westy", "a_c_retriever"), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360))
             {
                 IsPersistent = true
             };
 
-            m_Victim = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360))
+            m_Victim = new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360))
             {
                 IsPersistent = true
             };
@@ -44,10 +44,10 @@ namespace ResponseV.Callouts.Any
             if (Game.LocalPlayer.Character.Position.DistanceTo(g_SpawnPoint) <= 60)
             {
                 m_Animal.Tasks.FightAgainst(m_Victim);
-                if (Utils.GetRandBool())
+                if (ResponseVLib.Utils.GetRandBool())
                 {
                     m_Victim.Tasks.FightAgainst(m_Animal);
-                    m_Victim.Inventory.GiveNewWeapon(WeaponHash.Pistol, 31, Utils.GetRandBool());
+                    m_Victim.Inventory.GiveNewWeapon(WeaponHash.Pistol, 31, ResponseVLib.Utils.GetRandBool());
                 }
             }
 
@@ -78,7 +78,7 @@ namespace ResponseV.Callouts.Any
                 else
                 {
                     // TODO: call for Animal Control (add this in or use a 3rd party plugin)
-                    // Utils.NotifyPlayerTo("Dispatch", Utils.GetRandValue("notify animal control.", "I need animal control on scene.")); 
+                    // Utils.NotifyPlayerTo("Dispatch", ResponseVLib.Utils.GetRandValue("notify animal control.", "I need animal control on scene.")); 
                     End();
                 }
             }

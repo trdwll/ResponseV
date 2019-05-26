@@ -52,7 +52,7 @@ namespace ResponseV.Plugins
 
                             List<Vehicle> vehicles = World.GetAllVehicles().Where(v => v.DistanceTo(s_BaitCar) <= 25 && v.IsPoliceVehicle).Take(10).ToList();
 
-                            bool bIsCopNear = Native.IsCopNear(s_BaitCar.Position, 25.0f) || vehicles.Count > 0;
+                            bool bIsCopNear = ResponseVLib.Native.IsCopNear(s_BaitCar.Position, 25.0f) || vehicles.Count > 0;
 
                             if (!bIsCopNear)
                             {
@@ -76,7 +76,7 @@ namespace ResponseV.Plugins
 
                                     Main.MainLogger.Log("BaitCar: GoToOffsetFromEntity complete");
 
-                                    if (Utils.GetRandBool()) // && !bIsCopNear)
+                                    if (ResponseVLib.Utils.GetRandBool()) // && !bIsCopNear)
                                     {
                                         ped.Tasks.EnterVehicle(s_BaitCar, -1).WaitForCompletion();
                                         ped.Tasks.CruiseWithVehicle(MathHelper.GetRandomInteger(30, 60), VehicleDrivingFlags.Normal);
@@ -118,7 +118,7 @@ namespace ResponseV.Plugins
 
                         if (Functions.IsPlayerPerformingPullover() && Functions.GetPulloverSuspect(Functions.GetCurrentPullover()) == ped && s_Pursuit == null)
                         {
-                            if (Utils.GetRandBool() && !s_bPursuit && !s_bCarDisabled)
+                            if (ResponseVLib.Utils.GetRandBool() && !s_bPursuit && !s_bCarDisabled)
                             {
                                 StartPursuit();
                             }
@@ -424,7 +424,7 @@ namespace ResponseV.Plugins
 
                             Functions.SetVehicleOwnerName(s_BaitCar, Functions.GetCurrentAgencyScriptName().ToUpper());
 
-                            GTAV.VehicleExtensions.RandomizeLicensePlate(s_BaitCar);
+                            ResponseVLib.Vehicle.RandomizeLicensePlate(s_BaitCar);
 
                             Utils.Notify($"Spawned a {vehicle.SelectedValue.ToString()} as a Bait Car");
                             StartBaitCar();
@@ -457,7 +457,7 @@ namespace ResponseV.Plugins
                             {
                                 UIMenuListItem vehicle = s_CarsList.Where(list => list.Index != 0).First();
                                 s_PreviewCar = new Vehicle(vehicle.SelectedValue.ToString(), Game.LocalPlayer.Character.GetOffsetPositionFront(6f));
-                                GTAV.VehicleExtensions.RandomizeLicensePlate(s_PreviewCar);
+                                ResponseVLib.Vehicle.RandomizeLicensePlate(s_PreviewCar);
 
                                 Utils.Notify($"Spawned a {vehicle.SelectedValue.ToString()} as a Preview Bait Car");
 

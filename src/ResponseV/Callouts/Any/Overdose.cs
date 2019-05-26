@@ -21,9 +21,9 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("Overdose: Callout accepted");
 
-            g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
+            g_Victims.Add(new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
 
-            if (Native.GetSafeCoordForPed(g_SpawnPoint, out Vector3 pos))
+            if (ResponseVLib.Native.GetSafeCoordForPed(g_SpawnPoint, out Vector3 pos))
             {
                 g_Victims.ForEach(v => v.Position = pos);
             }

@@ -2,6 +2,9 @@
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 
+using ResponseVLib;
+using Ped = Rage.Ped;
+
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("DeadBody", CalloutProbability.VeryHigh)]
@@ -21,7 +24,7 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("DeadBody: Callout accepted");
 
-            g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
+            g_Victims.Add(new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360)));
             g_Victims.ForEach(v =>
             {
                 if (Native.GetSafeCoordForPed(g_SpawnPoint, out Vector3 pos))
@@ -29,13 +32,13 @@ namespace ResponseV.Callouts.Any
                     v.Position = pos;
                 }
 
-                v.ApplyDamagePack(Utils.GetRandValue(
-                        DamagePack.BigHitByVehicle, DamagePack.SCR_Torture,
-                        DamagePack.Explosion_Large, DamagePack.Burnt_Ped_0,
-                        DamagePack.Car_Crash_Light, DamagePack.Car_Crash_Heavy,
-                        DamagePack.Fall_Low, DamagePack.Fall,
-                        DamagePack.HitByVehicle, DamagePack.BigRunOverByVehicle,
-                        DamagePack.RunOverByVehicle
+                v.ApplyDamagePack(ResponseVLib.Utils.GetRandValue(
+                        DamagePacks.BigHitByVehicle, DamagePacks.SCR_Torture,
+                        DamagePacks.Explosion_Large, DamagePacks.Burnt_Ped_0,
+                        DamagePacks.Car_Crash_Light, DamagePacks.Car_Crash_Heavy,
+                        DamagePacks.Fall_Low, DamagePacks.Fall,
+                        DamagePacks.HitByVehicle, DamagePacks.BigRunOverByVehicle,
+                        DamagePacks.RunOverByVehicle
                     ), 100, 1);
 
                 v.Kill();

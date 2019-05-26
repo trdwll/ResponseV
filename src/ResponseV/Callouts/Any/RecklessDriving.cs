@@ -25,7 +25,7 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("RecklessDriving: Callout accepted");
 
-            m_Vehicle = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint)
+            m_Vehicle = new Vehicle(ResponseVLib.Utils.GetRandValue(g_Vehicles), g_SpawnPoint)
             {
                 IsPersistent = true
             };
@@ -39,10 +39,10 @@ namespace ResponseV.Callouts.Any
 
             RecklessDrivingFiber();
 
-            if (Main.g_bTrafficPolicer && Utils.GetRandBool())
+            if (Main.g_bTrafficPolicer && ResponseVLib.Utils.GetRandBool())
             {
                 // drugs
-                Traffic_Policer.API.Functions.SetPedDrugsLevels(m_Suspect, Utils.GetRandBool(), Utils.GetRandBool());
+                Traffic_Policer.API.Functions.SetPedDrugsLevels(m_Suspect, ResponseVLib.Utils.GetRandBool(), ResponseVLib.Utils.GetRandBool());
             }
             
             return base.OnCalloutAccepted();

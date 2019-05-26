@@ -5,7 +5,7 @@ namespace ResponseV
     internal class Configuration
     {
         private static readonly string ConfigFile = $"{Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.json";
-        public static Cfg.RootObject config = Serialization.JSON.Deserialize.GetFromFile<Cfg.RootObject>(ConfigFile);
+        public static Cfg.RootObject config = ResponseVLib.Serialization.JSON.Deserialize.GetFromFile<Cfg.RootObject>(ConfigFile);
 
         public class Cfg
         {

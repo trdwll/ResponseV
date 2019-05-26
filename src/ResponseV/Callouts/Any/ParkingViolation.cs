@@ -21,7 +21,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_Vehicle = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint);
+            m_Vehicle = new Vehicle(ResponseVLib.Utils.GetRandValue(g_Vehicles), g_SpawnPoint);
             
             return base.OnCalloutAccepted();
         }

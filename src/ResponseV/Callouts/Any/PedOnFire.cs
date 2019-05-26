@@ -2,12 +2,17 @@
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 
+using ResponseVLib;
+
+using World = Rage.World;
+using Ped = Rage.Ped;
+
 namespace ResponseV.Callouts.Any
 {
     [CalloutInfo("PedOnFire", CalloutProbability.VeryHigh)]
     internal sealed class PedOnFire : CalloutBase
     {
-        private bool m_bCallPursuit = Utils.GetRandBool();
+        private bool m_bCallPursuit = ResponseVLib.Utils.GetRandBool();
         private bool m_bSpawnedFire;
 
         private LHandle m_Pursuit;
@@ -26,23 +31,23 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("PedOnFire: Callout accepted");
 
-            g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, 0f));
+            g_Victims.Add(new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), g_SpawnPoint, 0f));
 
             // Spawn suspect
             if (m_bCallPursuit)
             {
-                g_Suspects.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, 0f));
+                g_Suspects.Add(new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), g_SpawnPoint, 0f));
                 g_Logger.Log("PedOnFire: Suspect created");
             }
 
             g_Victims.ForEach(v =>
             {
-                v.ApplyDamagePack(Utils.GetRandValue(
-                    DamagePack.Burnt_Ped_0, DamagePack.Burnt_Ped_Head_Torso,
-                    DamagePack.Burnt_Ped_Left_Arm, DamagePack.Burnt_Ped_Limbs,
-                    DamagePack.Burnt_Ped_Right_Arm), 100f, 1f);
+                v.ApplyDamagePack(ResponseVLib.Utils.GetRandValue(
+                    DamagePacks.Burnt_Ped_0, DamagePacks.Burnt_Ped_Head_Torso,
+                    DamagePacks.Burnt_Ped_Left_Arm, DamagePacks.Burnt_Ped_Limbs,
+                    DamagePacks.Burnt_Ped_Right_Arm), 100f, 1f);
 
-                if (Utils.GetRandBool())
+                if (ResponseVLib.Utils.GetRandBool())
                 {
                     v.Kill();
                 }
@@ -124,7 +129,7 @@ namespace ResponseV.Callouts.Any
                     s.Inventory.GiveNewWeapon(WeaponHash.Pistol, 200, false);
                     s.Inventory.GiveNewWeapon(WeaponHash.Molotov, 5, true);
 
-                    if (Utils.GetRandBool())
+                    if (ResponseVLib.Utils.GetRandBool())
                     {
                         s.Inventory.GiveNewWeapon(WeaponHash.PetrolCan, 1, true);
                     }

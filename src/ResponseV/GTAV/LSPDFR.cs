@@ -47,7 +47,7 @@ namespace ResponseV
         {
             if (Main.g_bArrestManager)
             {
-                Utils.NotifyPlayerTo("Dispatch", Utils.GetRandValue("Send a coroner.", "We need a coroner."));
+                Utils.NotifyPlayerTo("Dispatch", ResponseVLib.Utils.GetRandValue("Send a coroner.", "We need a coroner."));
                 Arrest_Manager.API.Functions.CallCoroner(location, true);
             }
         }
@@ -56,7 +56,7 @@ namespace ResponseV
         {
             GameFiber fiber = GameFiber.StartNew(delegate 
             {
-                GTAV.VehicleExtensions.RandomizeLicensePlate(vehicle);
+                ResponseVLib.Vehicle.RandomizeLicensePlate(vehicle);
                 GameFiber.Sleep(3000);
 
                 string VehicleName = vehicle.Model.Name.ToUpper(); //GTAV.VehicleExtensions.DetermineVehicleName(vehicle);
@@ -64,13 +64,13 @@ namespace ResponseV
 
                 Functions.PlayScannerAudio(SoundName);
 
-                string VehicleColor = GTAV.VehicleExtensions.GetColors(vehicle).PrimaryColorName;
+                string VehicleColor = ResponseVLib.Vehicle.GetColors(vehicle).PrimaryColorName;
                 string VehiclePlate = vehicle.LicensePlate;
 
                 {
                     string DispatchString = $"The RP reported the vehicle as a ~o~{VehicleName} ~s~in ~o~{VehicleColor} ~s~color.";
 
-                    if (Utils.GetRandBool())
+                    if (ResponseVLib.Utils.GetRandBool())
                     {
                         DispatchString += $"~n~The RP also wrote down a plate ~o~{VehiclePlate}~s~.";
                     }
@@ -349,7 +349,7 @@ namespace ResponseV
 
             public static string GetRandomSound(string[] sounds)
             {
-                return Utils.GetRandValue(sounds);
+                return ResponseVLib.Utils.GetRandValue(sounds);
             }
 
             // Probably the worst way to do this, but it works for now
@@ -361,27 +361,27 @@ namespace ResponseV
                 case WeaponHash.APPistol:
                 case WeaponHash.Pistol:
                 case WeaponHash.CombatPistol: // I know this is messy, but it works for now.
-                case WeaponHash.Pistol50: return Utils.GetRandValue(Utils.MergeArrays(Utils.MergeArrays(GAT, FIREARM), Utils.MergeArrays(GUN, WEAPON)));
+                case WeaponHash.Pistol50: return ResponseVLib.Utils.GetRandValue(ResponseVLib.Utils.MergeArrays(ResponseVLib.Utils.MergeArrays(GAT, FIREARM), ResponseVLib.Utils.MergeArrays(GUN, WEAPON)));
                 case WeaponHash.AdvancedRifle:
                 case WeaponHash.AssaultRifle:
-                case WeaponHash.CarbineRifle: return Utils.GetRandValue(Radio.ASSAULT_RIFLE);
+                case WeaponHash.CarbineRifle: return ResponseVLib.Utils.GetRandValue(Radio.ASSAULT_RIFLE);
                 case WeaponHash.AssaultSMG:
-                case WeaponHash.MicroSMG: return Utils.GetRandValue(Utils.MergeArrays(GAT, SUB_MACHINEGUN));
+                case WeaponHash.MicroSMG: return ResponseVLib.Utils.GetRandValue(ResponseVLib.Utils.MergeArrays(GAT, SUB_MACHINEGUN));
                 case WeaponHash.MG:
-                case WeaponHash.CombatMG: return Utils.GetRandValue(MACHINEGUN);
-                case WeaponHash.Bat: return Utils.GetRandValue(BAT);
-                case WeaponHash.Knife: return Utils.GetRandValue(KNIFE);
-                case WeaponHash.RPG: return Utils.GetRandValue(RPG);
-                case WeaponHash.Minigun: return Utils.GetRandValue(MINIGUN);
-                case WeaponHash.GrenadeLauncher: return Utils.GetRandValue(GRENADE_LAUNCHER);
-                case WeaponHash.SawnOffShotgun: return Utils.GetRandValue(SAWED_OFF_SHOTGUN);
-                case WeaponHash.AssaultShotgun: return Utils.GetRandValue(ASSAULT_SHOTGUN);
+                case WeaponHash.CombatMG: return ResponseVLib.Utils.GetRandValue(MACHINEGUN);
+                case WeaponHash.Bat: return ResponseVLib.Utils.GetRandValue(BAT);
+                case WeaponHash.Knife: return ResponseVLib.Utils.GetRandValue(KNIFE);
+                case WeaponHash.RPG: return ResponseVLib.Utils.GetRandValue(RPG);
+                case WeaponHash.Minigun: return ResponseVLib.Utils.GetRandValue(MINIGUN);
+                case WeaponHash.GrenadeLauncher: return ResponseVLib.Utils.GetRandValue(GRENADE_LAUNCHER);
+                case WeaponHash.SawnOffShotgun: return ResponseVLib.Utils.GetRandValue(SAWED_OFF_SHOTGUN);
+                case WeaponHash.AssaultShotgun: return ResponseVLib.Utils.GetRandValue(ASSAULT_SHOTGUN);
                 case WeaponHash.PumpShotgun:
-                case WeaponHash.BullpupShotgun: return Utils.GetRandValue(SHOTGUN);
+                case WeaponHash.BullpupShotgun: return ResponseVLib.Utils.GetRandValue(SHOTGUN);
                 case WeaponHash.SniperRifle:
-                case WeaponHash.HeavySniper: return Utils.GetRandValue(SNIPER_RIFLE);
+                case WeaponHash.HeavySniper: return ResponseVLib.Utils.GetRandValue(SNIPER_RIFLE);
                 case WeaponHash.Grenade:
-                case WeaponHash.SmokeGrenade: return Utils.GetRandValue(EXPLOSIVE);
+                case WeaponHash.SmokeGrenade: return ResponseVLib.Utils.GetRandValue(EXPLOSIVE);
                 }
             }
 
@@ -394,9 +394,9 @@ namespace ResponseV
                 case EResponse.R_CODE1: return "RESPOND_CODE_1";
                 case EResponse.R_CODE2: return "RESPOND_CODE_2";
                 case EResponse.R_CODE3: return "RESPOND_CODE_3";
-                case EResponse.R_CODE2OR3: return Utils.GetRandValue(Utils.MergeArrays(RESPOND_CODE2, RESPOND_CODE3));
-                case EResponse.R_CODE3_99: return Utils.GetRandValue(RESPOND_CODE99);
-                case EResponse.R_CODE3EMERGENCY: return Utils.GetRandValue(RESPOND_CODE99_EMERGENCY);
+                case EResponse.R_CODE2OR3: return ResponseVLib.Utils.GetRandValue(ResponseVLib.Utils.MergeArrays(RESPOND_CODE2, RESPOND_CODE3));
+                case EResponse.R_CODE3_99: return ResponseVLib.Utils.GetRandValue(RESPOND_CODE99);
+                case EResponse.R_CODE3EMERGENCY: return ResponseVLib.Utils.GetRandValue(RESPOND_CODE99_EMERGENCY);
                 case EResponse.R_RANDOM: return GetResponseAudio(RandomEnumValue<EResponse>());
                 }
             }
@@ -524,18 +524,18 @@ namespace ResponseV
                 switch (CallType)
                 {
                 default:
-                case ECallType.CT_AIRCRAFTCRASH: return (Utils.GetRandBool() ? Utils.GetRandValue("an Aircraft", "an Airplane") : "a Helicopter") +" Crash";
-                case ECallType.CT_ANIMALATTACK: return Utils.GetRandValue("an Animal Attack", "Vicious Animal", "Vicious Animal on the Loose");
+                case ECallType.CT_AIRCRAFTCRASH: return (ResponseVLib.Utils.GetRandBool() ? ResponseVLib.Utils.GetRandValue("an Aircraft", "an Airplane") : "a Helicopter") +" Crash";
+                case ECallType.CT_ANIMALATTACK: return ResponseVLib.Utils.GetRandValue("an Animal Attack", "Vicious Animal", "Vicious Animal on the Loose");
                 case ECallType.CT_ASSAULT: return "an Assault";
                 case ECallType.CT_ASSAULTONOFFICER: return "an Assault on an Officer";
                 case ECallType.CT_ATTEMPTEDMUDER: return "an Attempted Murder";
                 case ECallType.CT_ATTEMPTEDSUICIDE: return "an Attempted Suicide";
                 case ECallType.CT_BARFIGHT: return "a Bar Fight";
                 case ECallType.CT_BEACHPARTY: return "a Beach Party";
-                case ECallType.CT_DEADBODY: return Utils.GetRandValue("a Dead Body", "a Dead Person", "a Deceased Person");
-                case ECallType.CT_DROWNING: return Utils.GetRandValue("a Drowning", "a Possible Drowning");
+                case ECallType.CT_DEADBODY: return ResponseVLib.Utils.GetRandValue("a Dead Body", "a Dead Person", "a Deceased Person");
+                case ECallType.CT_DROWNING: return ResponseVLib.Utils.GetRandValue("a Drowning", "a Possible Drowning");
                 case ECallType.CT_DRUGBUST: return "a Drug Bust";
-                case ECallType.CT_DUI: return Utils.GetRandValue("a DUI", "a Driver Under the Influence", "a Possible DUI", "a Possible Driver Under the Influence");
+                case ECallType.CT_DUI: return ResponseVLib.Utils.GetRandValue("a DUI", "a Driver Under the Influence", "a Possible DUI", "a Possible Driver Under the Influence");
                 case ECallType.CT_GANGACTIVITY:
                     #region Gang Activity
                     if ((uint)args[0] == 1)
@@ -557,7 +557,7 @@ namespace ResponseV
                 case ECallType.CT_KIDNAPPING: return "a Kidnapping";
                 case ECallType.CT_LITTERING: return "Littering";
                 case ECallType.CT_LOITERING: return "Loitering";
-                case ECallType.CT_MVA: return Utils.GetRandValue("a Motor Vehicle Accident", "a MVA", "a Vehicle Accident", "a Vehicle Collision", "a MVC", "a Motor Vehicle Collision");
+                case ECallType.CT_MVA: return ResponseVLib.Utils.GetRandValue("a Motor Vehicle Accident", "a MVA", "a Vehicle Accident", "a Vehicle Collision", "a MVC", "a Motor Vehicle Collision");
                 case ECallType.CT_OFFICERDOWN:
                     #region Officer Down
                     if ((uint)args[0] == 1)
@@ -590,11 +590,11 @@ namespace ResponseV
                     }
                     else if ((uint)args[0] == 10)
                     {
-                        return Utils.GetRandValue("Multiple Officers Down", "Officers Down");
+                        return ResponseVLib.Utils.GetRandValue("Multiple Officers Down", "Officers Down");
                     }
                     return "";
                     #endregion Officer Down
-                case ECallType.CT_OVERDOSE: return Utils.GetRandValue("an Overdose", "a Possible Overdose");
+                case ECallType.CT_OVERDOSE: return ResponseVLib.Utils.GetRandValue("an Overdose", "a Possible Overdose");
                 case ECallType.CT_PAPARAZZI: return "paparazzi";
                 case ECallType.CT_PARKINGVIOLATION: return "a parking violation";
                 case ECallType.CT_PARTY: return "a party";

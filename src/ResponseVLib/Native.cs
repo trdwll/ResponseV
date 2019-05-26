@@ -14,5 +14,10 @@ namespace ResponseVLib
         {
             return NativeFunction.Natives.IS_COP_PED_IN_AREA_3D<bool>(pos.X - radius, pos.Y - radius, pos.Z - radius, pos.X + radius, pos.Y + radius, pos.Z + radius);
         }
+
+        public static void RegisterHatedTargetsAroundPed(this Rage.Ped ped, float radius)
+        {
+            Rage.Native.NativeFunction.Natives.REGISTER_HATED_TARGETS_AROUND_PED(ped, radius);
+        }
     }
 }

@@ -33,11 +33,15 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LSPD First Response">
+      <HintPath>G:\Program Files\Steam\steamapps\common\Grand Theft Auto V\plugins\LSPD First Response.dll</HintPath>
+    </Reference>
     <Reference Include="RagePluginHookSDK">
       <HintPath>G:\Program Files\Steam\steamapps\common\Grand Theft Auto V\SDK\RagePluginHookSDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,7 +51,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DamagePacks.cs" />
+    <Compile Include="Extension.cs" />
     <Compile Include="Native.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="Ped.cs" />
+    <Compile Include="Serialization.cs" />
+    <Compile Include="Updater.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Vehicle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -56,4 +65,7 @@
     <Compile Include="WorldZone.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /y "$(ProjectDir)$(OutDir)ResponseVLib.dll" "G:\Program Files\Steam\steamapps\common\Grand Theft Auto V\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

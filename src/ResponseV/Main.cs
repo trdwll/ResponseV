@@ -1,13 +1,11 @@
 ﻿using System;
 using LSPD_First_Response.Mod.API;
 using System.Reflection;
-using System.Windows.Forms;
 using ResponseV.Ambient;
 using Rage;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 using System.Collections.Generic;
-using System.Linq;
+
+using ResponseVLib;
 
 namespace ResponseV
 {
@@ -21,7 +19,9 @@ namespace ResponseV
 
         public static List<GameFiber> g_GameFibers = new List<GameFiber>();
 
+        public static readonly Version m_AppVersion = Assembly.GetExecutingAssembly().GetName().Version;
         private static bool m_UpdateAvailable;
+        private static Version m_VersionAvailable;
 
         public override void Initialize()
         {
@@ -39,14 +39,27 @@ namespace ResponseV
 
             if (Configuration.config.Roleplay.RealismEnabled)
             {
-                string Area = GTAV.WorldZoneMethods.GetAreaName(Rage.Game.LocalPlayer.Character.Position);
-                string WelcomeMessage = $"Welcome {Configuration.config.Roleplay.OfficerName}, to the " + (Utils.IsNight() ? "night" : "day") + $" shift in {Area}. Stay safe out there.";
+                string Area = WorldZone.GetAreaName(WorldZone.GetArea(Rage.Game.LocalPlayer.Character.Position));
+                string WelcomeMessage = $"Welcome {Configuration.config.Roleplay.OfficerName}, to the " + (ResponseVLib.World.IsNight() ? "night" : "day") + $" shift in {Area}. Stay safe out there.";
                 Game.DisplayNotification(WelcomeMessage);
             }
 
             if (Configuration.config.CheckForUpdates)
             {
-                m_UpdateAvailable = Updater.CheckForUpdates();
+                m_UpdateAvailable = Updater.CheckForUpdates("https://trdwll.com/f/ResponseV.json", m_AppVersion, out m_VersionAvailable);
+
+                MainLogger.Log("ResponseV Updater: " + (Updater.m_bIsCriticalUpdate ? "Critical update" : "Update") + $" {m_VersionAvailable.ToString()} available.");
+                MainLogger.Log($"ResponseV Updater: There are also {Updater.m_UpdateSinceCount} updates since you last updated.");
+
+                if (Updater.m_bHasCriticalUpdateBetween)
+                {
+                    MainLogger.Log($"ResponseV Updater: There are {Updater.m_CriticalUpdateCount} critical updates between your version {m_AppVersion.ToString()} and the current version {m_VersionAvailable.ToString()}.");
+
+                    Updater.m_CriticalVersions.ForEach(version =>
+                    {
+                        MainLogger.Log($"ResponseV Updater: Version {version.ToString()} is a critical update.");
+                    });
+                }
             }
 
             /** Plugins */
@@ -145,9 +158,9 @@ namespace ResponseV
             {
                 GameFiber.Sleep(20000);
 
-                g_bBetterEMS = Utils.IsLSPDFRPluginRunning("BetterEMS");
-                g_bArrestManager = Utils.IsLSPDFRPluginRunning("Arrest Manager");
-                g_bTrafficPolicer = Utils.IsLSPDFRPluginRunning("Traffic Policer");
+                g_bBetterEMS = ResponseVLib.Utils.IsLSPDFRPluginRunning("BetterEMS");
+                g_bArrestManager = ResponseVLib.Utils.IsLSPDFRPluginRunning("Arrest Manager");
+                g_bTrafficPolicer = ResponseVLib.Utils.IsLSPDFRPluginRunning("Traffic Policer");
 
                 MainLogger.Log($"BetterEMS: {g_bBetterEMS}");
                 MainLogger.Log($"Arrest Manager: {g_bArrestManager}");
@@ -191,11 +204,11 @@ namespace ResponseV
 
         private static void OnRawFrameRender(object sender, GraphicsEventArgs e)
         {
-            e.Graphics.DrawText($"ResponseV v{Updater.m_AppVersion?.ToString()}", "Verdana", 8.0f, new System.Drawing.PointF(2f, 2f), System.Drawing.Color.White);
+            e.Graphics.DrawText($"ResponseV v{m_AppVersion?.ToString()}", "Verdana", 8.0f, new System.Drawing.PointF(2f, 2f), System.Drawing.Color.White);
 
             if (m_UpdateAvailable)
             {
-                e.Graphics.DrawText($"Version {Updater.m_VersionAvailable?.ToString()} Available!", "Verdana", 8.0f, new System.Drawing.PointF(2f, 12f), System.Drawing.Color.Orange);
+                e.Graphics.DrawText((Updater.m_bIsCriticalUpdate ? "Critical update" : "Update") + $" {m_VersionAvailable.ToString()} available!", "Verdana", 8.0f, new System.Drawing.PointF(2f, 12f), System.Drawing.Color.Orange);
             }
         }
     }

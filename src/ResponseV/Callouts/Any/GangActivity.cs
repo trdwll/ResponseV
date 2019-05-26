@@ -61,7 +61,7 @@ namespace ResponseV.Callouts.Any
 
             for (int i = 0; i < MathHelper.GetRandomInteger(4, 10); i++)
             {
-                Ped ped = new Ped(Utils.GetRandValue(m_Models), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+                Ped ped = new Ped(ResponseVLib.Utils.GetRandValue(m_Models), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
                 Blip blip = new Blip(ped)
                 {
                     IsFriendly = false
@@ -75,7 +75,7 @@ namespace ResponseV.Callouts.Any
                 ped.RelationshipGroup = RelationshipGroup.AmbientGangBallas;
                 ped.CanAttackFriendlies = true;
 
-                ped.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
+                ped.Inventory.GiveNewWeapon(ResponseVLib.Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
             }
 
             return base.OnCalloutAccepted();

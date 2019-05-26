@@ -88,7 +88,7 @@ namespace ResponseV.Callouts
                 g_CallBlip.IsRouteEnabled = false;
                 g_Logger.Log("CalloutBase: DistanceTo(g_SpawnPoint) < 35 so hide g_CallBlip");
 
-                Utils.NotifyPlayerTo("Dispatch", Utils.GetRandValue("I'm on scene.", "on scene"));
+                Utils.NotifyPlayerTo("Dispatch", ResponseVLib.Utils.GetRandValue("I'm on scene.", "on scene"));
             }
 
             if (Game.LocalPlayer.IsDead)

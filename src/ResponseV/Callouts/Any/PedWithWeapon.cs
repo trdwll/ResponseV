@@ -10,14 +10,14 @@ namespace ResponseV.Callouts.Any
         private WeaponHash m_Weapon;
         private LHandle m_Pursuit;
 
-        private bool m_bMultiple = Utils.GetRandBool();
-        private bool m_bOpenCarry = Utils.GetRandBool();
+        private bool m_bMultiple = ResponseVLib.Utils.GetRandBool();
+        private bool m_bOpenCarry = ResponseVLib.Utils.GetRandBool();
 
         private WeaponHash[] m_OpenCarryList = { WeaponHash.AssaultRifle, WeaponHash.AssaultSMG, WeaponHash.Pistol };
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_Weapon = m_bOpenCarry ? Utils.GetRandValue(m_OpenCarryList) : Utils.GetRandValue(g_WeaponList);
+            m_Weapon = m_bOpenCarry ? ResponseVLib.Utils.GetRandValue(m_OpenCarryList) : ResponseVLib.Utils.GetRandValue(g_WeaponList);
 
             if (m_bMultiple)
             {
@@ -25,7 +25,7 @@ namespace ResponseV.Callouts.Any
             }
             else
             {
-                CalloutMessage = "Reports of a person with a " + (Utils.GetRandBool() ? m_Weapon.ToString() : "weapon");
+                CalloutMessage = "Reports of a person with a " + (ResponseVLib.Utils.GetRandBool() ? m_Weapon.ToString() : "weapon");
             }
             CalloutPosition = g_SpawnPoint;
 
@@ -49,11 +49,11 @@ namespace ResponseV.Callouts.Any
             {
                 for (int i = 0; i < MathHelper.GetRandomInteger(1, 3); i++)
                 {
-                    g_Suspects.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, 360));
+                    g_Suspects.Add(new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), g_SpawnPoint, 360));
                 }
             }
 
-            g_Suspects.Add(new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint, 360));
+            g_Suspects.Add(new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), g_SpawnPoint, 360));
 
             g_Suspects.ForEach(s =>
             {
@@ -106,23 +106,23 @@ namespace ResponseV.Callouts.Any
                 {
                     // TODO: Add peds to pursuit doesn't show the blip 
                     Functions.AddPedToPursuit(m_Pursuit, s);
-                    s.BlockPermanentEvents = Utils.GetRandBool();
+                    s.BlockPermanentEvents = ResponseVLib.Utils.GetRandBool();
 
                     // We don't want all suspects to attack lol
-                    if (Utils.GetRandBool())
+                    if (ResponseVLib.Utils.GetRandBool())
                     {
                         s.Tasks.FightAgainstClosestHatedTarget(50f);
                     }
                 });
 
-                if (Utils.GetRandBool()) 
+                if (ResponseVLib.Utils.GetRandBool()) 
                 {
                     Functions.SetPursuitDisableAI(m_Pursuit, true);
                 }
 
                 Functions.SetPursuitIsActiveForPlayer(m_Pursuit, true);
 
-                if (Utils.GetRandBool())
+                if (ResponseVLib.Utils.GetRandBool())
                 {
                     GameFiber.Sleep(5000);
                     LSPDFR.RequestBackup(g_SpawnPoint, MathHelper.GetRandomInteger(1, 3), LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);

@@ -5,6 +5,10 @@ using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 
 using ResponseV.GTAV;
+using ResponseVLib;
+using Vehicle = Rage.Vehicle;
+using World = Rage.World;
+using Ped = Rage.Ped;
 
 namespace ResponseV.Callouts.Any
 {
@@ -16,8 +20,8 @@ namespace ResponseV.Callouts.Any
         private Model[] m_AirplaneModels = Model.VehicleModels.Where(v => v.IsPlane).ToArray();
         private Model[] m_HelicopterModels = Model.VehicleModels.Where(v => v.IsHelicopter).ToArray();
 
-        private bool m_bIsAirplane = Utils.GetRandBool();
-        private bool m_bIsExploded = Utils.GetRandBool();
+        private bool m_bIsAirplane = ResponseVLib.Utils.GetRandBool();
+        private bool m_bIsExploded = ResponseVLib.Utils.GetRandBool();
         private bool m_bSceneSetup;
 
         private GameFiber m_ExplosionFiber;
@@ -26,10 +30,10 @@ namespace ResponseV.Callouts.Any
         {
             g_bCustomSpawn = true;
 
-            Vector3[] HeliSpawns = Utils.MergeArrays(SpawnPoints.m_AirplaneCrashSpawnPoints, SpawnPoints.m_HelicopterCrashSpawnPoints);
+            Vector3[] HeliSpawns = ResponseVLib.Utils.MergeArrays(SpawnPoints.m_AirplaneCrashSpawnPoints, SpawnPoints.m_HelicopterCrashSpawnPoints);
 
             // TODO: if in blaine then choose from blaine points
-            g_SpawnPoint = m_bIsAirplane ? Utils.GetRandValue(SpawnPoints.m_AirplaneCrashSpawnPoints) : Utils.GetRandValue(HeliSpawns);
+            g_SpawnPoint = m_bIsAirplane ? ResponseVLib.Utils.GetRandValue(SpawnPoints.m_AirplaneCrashSpawnPoints) : ResponseVLib.Utils.GetRandValue(HeliSpawns);
 
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_AIRCRAFTCRASH, m_bIsAirplane)}";
             CalloutPosition = g_SpawnPoint;
@@ -41,22 +45,24 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_Vehicle = new Vehicle(m_bIsAirplane ? Utils.GetRandValue(m_AirplaneModels) : Utils.GetRandValue(m_HelicopterModels), g_SpawnPoint);
-            m_Vehicle.IsPersistent = true;
+            m_Vehicle = new Vehicle(m_bIsAirplane ? ResponseVLib.Utils.GetRandValue(m_AirplaneModels) : ResponseVLib.Utils.GetRandValue(m_HelicopterModels), g_SpawnPoint)
+            {
+                IsPersistent = true
+            };
 
             int max_vics = MathHelper.GetRandomInteger(4, 10);
             for (int i = 0; i < max_vics; i++)
             {
-                Vector3 pos = Extensions.AroundPosition(g_SpawnPoint, MathHelper.GetRandomInteger(25, 60));
-                g_Victims.Add(new Ped(Utils.GetRandValue(g_PedModels), pos, MathHelper.GetRandomInteger(0, 360)));
+                Vector3 pos = Extension.AroundPosition(g_SpawnPoint, MathHelper.GetRandomInteger(25, 60));
+                g_Victims.Add(new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), pos, MathHelper.GetRandomInteger(0, 360)));
             }
 
             g_Victims.ForEach(v =>
             {
-                v.ApplyDamagePack(DamagePack.BigHitByVehicle, MathHelper.GetRandomInteger(50, 100), 0.0f);
+                v.ApplyDamagePack(DamagePacks.BigHitByVehicle, MathHelper.GetRandomInteger(50, 100), 0.0f);
                 v.IsPersistent = true;
 
-                if (Utils.GetRandBool())
+                if (ResponseVLib.Utils.GetRandBool())
                 {
                     v.Kill();
                 }
@@ -127,7 +133,7 @@ namespace ResponseV.Callouts.Any
             {
                 for (int i = 0; i < MathHelper.GetRandomInteger(5, 12); i++)
                 {
-                    World.SpawnExplosion(Extensions.AroundPosition(g_SpawnPoint, MathHelper.GetRandomInteger(5, 15)), Utils.GetRandValue(3, 6, 9), MathHelper.GetRandomInteger(5, 12), false, false, 0.0f);
+                    World.SpawnExplosion(Extension.AroundPosition(g_SpawnPoint, MathHelper.GetRandomInteger(5, 15)), ResponseVLib.Utils.GetRandValue(3, 6, 9), MathHelper.GetRandomInteger(5, 12), false, false, 0.0f);
                 }
 
             }, "AircraftCrashFireFiber");

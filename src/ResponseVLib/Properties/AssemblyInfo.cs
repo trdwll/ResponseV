@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ResponseVLib")]
 [assembly: AssemblyDescription("A library for the ResponseV mod.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Russ 'trdwll' Treadwell")]
 [assembly: AssemblyProduct("ResponseVLib")]
 [assembly: AssemblyCopyright("Copyright © 2019 Russ 'trdwll' Treadwell")]
 [assembly: AssemblyTrademark("")]

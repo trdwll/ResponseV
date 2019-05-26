@@ -21,7 +21,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnCalloutAccepted()
         {
-            m_Vehicle = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint)
+            m_Vehicle = new Vehicle(ResponseVLib.Utils.GetRandValue(g_Vehicles), g_SpawnPoint)
             {
                 EngineHealth = 350.0f
             };
@@ -48,7 +48,7 @@ namespace ResponseV.Callouts.Any
 
             if (g_bOnScene)
             {
-                bool bCool = Utils.GetRandBool();
+                bool bCool = ResponseVLib.Utils.GetRandBool();
                 g_Victims.ForEach(v =>
                 {
                     if (bCool)

@@ -14,7 +14,7 @@ namespace ResponseV.Callouts.Any
 
         private uint m_Speed;
 
-        private bool m_bIsPursuit = Utils.GetRandBool();
+        private bool m_bIsPursuit = ResponseVLib.Utils.GetRandBool();
 
         private Ped m_Driver;
 
@@ -38,7 +38,7 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("SpeedingVehicle: Callout accepted");
 
-            m_Vehicle = new Vehicle(Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), g_SpawnPoint);
+            m_Vehicle = new Vehicle(ResponseVLib.Utils.GetRandValue(Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle).ToArray()), g_SpawnPoint);
             m_Driver = m_Vehicle.CreateRandomDriver();
             g_Suspects.Add(m_Driver);
 

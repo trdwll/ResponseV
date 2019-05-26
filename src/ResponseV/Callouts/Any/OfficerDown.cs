@@ -2,7 +2,11 @@
 using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 using System.Collections.Generic;
-using ResponseV.GTAV;
+
+using ResponseVLib;
+using Vehicle = Rage.Vehicle;
+using World = Rage.World;
+using Ped = Rage.Ped;
 
 namespace ResponseV.Callouts.Any
 {
@@ -19,7 +23,7 @@ namespace ResponseV.Callouts.Any
 
         private Vector3 m_OfficerFireLocation;
 
-        private bool m_bAgitated = Utils.GetRandBool();
+        private bool m_bAgitated = ResponseVLib.Utils.GetRandBool();
 
         enum ECall : uint
         {
@@ -35,7 +39,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            m_PoliceVehicleModels = Game.LocalPlayer.Character.Position.GetArea() == WorldZone.EWorldArea.Blaine_County ? g_BlaineCountyPoliceVehicles : g_LosSantosPoliceVehicles;
+            m_PoliceVehicleModels = WorldZone.GetArea(Game.LocalPlayer.Character.Position) == WorldZone.EWorldArea.Blaine_County ? g_BlaineCountyPoliceVehicles : g_LosSantosPoliceVehicles;
 
             uint choice = (uint)Enums.RandomEnumValue<ECall>();
             Main.MainLogger.Log($"OfficerDown: choose a random enum value {choice}");
@@ -46,7 +50,7 @@ namespace ResponseV.Callouts.Any
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_OFFICERDOWN, choice)}";
             CalloutPosition = g_SpawnPoint;
 
-            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, Utils.GetRandValue(Enums.EResponse.R_CODE3EMERGENCY, Enums.EResponse.R_CODE3_99), choice)}", g_SpawnPoint);
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, ResponseVLib.Utils.GetRandValue(Enums.EResponse.R_CODE3EMERGENCY, Enums.EResponse.R_CODE3_99), choice)}", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -60,11 +64,11 @@ namespace ResponseV.Callouts.Any
             Vector3 tmpVec3 = g_SpawnPoint.Around(5f);
             if (m_CalloutType != ECall.C_MDOWN)
             {
-                Vehicle veh = new Vehicle(Utils.GetRandValue(m_PoliceVehicleModels), tmpVec3)
+                Vehicle veh = new Vehicle(ResponseVLib.Utils.GetRandValue(m_PoliceVehicleModels), tmpVec3)
                 {
                     IsPersistent = true
                 };
-                float heading = Extensions.GetClosestVehicleNodeHeading(veh.Position);
+                float heading = ResponseVLib.Node.GetClosestVehicleNodeHeading(veh.Position);
                 veh.Heading = heading;
 
                 officer = veh.CreateRandomDriver();
@@ -74,7 +78,7 @@ namespace ResponseV.Callouts.Any
 
                 if (m_CalloutType != ECall.C_HIT)
                 {
-                    suspect = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint.Around(5f, 8f), MathHelper.GetRandomInteger(1, 360))
+                    suspect = new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), g_SpawnPoint.Around(5f, 8f), MathHelper.GetRandomInteger(1, 360))
                     {
                         IsPersistent = true
                     };
@@ -88,7 +92,7 @@ namespace ResponseV.Callouts.Any
             switch (m_CalloutType)
             {
             case ECall.C_HIT:
-                Vehicle v = new Vehicle(Utils.GetRandValue(g_Vehicles), g_SpawnPoint)
+                Vehicle v = new Vehicle(ResponseVLib.Utils.GetRandValue(g_Vehicles), g_SpawnPoint)
                 {
                     IsPersistent = true
                 };
@@ -96,7 +100,7 @@ namespace ResponseV.Callouts.Any
                 v.Driver.IsPersistent = true;
                 g_Suspects.Add(v.Driver);
 
-                float heading = Extensions.GetClosestVehicleNodeHeading(v.Position);
+                float heading = Node.GetClosestVehicleNodeHeading(v.Position);
                 v.Heading = -heading;
 
                 if (!m_bAgitated)
@@ -104,12 +108,12 @@ namespace ResponseV.Callouts.Any
                     suspect.Tasks.Clear();
                 }
 
-                if (Utils.GetRandBool())
+                if (ResponseVLib.Utils.GetRandBool())
                 {
                     officer.Resurrect();
                 }
 
-                officer.ApplyDamagePack(Utils.GetRandValue(DamagePack.BigHitByVehicle, DamagePack.HitByVehicle, DamagePack.BigRunOverByVehicle, DamagePack.RunOverByVehicle), 100f, 0f);
+                officer.ApplyDamagePack(ResponseVLib.Utils.GetRandValue(DamagePacks.BigHitByVehicle, DamagePacks.HitByVehicle, DamagePacks.BigRunOverByVehicle, DamagePacks.RunOverByVehicle), 100f, 0f);
                 break;
 
             case ECall.C_FIRE:
@@ -124,15 +128,15 @@ namespace ResponseV.Callouts.Any
                 suspect.Inventory.GiveNewWeapon(WeaponHash.Pistol, 200, false);
                 suspect.Inventory.GiveNewWeapon(WeaponHash.Molotov, 5, true);
 
-                if (Utils.GetRandBool())
+                if (ResponseVLib.Utils.GetRandBool())
                 {
                     suspect.Inventory.GiveNewWeapon(WeaponHash.PetrolCan, 1, true);
                 }
 
-                officer.ApplyDamagePack(Utils.GetRandValue(
-                    DamagePack.Burnt_Ped_0, DamagePack.Burnt_Ped_Head_Torso,
-                    DamagePack.Burnt_Ped_Left_Arm, DamagePack.Burnt_Ped_Limbs,
-                    DamagePack.Burnt_Ped_Right_Arm), 100f, 1f);
+                officer.ApplyDamagePack(ResponseVLib.Utils.GetRandValue(
+                    DamagePacks.Burnt_Ped_0, DamagePacks.Burnt_Ped_Head_Torso,
+                    DamagePacks.Burnt_Ped_Left_Arm, DamagePacks.Burnt_Ped_Limbs,
+                    DamagePacks.Burnt_Ped_Right_Arm), 100f, 1f);
                 break;
 
             case ECall.C_STAB:
@@ -142,7 +146,7 @@ namespace ResponseV.Callouts.Any
             case ECall.C_INJ:
             case ECall.C_DOWN:
             case ECall.C_SHOT:
-                suspect.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
+                suspect.Inventory.GiveNewWeapon(ResponseVLib.Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
 
                 if (officer != null && Main.g_bBetterEMS)
                 {
@@ -155,13 +159,13 @@ namespace ResponseV.Callouts.Any
                 // Spawn suspects
                 for (int i = 0; i < MathHelper.GetRandomInteger(1, 5); i++)
                 {
-                    Ped sus = new Ped(Utils.GetRandValue(g_PedModels), g_SpawnPoint.Around(5f, 10f), MathHelper.GetRandomInteger(1, 360));
-                    sus.Inventory.GiveNewWeapon(Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
+                    Ped sus = new Ped(ResponseVLib.Utils.GetRandValue(g_PedModels), g_SpawnPoint.Around(5f, 10f), MathHelper.GetRandomInteger(1, 360));
+                    sus.Inventory.GiveNewWeapon(ResponseVLib.Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
                     sus.Tasks.FightAgainstClosestHatedTarget(30f);
                     sus.IsPersistent = true;
                     g_Suspects.Add(sus);
 
-                    if (Utils.GetRandBool())
+                    if (ResponseVLib.Utils.GetRandBool())
                     {
                         sus.Kill();
                         if (sus != null && Main.g_bBetterEMS)
@@ -169,7 +173,7 @@ namespace ResponseV.Callouts.Any
                             BetterEMS.API.EMSFunctions.OverridePedDeathDetails(sus, "", "Gun shot wound", Game.GameTime, (float)MathHelper.GetRandomDouble(0.0, 0.5));
                         }
 
-                        sus.ApplyDamagePack(DamagePack.TD_PISTOL_FRONT_KILL, 100f, 0f);
+                        sus.ApplyDamagePack(DamagePacks.TD_PISTOL_FRONT_KILL, 100f, 0f);
                     }
                 }
 
@@ -178,13 +182,15 @@ namespace ResponseV.Callouts.Any
                 // Spawn police
                 for (int j = 0; j < MathHelper.GetRandomInteger(2, 5); j++)
                 {
-                    Vehicle veh = new Vehicle(Utils.GetRandValue(Utils.GetRandValue(m_PoliceVehicleModels)), g_SpawnPoint.Around(25f));
-                    veh.IsPersistent = true;
+                    Vehicle veh = new Vehicle(ResponseVLib.Utils.GetRandValue(ResponseVLib.Utils.GetRandValue(m_PoliceVehicleModels)), g_SpawnPoint.Around(25f))
+                    {
+                        IsPersistent = true
+                    };
 
                     Ped ofc = veh.CreateRandomDriver();
                     ofc.IsPersistent = true;
 
-                    if (Utils.GetRandBool())
+                    if (ResponseVLib.Utils.GetRandBool())
                     {
                         ofc.Kill();
 
@@ -193,7 +199,7 @@ namespace ResponseV.Callouts.Any
                             BetterEMS.API.EMSFunctions.OverridePedDeathDetails(ofc, "", "Gun shot wound", Game.GameTime, (float)MathHelper.GetRandomDouble(0.0, 0.7));
                         }
 
-                        ofc.ApplyDamagePack(DamagePack.TD_PISTOL_FRONT_KILL, 100f, 0f);
+                        ofc.ApplyDamagePack(DamagePacks.TD_PISTOL_FRONT_KILL, 100f, 0f);
                     }
 
                     m_Officers.Add(veh);
@@ -257,7 +263,7 @@ namespace ResponseV.Callouts.Any
 
                 if (!g_bIsPursuit)
                 {
-                    if ((m_bAgitated && m_CalloutType == ECall.C_HIT && Utils.GetRandBool()) || m_CalloutType != ECall.C_HIT)// && Utils.GetRandBool())
+                    if ((m_bAgitated && m_CalloutType == ECall.C_HIT && ResponseVLib.Utils.GetRandBool()) || m_CalloutType != ECall.C_HIT)// && ResponseVLib.Utils.GetRandBool())
                     {
                         OfcDown();
                     }

@@ -45,7 +45,7 @@ namespace ResponseV.Callouts.Fed
                 return false;
             }
 
-            CalloutMessage = "Reports of a " + (Utils.GetRandBool() ? "Robbery" : "Heist" ) + " at the Union Depository";
+            CalloutMessage = "Reports of a " + (ResponseVLib.Utils.GetRandBool() ? "Robbery" : "Heist" ) + " at the Union Depository";
             CalloutPosition = m_SpawnPoint;
 
             ShowCalloutAreaBlipBeforeAccepting(m_SpawnPoint, 25f);
@@ -68,8 +68,8 @@ namespace ResponseV.Callouts.Fed
             m_CallBlip.Color = System.Drawing.Color.Blue;
 
             m_Vehicle1 = new Vehicle("STOCKADE", new Vector3(-94.28f, -671.04f, 35.05f), 69.04f);//new Vector3(29.37f, -658.82f, 31.23f), 313.50f);
-            Ped suspect = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
-            Ped suspect2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+            Ped suspect = new Ped(ResponseVLib.Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+            Ped suspect2 = new Ped(ResponseVLib.Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
             m_Suspects.Add(suspect);
             m_Suspects.Add(suspect2);
 
@@ -77,11 +77,11 @@ namespace ResponseV.Callouts.Fed
             suspect2.WarpIntoVehicle(m_Vehicle1, 0);
 
             // Spawn a possible second STOCKADE
-            if (Utils.GetRandBool())
+            if (ResponseVLib.Utils.GetRandBool())
             {
                 m_Vehicle2 = new Vehicle("STOCKADE", new Vector3(-85.70f, -674.37f, 34.94f), 67.71f);//new Vector3(38.77f, -649.90f, 31.23f), 313.50f);
-                Ped sus = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
-                Ped sus2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+                Ped sus = new Ped(ResponseVLib.Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+                Ped sus2 = new Ped(ResponseVLib.Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
                 m_Suspects.Add(sus);
                 m_Suspects.Add(sus2);
 
@@ -90,11 +90,11 @@ namespace ResponseV.Callouts.Fed
             }
 
             // Spawn a possible third STOCKADE
-            if (Utils.GetRandBool())
+            if (ResponseVLib.Utils.GetRandBool())
             {
                 m_Vehicle3 = new Vehicle("STOCKADE", new Vector3(-76.98f, -677.95f, 33.95f), 67.48f);//new Vector3(52.94f, -632.16f, 31.25f), 331.61f);
-                Ped sus = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
-                Ped sus2 = new Ped(Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+                Ped sus = new Ped(ResponseVLib.Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
+                Ped sus2 = new Ped(ResponseVLib.Utils.GetRandValue(m_PedModels), m_SpawnPoint, MathHelper.GetRandomInteger(1, 360));
                 m_Suspects.Add(sus);
                 m_Suspects.Add(sus2);
 
@@ -103,15 +103,15 @@ namespace ResponseV.Callouts.Fed
             }
 
             // Spawn a possible group of people that shoot police on sight
-            if (Utils.GetRandBool())
+            if (ResponseVLib.Utils.GetRandBool())
             {
                 for (int i = 0; i < MathHelper.GetRandomInteger(2, 6); i++)
                 {
-                    Ped p = new Ped(Utils.GetRandValue(m_PedModels), new Vector3(-84.27f, -661.55f, 35.94f), MathHelper.GetRandomInteger(1, 360));
+                    Ped p = new Ped(ResponseVLib.Utils.GetRandValue(m_PedModels), new Vector3(-84.27f, -661.55f, 35.94f), MathHelper.GetRandomInteger(1, 360));
                     m_Suspects.Add(p);
                 }
 
-                Vehicle v = new Vehicle(Utils.GetRandValue(m_Vehicles), new Vector3(-87.38f, -658.41f, 35.57f), 160.89f);
+                Vehicle v = new Vehicle(ResponseVLib.Utils.GetRandValue(m_Vehicles), new Vector3(-87.38f, -658.41f, 35.57f), 160.89f);
                 v.Dismiss();
             }
 
@@ -182,7 +182,7 @@ namespace ResponseV.Callouts.Fed
                 m_Suspects.ForEach(s =>
                 {
                     Functions.AddPedToPursuit(m_Pursuit, s);
-                    s.Inventory.GiveNewWeapon(Utils.GetRandValue(WeaponHash.AssaultRifle, WeaponHash.CombatMG, WeaponHash.AssaultSMG), 180, true);
+                    s.Inventory.GiveNewWeapon(ResponseVLib.Utils.GetRandValue(WeaponHash.AssaultRifle, WeaponHash.CombatMG, WeaponHash.AssaultSMG), 180, true);
                     s.Armor = 100;
                     s.Health = 100;
 

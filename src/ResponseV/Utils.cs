@@ -1,9 +1,6 @@
-﻿using LSPD_First_Response.Mod.API;
-using Rage;
-using System;
+﻿using Rage;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 
 namespace ResponseV
@@ -14,36 +11,6 @@ namespace ResponseV
         public static bool m_bEMSOnScene = false;
 
         public static GameFiber m_CheckEMSFiber;
-
-        public static T GetRandValue<T>(params T[] args)
-        {
-            return args[MathHelper.GetRandomInteger(args.Length - 1)];
-        }
-
-        public static bool GetRandBool()
-        {
-            return MathHelper.GetRandomDouble(0.0, 1.0) >= 0.5;
-        }
-
-        public static T[] MergeArrays<T>(T[] array1, T[] array2)
-        {
-            T[] tmp = new T[array1.Length + array2.Length];
-            array1.CopyTo(tmp, 0);
-            array2.CopyTo(tmp, array1.Length);
-
-            return tmp;
-        }
-
-        public static bool IsNight()
-        {
-            TimeSpan now = Rage.World.TimeOfDay;
-            return now.Hours >= 20 || now.Hours < 6;
-        }
-
-        public static bool IsDay()
-        {
-            return !IsNight();
-        }
 
         public static void Notify(string Message)
         {
@@ -86,22 +53,6 @@ namespace ResponseV
             }
         }
 
-        public static bool IsLSPDFRPluginRunning(string PluginName)
-        {
-            foreach (Assembly assembly in Functions.GetAllUserPlugins())
-            {
-                AssemblyName an = assembly.GetName();
-                if (an.Name.ToLower() == PluginName.ToLower())
-                {
-                    return true;
-                }
-                // for some reason this fucking return doesn't return true when it should
-                //return assembly.GetName().Name.ToLower() == PluginName.ToLower();
-            }
-
-            return false;
-        }
-
         public static void CheckEMSOnScene(Vector3 location, string CalloutName)
         {
             m_bEMSOnScene = false;
@@ -120,7 +71,7 @@ namespace ResponseV
                         {
                             m_bEMSOnScene = true;
                             Main.MainLogger.Log($"{CalloutName} Utils.CheckEMSOnScene: EMS is on scene");
-                            Notify($"{GetRandValue("EMS", "Med", "Medic", "RA")}-{MathHelper.GetRandomInteger(1, 100)} on scene Dispatch.");
+                            Notify($"{ResponseVLib.Utils.GetRandValue("EMS", "Med", "Medic", "RA")}-{MathHelper.GetRandomInteger(1, 150)} on scene Dispatch.");
                             break;
                         }
                     }

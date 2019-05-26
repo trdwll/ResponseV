@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace ResponseV
+namespace ResponseVLib
 {
     /*
      * Serialization class written by Jack 'OhYea777' Taylor (https://github.com/OhYea777) and is licensed under MIT
      * This class was written for an old project we worked on and is being recycled for this current project
      * Thanks Jack
      */
-    internal class Serialization
+    public static class Serialization
     {
         public class JSON
         {

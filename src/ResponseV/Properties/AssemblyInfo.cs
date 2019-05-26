@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ResponseV")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Russ 'trdwll' Treadwell")]
 [assembly: AssemblyProduct("ResponseV")]
 [assembly: AssemblyCopyright("Copyright © 2017-2019 Russ 'trdwll' Treadwell")]
 [assembly: AssemblyTrademark("")]

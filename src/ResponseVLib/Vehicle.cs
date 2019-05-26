@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Rage;
 using Rage.Native;
 
@@ -38,7 +41,7 @@ namespace ResponseVLib
 
         internal static void RepairVehicle_Impl(Rage.Vehicle vehicle, bool bPlayAnimation, uint CompletionTime)
         {
-            Ped ped = Game.LocalPlayer.Character;
+            Rage.Ped ped = Game.LocalPlayer.Character;
             if (!ped.Exists() || !ped.IsOnFoot || vehicle.EngineHealth < 400.0f) return;
 
             if (vehicle.Exists())
@@ -62,6 +65,56 @@ namespace ResponseVLib
                     vehicle.Doors[4].Close(false);
                 }
             }
+        }
+
+        /// <summary>
+        /// Cache the result of whether a vehicle is an ELS vehicle.
+        /// </summary>
+        private static Dictionary<Model, bool> vehicleModelELSCache = new Dictionary<Model, bool>();
+
+        /// <summary>
+        /// Determine whether the passed vehicle model is an ELS vehicle.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static bool VehicleModelIsELS(Model model)
+        {
+            try
+            {
+                if (vehicleModelELSCache.ContainsKey(model))
+                {
+                    return vehicleModelELSCache[model];
+                }
+
+                if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "ELS")))
+                {
+                    // no ELS installation at all
+                    vehicleModelELSCache.Add(model, false);
+                    return false;
+                }
+
+                IEnumerable<string> elsFiles = Directory.EnumerateFiles(
+                    Path.Combine(Directory.GetCurrentDirectory(), "ELS"),
+                    $"{model.Name}.xml", SearchOption.AllDirectories);
+
+                vehicleModelELSCache.Add(model, elsFiles.Any());
+                return vehicleModelELSCache[model];
+            }
+            catch (Exception e)
+            {
+                Game.LogTrivial($"Failed to determine if a vehicle model '{model}' was ELS-enabled: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Determine whether the passed vehicle is an ELS vehicle.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <returns></returns>
+        public static bool VehicleModelIsELS(this Rage.Vehicle vehicle)
+        {
+            return VehicleModelIsELS(vehicle.Model);
         }
 
 
