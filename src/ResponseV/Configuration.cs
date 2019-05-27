@@ -42,6 +42,7 @@ namespace ResponseV
             public class RootObject
             {
                 public bool CheckForUpdates { get; set; }
+                public string UpdateChannel { get; }
                 public Roleplay Roleplay;
                 public Ambient AmbientEvents;
                 public Plugins Plugins;

@@ -11,10 +11,14 @@ namespace ResponseVLib
             public Dictionary<string, SUpdateData> Updates = new Dictionary<string, SUpdateData>();
 
             public string CurrentUpdate;
+            public string CurrentUpdateLabel;
+            public string UpdateChannel;
 
             public struct SUpdateData
             {
+                public DateTime ReleaseDate;
                 public bool CriticalUpdate;
+                public string DownloadURL;
                 public SUpdatePatchNotes PatchNotes;
             }
 
@@ -25,13 +29,17 @@ namespace ResponseVLib
         }
 
 
-        public static uint m_CriticalUpdateCount { get; internal set; }
-        public static bool m_bIsCriticalUpdate { get; internal set; }
-        public static bool m_bHasCriticalUpdateBetween { get; internal set; }
-        public static uint m_UpdateSinceCount { get; internal set; }
+        public static uint s_CriticalUpdateCount { get; internal set; }
+        public static bool s_bIsCriticalUpdate { get; internal set; }
+        public static bool s_bHasCriticalUpdateBetween { get; internal set; }
+        public static uint s_UpdateSinceCount { get; internal set; }
+        public static string s_UpdateChannel { get; internal set; }
+        public static string s_DownloadURL { get; internal set; }
+        public static DateTime s_CurrentReleaseDate { get; internal set; }
+        public static int s_DaysSinceUpdate { get { return (int)Math.Round((s_CurrentReleaseDate - s_AppVersionReleaseDate).TotalDays); } }
+        private static DateTime s_AppVersionReleaseDate { get; set; }
 
-        public static List<string> m_CriticalVersions = new List<string>();
-
+        public static List<string> s_CriticalVersions = new List<string>();
 
         /// <summary>
         /// Check for updates
@@ -54,7 +62,8 @@ namespace ResponseVLib
                 System.IO.StreamReader reader = new System.IO.StreamReader(webClient.OpenRead(URL));
                 string content = reader.ReadToEnd();
 
-                Update update = ResponseVLib.Serialization.JSON.Deserialize.GetFromJson<Update>(content);
+                Update update = Serialization.JSON.Deserialize.GetFromJson<Update>(content);
+                s_UpdateChannel = update.UpdateChannel;
 
                 Version CurrentUpdate = new Version(update.CurrentUpdate);
 
@@ -62,6 +71,7 @@ namespace ResponseVLib
                 {
                     UpdateAvailable = CurrentUpdate;
 
+                    // Remove versions that are older than the AppVersion
                     foreach (var f in update.Updates.ToList())
                     {
                         if (new Version(f.Key) < AppVersion)
@@ -71,16 +81,16 @@ namespace ResponseVLib
                     }
 
                     // Get the count of updates between AppVersion and CurrentVersion
-                    m_UpdateSinceCount = (uint)update.Updates.Count() - 1;
+                    s_UpdateSinceCount = (uint)update.Updates.Count() - 1;
 
                     // Check if there are any critical updates between the your version and previous updates
                     foreach (var upd in update.Updates.OrderBy(v => new Version(v.Key)))
                     {
                         if (upd.Value.CriticalUpdate && upd.Key.ToString() != CurrentUpdate.ToString())
                         {
-                            m_CriticalUpdateCount++;
-                            m_bHasCriticalUpdateBetween = true;
-                            m_CriticalVersions.Add(upd.Key.ToString());
+                            s_CriticalUpdateCount++;
+                            s_bHasCriticalUpdateBetween = true;
+                            s_CriticalVersions.Add(upd.Key.ToString());
                         }
                     }
 
@@ -88,7 +98,17 @@ namespace ResponseVLib
                     Update.SUpdateData value;
                     if (update.Updates.TryGetValue(CurrentUpdate.ToString(), out value))
                     {
-                        m_bIsCriticalUpdate = value.CriticalUpdate;
+                        s_bIsCriticalUpdate = value.CriticalUpdate;
+
+                        s_DownloadURL = value.DownloadURL;
+                        s_CurrentReleaseDate = value.ReleaseDate;
+                    }
+
+                    // Get the AppVersion's release date
+                    Update.SUpdateData value2;
+                    if (update.Updates.TryGetValue(AppVersion.ToString(), out value2))
+                    {
+                        s_AppVersionReleaseDate = value2.ReleaseDate;
                     }
 
                     return true;

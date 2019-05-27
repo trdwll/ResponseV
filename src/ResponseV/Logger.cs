@@ -25,7 +25,7 @@ namespace ResponseV
             // TODO: if m_AppVersion > what's in the log then delete the log
 
             WriteLog("--------------------");
-            WriteLog($"ResponseV v{Main.m_AppVersion?.ToString()}");
+            WriteLog($"ResponseV v{Main.s_AppVersion?.ToString()}");
             WriteLog("Initialized Log");
             WriteLog("--------------------");
         }

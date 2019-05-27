@@ -4,8 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.28902.138
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResponseV", "ResponseV\ResponseV.csproj", "{F6D9FD96-952E-4073-9E21-4ED1829A6C43}"
+	ProjectSection(ProjectDependencies) = postProject
+		{22405D44-E0FD-400B-B48A-92B42B977599} = {22405D44-E0FD-400B-B48A-92B42B977599}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResponseV Configurator", "ResponseV Configurator\ResponseV Configurator.csproj", "{46EAA5F0-4195-4B5A-ACA1-B3FC3CF17C60}"
+	ProjectSection(ProjectDependencies) = postProject
+		{22405D44-E0FD-400B-B48A-92B42B977599} = {22405D44-E0FD-400B-B48A-92B42B977599}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResponseVLib", "ResponseVLib\ResponseVLib.csproj", "{22405D44-E0FD-400B-B48A-92B42B977599}"
 EndProject

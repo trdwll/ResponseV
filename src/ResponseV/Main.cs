@@ -19,9 +19,10 @@ namespace ResponseV
 
         public static List<GameFiber> g_GameFibers = new List<GameFiber>();
 
-        public static readonly Version m_AppVersion = Assembly.GetExecutingAssembly().GetName().Version;
-        private static bool m_UpdateAvailable;
-        private static Version m_VersionAvailable;
+        public static readonly Version s_AppVersion = Assembly.GetExecutingAssembly().GetName().Version;
+        private static bool s_UpdateAvailable;
+        private static Version s_VersionAvailable;
+        private static string s_UpdateChannel;
 
         public override void Initialize()
         {
@@ -46,19 +47,29 @@ namespace ResponseV
 
             if (Configuration.config.CheckForUpdates)
             {
-                m_UpdateAvailable = Updater.CheckForUpdates("https://trdwll.com/f/ResponseV.json", m_AppVersion, out m_VersionAvailable);
+                s_UpdateChannel = Configuration.config.UpdateChannel.ToLower();
+                s_UpdateAvailable = Updater.CheckForUpdates($"https://trdwll.com/api/ResponseV/update/{s_UpdateChannel}/", s_AppVersion, out s_VersionAvailable);
 
-                MainLogger.Log("ResponseV Updater: " + (Updater.m_bIsCriticalUpdate ? "Critical update" : "Update") + $" {m_VersionAvailable.ToString()} available.");
-                MainLogger.Log($"ResponseV Updater: There are also {Updater.m_UpdateSinceCount} updates since you last updated.");
-
-                if (Updater.m_bHasCriticalUpdateBetween)
+                MainLogger.Log("ResponseV Updater: " + (Updater.s_bIsCriticalUpdate ? "Critical update" : "Update") + $" ({s_UpdateChannel}) {s_VersionAvailable.ToString()} available.");
+                if (s_UpdateAvailable && s_UpdateChannel != "stable")
                 {
-                    MainLogger.Log($"ResponseV Updater: There are {Updater.m_CriticalUpdateCount} critical updates between your version {m_AppVersion.ToString()} and the current version {m_VersionAvailable.ToString()}.");
+                    MainLogger.Log($"You can download the latest {s_UpdateChannel} update at {Updater.s_DownloadURL}");
+                }
+                if (Updater.s_UpdateSinceCount > 0)
+                {
+                    MainLogger.Log($"ResponseV Updater: There are also {Updater.s_UpdateSinceCount} updates since you last updated.");
+                }
 
-                    Updater.m_CriticalVersions.ForEach(version =>
+                if (Updater.s_bHasCriticalUpdateBetween)
+                {
+                    MainLogger.Log($"ResponseV Updater: There are {Updater.s_CriticalUpdateCount} critical updates between your version {s_AppVersion.ToString()} and the current version {s_VersionAvailable.ToString()}.");
+
+                    Updater.s_CriticalVersions.ForEach(version =>
                     {
                         MainLogger.Log($"ResponseV Updater: Version {version.ToString()} is a critical update.");
                     });
+
+                    MainLogger.Log("The developer advises you to update since there are critical updates between your version and the current version.");
                 }
             }
 
@@ -204,11 +215,11 @@ namespace ResponseV
 
         private static void OnRawFrameRender(object sender, GraphicsEventArgs e)
         {
-            e.Graphics.DrawText($"ResponseV v{m_AppVersion?.ToString()}", "Verdana", 8.0f, new System.Drawing.PointF(2f, 2f), System.Drawing.Color.White);
+            e.Graphics.DrawText($"ResponseV v{s_AppVersion?.ToString()}  ({s_UpdateChannel})", "Verdana", 8.0f, new System.Drawing.PointF(2f, 2f), System.Drawing.Color.White);
 
-            if (m_UpdateAvailable)
+            if (s_UpdateAvailable)
             {
-                e.Graphics.DrawText((Updater.m_bIsCriticalUpdate ? "Critical update" : "Update") + $" {m_VersionAvailable.ToString()} available!", "Verdana", 8.0f, new System.Drawing.PointF(2f, 12f), System.Drawing.Color.Orange);
+                e.Graphics.DrawText((Updater.s_bIsCriticalUpdate ? "Critical update" : "Update") + $" ({s_UpdateChannel}) {s_VersionAvailable.ToString()} available!", "Verdana", 8.0f, new System.Drawing.PointF(2f, 12f), System.Drawing.Color.Orange);
             }
         }
     }
