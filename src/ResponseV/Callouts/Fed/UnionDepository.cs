@@ -206,7 +206,7 @@ namespace ResponseV.Callouts.Fed
 
             }, "UnionDepositoryPursuitFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
 
 
             //GameFiber fiber2 = GameFiber.StartNew(delegate

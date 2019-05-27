@@ -51,7 +51,7 @@ namespace ResponseV.Callouts.Any
                 LSPDFR.RequestBackup(g_SpawnPoint, 1);
             });
             
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
 
             return base.OnCalloutAccepted();
         }

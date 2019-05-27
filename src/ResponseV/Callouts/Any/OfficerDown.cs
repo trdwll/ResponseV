@@ -120,7 +120,7 @@ namespace ResponseV.Callouts.Any
                 officer.Position = tmpVec3.Around(2f);
                 m_OfficerFireLocation = officer.Position;
 
-                if (officer != null && Main.g_bBetterEMS)
+                if (officer != null && Main.s_bBetterEMS)
                 {
                     BetterEMS.API.EMSFunctions.OverridePedDeathDetails(officer, "", "Fire", Game.GameTime, (float)MathHelper.GetRandomDouble(0.0, 0.7));
                 }
@@ -148,7 +148,7 @@ namespace ResponseV.Callouts.Any
             case ECall.C_SHOT:
                 suspect.Inventory.GiveNewWeapon(ResponseVLib.Utils.GetRandValue(g_WeaponList), (short)MathHelper.GetRandomInteger(10, 60), true);
 
-                if (officer != null && Main.g_bBetterEMS)
+                if (officer != null && Main.s_bBetterEMS)
                 {
                     BetterEMS.API.EMSFunctions.OverridePedDeathDetails(officer, "", "Gun shot wound", Game.GameTime, (float)MathHelper.GetRandomDouble(0.0, 0.7));
                 }
@@ -168,7 +168,7 @@ namespace ResponseV.Callouts.Any
                     if (ResponseVLib.Utils.GetRandBool())
                     {
                         sus.Kill();
-                        if (sus != null && Main.g_bBetterEMS)
+                        if (sus != null && Main.s_bBetterEMS)
                         {
                             BetterEMS.API.EMSFunctions.OverridePedDeathDetails(sus, "", "Gun shot wound", Game.GameTime, (float)MathHelper.GetRandomDouble(0.0, 0.5));
                         }
@@ -194,7 +194,7 @@ namespace ResponseV.Callouts.Any
                     {
                         ofc.Kill();
 
-                        if (ofc != null && Main.g_bBetterEMS)
+                        if (ofc != null && Main.s_bBetterEMS)
                         {
                             BetterEMS.API.EMSFunctions.OverridePedDeathDetails(ofc, "", "Gun shot wound", Game.GameTime, (float)MathHelper.GetRandomDouble(0.0, 0.7));
                         }
@@ -240,7 +240,7 @@ namespace ResponseV.Callouts.Any
                     }
                 }, "OfficerDownRequestEMSFireFiber");
 
-                Main.g_GameFibers.Add(fiber);
+                Main.s_GameFibers.Add(fiber);
             }
 
             return base.OnCalloutAccepted();
@@ -319,7 +319,7 @@ namespace ResponseV.Callouts.Any
 
             }, "OfficerDownPursuitFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
         }
 
         public override void End()

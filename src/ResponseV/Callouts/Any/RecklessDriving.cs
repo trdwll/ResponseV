@@ -39,7 +39,7 @@ namespace ResponseV.Callouts.Any
 
             RecklessDrivingFiber();
 
-            if (Main.g_bTrafficPolicer && ResponseVLib.Utils.GetRandBool())
+            if (Main.s_bTrafficPolicer && ResponseVLib.Utils.GetRandBool())
             {
                 // drugs
                 Traffic_Policer.API.Functions.SetPedDrugsLevels(m_Suspect, ResponseVLib.Utils.GetRandBool(), ResponseVLib.Utils.GetRandBool());
@@ -93,7 +93,7 @@ namespace ResponseV.Callouts.Any
                 }
             }, "RecklessDrivingFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
         }
 
         public override void End()

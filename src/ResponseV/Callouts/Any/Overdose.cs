@@ -32,7 +32,7 @@ namespace ResponseV.Callouts.Any
             {
                 v.Kill();
 
-                if (Main.g_bBetterEMS)
+                if (Main.s_bBetterEMS)
                 {
                     BetterEMS.API.EMSFunctions.OverridePedDeathDetails(v, "", "Overdose", Game.GameTime, (float)MathHelper.GetRandomDouble(0.0, 1.0) + .1f);
                 }
@@ -44,7 +44,7 @@ namespace ResponseV.Callouts.Any
                 LSPDFR.RequestEMS(g_SpawnPoint);
             }, "OverdoseRequestEMSFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
 
             return base.OnCalloutAccepted();
         }

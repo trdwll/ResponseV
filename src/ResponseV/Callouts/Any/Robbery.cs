@@ -89,7 +89,7 @@ namespace ResponseV.Callouts.Any
                 LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 3, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
             }, "RobberyPursuitFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
         }
     }
 }

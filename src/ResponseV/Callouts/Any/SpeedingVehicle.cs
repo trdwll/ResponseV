@@ -110,7 +110,7 @@ namespace ResponseV.Callouts.Any
                 LSPDFR.RequestBackup(Game.LocalPlayer.Character.Position, 2, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
             }, "SpeedingVehicleFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
         }
 
         public override void End()

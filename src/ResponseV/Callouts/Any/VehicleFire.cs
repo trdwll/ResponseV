@@ -37,7 +37,7 @@ namespace ResponseV.Callouts.Any
                 LSPDFR.RequestEMS(g_SpawnPoint);
             }, "VehicleFireRequestEMSFireFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
 
             return base.OnCalloutAccepted();
         }

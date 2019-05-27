@@ -80,7 +80,7 @@ namespace ResponseV.Callouts.Any
 
             }, "AircraftCrashBackupFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
 
             return base.OnCalloutAccepted();
         }
@@ -138,7 +138,7 @@ namespace ResponseV.Callouts.Any
 
             }, "AircraftCrashFireFiber");
 
-            Main.g_GameFibers.Add(m_ExplosionFiber);
+            Main.s_GameFibers.Add(m_ExplosionFiber);
         }
 
         public override void End()
@@ -149,7 +149,7 @@ namespace ResponseV.Callouts.Any
                 m_Vehicle.Delete();
             });
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
 
             m_ExplosionFiber?.Abort();
 

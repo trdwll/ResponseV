@@ -52,7 +52,7 @@ namespace ResponseV.Callouts.Any
                     v.Kill();
                 }
 
-                if (Main.g_bBetterEMS)
+                if (Main.s_bBetterEMS)
                 {
                     BetterEMS.API.EMSFunctions.OverridePedDeathDetails(v, "", "Fire", Game.GameTime, (float)MathHelper.GetRandomDouble(0.0, 1.0) - .05f);
                 }
@@ -67,7 +67,7 @@ namespace ResponseV.Callouts.Any
                 LSPDFR.RequestEMS(g_SpawnPoint);
             }, "PedOnFireRequestEMSFireFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
 
             return base.OnCalloutAccepted();
         }
@@ -138,7 +138,7 @@ namespace ResponseV.Callouts.Any
                 Functions.SetPursuitIsActiveForPlayer(m_Pursuit, true);
             }, "PedOnFirePursuitFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
         }
     }
 }

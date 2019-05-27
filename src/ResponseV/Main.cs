@@ -13,11 +13,12 @@ namespace ResponseV
     {
         public static Logger MainLogger = new Logger();
 
-        public static bool g_bBetterEMS;
-        public static bool g_bArrestManager;
-        public static bool g_bTrafficPolicer;
+        /** Plugin implementations */
+        public static bool s_bBetterEMS;
+        public static bool s_bArrestManager;
+        public static bool s_bTrafficPolicer;
 
-        public static List<GameFiber> g_GameFibers = new List<GameFiber>();
+        public static List<GameFiber> s_GameFibers = new List<GameFiber>();
 
         public static readonly Version s_AppVersion = Assembly.GetExecutingAssembly().GetName().Version;
         private static bool s_UpdateAvailable;
@@ -26,18 +27,12 @@ namespace ResponseV
 
         public override void Initialize()
         {
-            //foreach (Model c in Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle && !v.IsEmergencyVehicle && !v.IsBigVehicle).ToArray())
-            //{
-            //    MainLogger.Log($"Vehicle: {c.Name.ToUpper()}");
-            //}
-
+            /** Events */
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LSPDFR);
             Functions.OnOnDutyStateChanged += OnDutyStateChangedEvent;
-
-            // Game.DisplayNotification($"Response~y~V~w~ ~b~{Updater.m_AppVersion?.ToString()} ~w~by ~b~trdwll ~w~loaded successfully.");
-
             Game.RawFrameRender += OnRawFrameRender;
 
+            /** If realism is enabled then we welcome the officer on duty and what not. */
             if (Configuration.config.Roleplay.RealismEnabled)
             {
                 string Area = WorldZone.GetAreaName(WorldZone.GetArea(Rage.Game.LocalPlayer.Character.Position));
@@ -45,31 +40,35 @@ namespace ResponseV
                 Game.DisplayNotification(WelcomeMessage);
             }
 
+            /** Update handling */
+            s_UpdateChannel = Configuration.config.UpdateChannel.ToLower();
             if (Configuration.config.CheckForUpdates)
             {
-                s_UpdateChannel = Configuration.config.UpdateChannel.ToLower();
                 s_UpdateAvailable = Updater.CheckForUpdates($"https://trdwll.com/api/ResponseV/update/{s_UpdateChannel}/", s_AppVersion, out s_VersionAvailable);
 
-                MainLogger.Log("ResponseV Updater: " + (Updater.s_bIsCriticalUpdate ? "Critical update" : "Update") + $" ({s_UpdateChannel}) {s_VersionAvailable.ToString()} available.");
-                if (s_UpdateAvailable && s_UpdateChannel != "stable")
+                if (s_UpdateAvailable)
                 {
-                    MainLogger.Log($"You can download the latest {s_UpdateChannel} update at {Updater.s_DownloadURL}");
-                }
-                if (Updater.s_UpdateSinceCount > 0)
-                {
-                    MainLogger.Log($"ResponseV Updater: There are also {Updater.s_UpdateSinceCount} updates since you last updated.");
-                }
+                    MainLogger.Log("ResponseV Updater: " + (Updater.s_bIsCriticalUpdate ? "Critical update" : "Update") + $" ({s_UpdateChannel}) {s_VersionAvailable.ToString()} available.");
 
-                if (Updater.s_bHasCriticalUpdateBetween)
-                {
-                    MainLogger.Log($"ResponseV Updater: There are {Updater.s_CriticalUpdateCount} critical updates between your version {s_AppVersion.ToString()} and the current version {s_VersionAvailable.ToString()}.");
-
-                    Updater.s_CriticalVersions.ForEach(version =>
+                    if (s_UpdateChannel != "stable")
                     {
-                        MainLogger.Log($"ResponseV Updater: Version {version.ToString()} is a critical update.");
-                    });
+                        MainLogger.Log($"You can download the latest {s_UpdateChannel} update at {Updater.s_DownloadURL}");
+                    }
+                    if (Updater.s_UpdateSinceCount > 0)
+                    {
+                        MainLogger.Log($"ResponseV Updater: There are also {Updater.s_UpdateSinceCount} updates since you last updated.");
+                    }
+                    if (Updater.s_bHasCriticalUpdateBetween)
+                    {
+                        MainLogger.Log($"ResponseV Updater: There are {Updater.s_CriticalUpdateCount} critical updates between your version {s_AppVersion.ToString()} and the current version {s_VersionAvailable.ToString()}.");
 
-                    MainLogger.Log("The developer advises you to update since there are critical updates between your version and the current version.");
+                        Updater.s_CriticalVersions.ForEach(version =>
+                        {
+                            MainLogger.Log($"ResponseV Updater: Version {version.ToString()} is a critical update.");
+                        });
+
+                        MainLogger.Log("The developer advises you to update since there are critical updates between your version and the current version.");
+                    }
                 }
             }
 
@@ -82,7 +81,6 @@ namespace ResponseV
             {
                 Plugins.KeepDoorOpen.KeepDoorOpenImpl();
             }
-
             if (Configuration.config.Plugins.BaitCar)
             {
                 Plugins.BaitCar.BaitCarImpl();
@@ -169,13 +167,13 @@ namespace ResponseV
             {
                 GameFiber.Sleep(20000);
 
-                g_bBetterEMS = ResponseVLib.Utils.IsLSPDFRPluginRunning("BetterEMS");
-                g_bArrestManager = ResponseVLib.Utils.IsLSPDFRPluginRunning("Arrest Manager");
-                g_bTrafficPolicer = ResponseVLib.Utils.IsLSPDFRPluginRunning("Traffic Policer");
+                s_bBetterEMS = ResponseVLib.Utils.IsLSPDFRPluginRunning("BetterEMS");
+                s_bArrestManager = ResponseVLib.Utils.IsLSPDFRPluginRunning("Arrest Manager");
+                s_bTrafficPolicer = ResponseVLib.Utils.IsLSPDFRPluginRunning("Traffic Policer");
 
-                MainLogger.Log($"BetterEMS: {g_bBetterEMS}");
-                MainLogger.Log($"Arrest Manager: {g_bArrestManager}");
-                MainLogger.Log($"Traffic Policer: {g_bTrafficPolicer}");
+                MainLogger.Log($"BetterEMS: {s_bBetterEMS}");
+                MainLogger.Log($"Arrest Manager: {s_bArrestManager}");
+                MainLogger.Log($"Traffic Policer: {s_bTrafficPolicer}");
 
                 foreach (Assembly a in Functions.GetAllUserPlugins())
                 {
@@ -185,14 +183,14 @@ namespace ResponseV
                 Utils.Notify("You can go on duty now. Thanks for waiting. :)");
             }, "DutyFiber");
 
-            g_GameFibers.Add(fiber);
+            s_GameFibers.Add(fiber);
         }
 
         public override void Finally()
         {
             MainLogger.Log("Shutting down.");
 
-            foreach (GameFiber fiber in g_GameFibers)
+            foreach (GameFiber fiber in s_GameFibers)
             {
                 if (fiber.IsAlive)
                 {
@@ -201,7 +199,7 @@ namespace ResponseV
                 }
             }
 
-            g_GameFibers.Clear();
+            s_GameFibers.Clear();
         }
 
         public static Assembly LSPDFR(object sender, ResolveEventArgs e)

@@ -129,7 +129,7 @@ namespace ResponseV.Callouts.Any
                 }
             }, "PedWithWeaponPursuitFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
         }
     }
 }

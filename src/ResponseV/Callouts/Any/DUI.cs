@@ -39,7 +39,7 @@ namespace ResponseV.Callouts.Any
 
             StartVehicleDUI();
 
-            if (Main.g_bTrafficPolicer)
+            if (Main.s_bTrafficPolicer)
             {
                 if (ResponseVLib.Utils.GetRandBool())
                 {
@@ -108,7 +108,7 @@ namespace ResponseV.Callouts.Any
                 }
             }, "DUIStartVehicleDUIFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
         }
 
         public override void End()

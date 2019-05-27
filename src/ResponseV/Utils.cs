@@ -96,7 +96,7 @@ namespace ResponseV
 
             }, $"{CalloutName}CheckEMSFiber");
 
-            Main.g_GameFibers.Add(m_CheckEMSFiber);
+            Main.s_GameFibers.Add(m_CheckEMSFiber);
         }
     }
 }

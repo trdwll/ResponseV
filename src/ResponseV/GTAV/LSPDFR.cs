@@ -21,7 +21,7 @@ namespace ResponseV
 
         public static void RequestEMS(Rage.Vector3 location)
         {
-            if (Main.g_bBetterEMS)
+            if (Main.s_bBetterEMS)
             {
                 BetterEMS.API.EMSFunctions.RespondToLocation(location, false);
             }
@@ -33,7 +33,7 @@ namespace ResponseV
 
         public static void RequestFire(Rage.Vector3 location)
         {
-            if (Main.g_bBetterEMS)
+            if (Main.s_bBetterEMS)
             {
                 BetterEMS.API.EMSFunctions.RespondToLocation(location, true);
             }
@@ -45,7 +45,7 @@ namespace ResponseV
 
         public static void RequestCoroner(Rage.Vector3 location)
         {
-            if (Main.g_bArrestManager)
+            if (Main.s_bArrestManager)
             {
                 Utils.NotifyPlayerTo("Dispatch", ResponseVLib.Utils.GetRandValue("Send a coroner.", "We need a coroner."));
                 Arrest_Manager.API.Functions.CallCoroner(location, true);
@@ -82,7 +82,7 @@ namespace ResponseV
 
             }, "AnnounceVehicleDetailsFiber");
 
-            Main.g_GameFibers.Add(fiber);
+            Main.s_GameFibers.Add(fiber);
         }
 
         public class Radio
