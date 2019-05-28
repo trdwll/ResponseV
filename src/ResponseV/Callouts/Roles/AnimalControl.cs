@@ -135,58 +135,61 @@ namespace ResponseV.Callouts.Roles
 
                 AliveAnimals.ForEach(animal =>
                 {
-                    Blip b = animal.AttachBlip();
-                    b.Sprite = BlipSprite.Chop;
-
-                    if (animal.Exists() && animal.Position.DistanceTo(s_Officer) < 100)
+                    if (animal.Exists())
                     {
-                        // Aim weapon 
-                        s_Officer.Inventory.GiveNewWeapon(WeaponHash.SniperRifle, 1, true);
+                        Blip b = animal.AttachBlip();
+                        b.Color = System.Drawing.Color.Yellow;
 
-                        // chase after the animal
-                        if (animal.Position.DistanceTo(s_Officer) > 10)
+                        if (animal.Position.DistanceTo(SpawnPoint) < 100)
                         {
-                            Main.MainLogger.Log("AnimalControl: Officer is > 10 away from the animal so go towards the animal");
-                            s_Officer.Tasks.AimWeaponAt(animal, -1);
-                            s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 3.0f, 25.0f).WaitForCompletion(20000);
+                            // Aim weapon 
+                            s_Officer.Inventory.GiveNewWeapon(WeaponHash.SniperRifle, 1, true);
+
+                            // chase after the animal
+                            if (animal.Position.DistanceTo(s_Officer) > 10)
+                            {
+                                Main.MainLogger.Log("AnimalControl: Officer is > 10 away from the animal so go towards the animal");
+                                s_Officer.Tasks.AimWeaponAt(animal, -1);
+                                s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 3.0f, 25.0f).WaitForCompletion(20000);
+                            }
+                            else
+                            {
+                                GameFiber.Sleep(500);
+                            }
+
+                            Main.MainLogger.Log("AnimalControl: Fire the weapon at the animal");
+
+                            // s_Officer.Tasks.FireWeaponAt(animal, -1, FiringPattern.SingleShot).WaitForCompletion(3000);
+
+                            GameFiber.Sleep(2000);
+                            // TODO: Play sound here
+                            Utils.Notify("Play sound for tranquilizer");
+                            animal.Kill();
+                            animal.ClearBlood();
+
+                            GameFiber.Sleep(250);
+
+                            // remove weapons
+                            s_Officer.RemoveAllWeapons();
+                            Main.MainLogger.Log("AnimalControl: Cleared the Officer's weapons");
+
+                            // We kill the animal to act like it was tranquilized
+                            if (animal.IsDead)
+                            {
+                                TranquilizedAnimals.Add(animal);
+                                Main.MainLogger.Log("AnimalControl: Animal has been tranquilized");
+
+                                s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 2.0f, 1.0f).WaitForCompletion();
+                                s_Officer.Tasks.PlayAnimation(new AnimationDictionary("amb@medic@standing@tendtodead@idle_a"), "idle_a", 1.0f, AnimationFlags.None);
+                                Main.MainLogger.Log("AnimalControl: Animal is tranquilized so lets pick it up");
+                                GameFiber.Sleep(3000);
+                            }
                         }
-                        else
-                        {
-                            GameFiber.Sleep(500);
-                        }
 
-                        Main.MainLogger.Log("AnimalControl: Fire the weapon at the animal");
-
-                        // s_Officer.Tasks.FireWeaponAt(animal, -1, FiringPattern.SingleShot).WaitForCompletion(3000);
-
-                        GameFiber.Sleep(2000);
-                        // TODO: Play sound here
-                        Utils.Notify("Play sound for tranquilizer");
-                        animal.Kill();
-                        animal.ClearBlood();
-
-                        GameFiber.Sleep(250);
-                        
-                        // remove weapons
-                        s_Officer.RemoveAllWeapons();
-                        Main.MainLogger.Log("AnimalControl: Cleared the Officer's weapons");
-
-                        // We kill the animal to act like it was tranquilized
-                        if (animal.IsDead)
-                        {
-                            TranquilizedAnimals.Add(animal);
-                            Main.MainLogger.Log("AnimalControl: Animal has been tranquilized");
-
-                            s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 2.0f, 1.0f).WaitForCompletion();
-                            s_Officer.Tasks.PlayAnimation(new AnimationDictionary("amb@medic@standing@tendtodead@idle_a"), "idle_a", 1.0f, AnimationFlags.None);
-                            Main.MainLogger.Log("AnimalControl: Animal is tranquilized so lets pick it up");
-                            GameFiber.Sleep(3000);
-                        }
+                        b.Delete();
+                        animal.Delete();
+                        Main.MainLogger.Log("AnimalControl: Deleted the animal (AliveAnimals)");
                     }
-
-                    b.Delete();
-                    animal.Delete();
-                    Main.MainLogger.Log("AnimalControl: Deleted the animal (AliveAnimals)");
                 });
 
                 // Wait before going to get the dead animals
@@ -194,7 +197,7 @@ namespace ResponseV.Callouts.Roles
 
                 DeadAnimals.ForEach(animal =>
                 {
-                    if (animal.Exists() && animal.Position.DistanceTo(s_Officer) < 100)
+                    if (animal.Exists() && animal.Position.DistanceTo(SpawnPoint) < 100)
                     {
                         Main.MainLogger.Log("AnimalControl: Officer walks towards animal");
                         s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 2.0f, 1.0f).WaitForCompletion();

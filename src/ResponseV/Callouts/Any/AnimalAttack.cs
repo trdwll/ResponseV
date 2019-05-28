@@ -4,7 +4,7 @@ using Rage;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("AnimalAttack", CalloutProbability.VeryHigh)]
+    [CalloutInfo("AnimalAttack", CalloutProbability.Always)]
     internal sealed class AnimalAttack : CalloutBase
     {
         private Ped m_Animal, m_Animal2;
@@ -40,6 +40,9 @@ namespace ResponseV.Callouts.Any
             {
                 IsPersistent = true
             };
+
+            m_Victim.RelationshipGroup = new RelationshipGroup("VICTIM");
+            Game.SetRelationshipBetweenRelationshipGroups("VICTIM", "PLAYER", Relationship.Like);
 
             return base.OnCalloutAccepted();
         }
