@@ -7,7 +7,7 @@ namespace ResponseV.Callouts.Any
     [CalloutInfo("AnimalAttack", CalloutProbability.VeryHigh)]
     internal sealed class AnimalAttack : CalloutBase
     {
-        private Ped m_Animal;
+        private Ped m_Animal, m_Animal2;
         private Ped m_Victim;
 
         public override bool OnBeforeCalloutDisplayed()
@@ -27,6 +27,11 @@ namespace ResponseV.Callouts.Any
             g_Logger.Log("AnimalAttack: Callout accepted");
 
             m_Animal = new Ped(ResponseVLib.Utils.GetRandValue("a_c_husky", "a_c_rottweiler", "a_c_poodle", "a_c_shepherd", "a_c_westy", "a_c_retriever"), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360))
+            {
+                IsPersistent = true
+            };
+
+            m_Animal2 = new Ped(ResponseVLib.Utils.GetRandValue("a_c_husky", "a_c_rottweiler", "a_c_poodle", "a_c_shepherd", "a_c_westy", "a_c_retriever"), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360))
             {
                 IsPersistent = true
             };
@@ -77,12 +82,8 @@ namespace ResponseV.Callouts.Any
                 //    }
                 //}
 
-                bool b = Roles.AnimalControl.Request(g_SpawnPoint, m_Animal);
-
-                if (b)
-                {
-                    Utils.Notify("Animal Control on the way");
-                }
+                // this isn't ideal as it's constantly running
+                Roles.AnimalControl.Request(g_SpawnPoint, m_Animal, m_Animal2);
 
                 if (!m_Animal.Exists())
                 {

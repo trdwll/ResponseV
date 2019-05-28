@@ -19,5 +19,10 @@ namespace ResponseVLib
         {
             Rage.Native.NativeFunction.Natives.REGISTER_HATED_TARGETS_AROUND_PED(ped, radius);
         }
+
+        public static void RemoveAllWeapons(this Rage.Ped ped)
+        {
+            Rage.Native.NativeFunction.Natives.REMOVE_ALL_PED_WEAPONS(ped, false);
+        }
     }
 }

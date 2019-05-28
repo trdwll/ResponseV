@@ -14,3 +14,6 @@
 	- Possible flee/pursuit
 - PrankCall
 	- Add audio to said callout also to add immersion
+
+
+- Issue with g_SpawnPoint being set as 0,0,0
