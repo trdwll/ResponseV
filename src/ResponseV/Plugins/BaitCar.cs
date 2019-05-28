@@ -124,7 +124,7 @@ namespace ResponseV.Plugins
                             }
                         }
 
-                        if ((s_bPursuit && !Functions.IsPursuitStillRunning(s_Pursuit)) || Functions.IsPedArrested(ped))
+                        if ((s_bPursuit && !Functions.IsPursuitStillRunning(s_Pursuit)) || (Functions.IsPedArrested(ped) || ped.IsDead))
                         {
                             if (s_BaitCarBlip.Exists())
                             {

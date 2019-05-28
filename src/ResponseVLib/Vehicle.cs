@@ -134,6 +134,17 @@ namespace ResponseVLib
         }
 
         /// <summary>
+        /// Sets the color to this Rage.Vehicle instance
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="primaryColor">The primary color</param>
+        /// <param name="secondaryColor">The secondary color</param>
+        public static void SetColors(this Rage.Vehicle v, EPaint primaryColor, EPaint secondaryColor)
+        {
+            NativeFunction.Natives.SET_VEHICLE_COLOURS(v, (int)primaryColor, (int)secondaryColor);
+        }
+
+        /// <summary>
         /// VehicleColor and associated methods were created by alexguirre
         /// </summary>
         public struct VehicleColor

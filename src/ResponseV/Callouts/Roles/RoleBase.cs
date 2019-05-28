@@ -8,12 +8,6 @@ namespace ResponseV.Callouts.Roles
 {
     internal abstract class RoleBase
     {
-        protected struct Ped
-        {
-            Rage.Model model;
-        }
-
-        protected List<Ped> m_RolePeds = new List<Ped>();
 
     }
 }

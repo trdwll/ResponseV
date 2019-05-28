@@ -35,7 +35,7 @@ namespace ResponseV
             /** If realism is enabled then we welcome the officer on duty and what not. */
             if (Configuration.config.Roleplay.RealismEnabled)
             {
-                string Area = WorldZone.GetAreaName(WorldZone.GetArea(Rage.Game.LocalPlayer.Character.Position));
+                string Area = WorldZone.GetAreaName(WorldZone.GetArea(Game.LocalPlayer.Character.Position));
                 string WelcomeMessage = $"Welcome {Configuration.config.Roleplay.OfficerName}, to the " + (ResponseVLib.World.IsNight() ? "night" : "day") + $" shift in {Area}. Stay safe out there.";
                 Game.DisplayNotification(WelcomeMessage);
             }
@@ -98,7 +98,7 @@ namespace ResponseV
             // Rage.GameFiber AmbientEvents = Rage.GameFiber.StartNew(new System.Threading.ThreadStart(AmbientEvent.Initialize), "AmbientEventsFiber");
 
             // Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash)); // needs more testing and work
-            // Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack)); // needs more testing and work
+            Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack)); // needs more testing and work
             //Functions.RegisterCallout(typeof(Callouts.Any.Assault));
             //Functions.RegisterCallout(typeof(Callouts.Any.AssaultOnOfficer));
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedMurder));
