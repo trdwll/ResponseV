@@ -59,5 +59,10 @@ namespace ResponseVLib
             }
             return null;
         }
+
+        public static bool IsKeyDown(System.Windows.Forms.Keys Key, System.Windows.Forms.Keys Modifier)
+        {
+            return (Rage.Game.IsKeyDownRightNow(Key) || Modifier == System.Windows.Forms.Keys.None) && Rage.Game.IsKeyDown(Key);
+        }
     }
 }

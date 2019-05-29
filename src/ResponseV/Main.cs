@@ -72,6 +72,27 @@ namespace ResponseV
                 }
             }
 
+            //if (true)
+            {
+                MainLogger.Log("Init repair 1");
+                GameFiber fiber = GameFiber.StartNew(delegate
+                {
+                    MainLogger.Log("Init repair");
+                    for (;;)
+                    {
+                        GameFiber.Yield();
+
+                        if (ResponseVLib.Utils.IsKeyDown(System.Windows.Forms.Keys.T, System.Windows.Forms.Keys.Alt))
+                        {
+                            Utils.Notify("Repairing vehicle");
+                            ResponseVLib.Vehicle.RepairVehicle();
+                        }
+                    }
+                });
+
+                s_GameFibers.Add(fiber);
+            }
+
             /** Plugins */
             if (Configuration.config.Plugins.TurnWheels)
             {
