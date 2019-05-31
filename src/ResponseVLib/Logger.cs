@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 
-namespace ResponseV
+namespace ResponseVLib
 {
-    internal class Logger
+    public class Logger
     {
         public enum ELogLevel
         {
@@ -15,7 +14,7 @@ namespace ResponseV
 
         private readonly string m_LogFile = $"{System.Windows.Forms.Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.log";
 
-        public Logger()
+        public Logger(Version AppVersion)
         {
             if (System.IO.File.Exists(m_LogFile))
             {
@@ -25,7 +24,7 @@ namespace ResponseV
             // TODO: if m_AppVersion > what's in the log then delete the log
 
             WriteLog("--------------------");
-            WriteLog($"ResponseV v{Main.s_AppVersion?.ToString()}");
+            WriteLog($"ResponseV v{AppVersion}");
             WriteLog("Initialized Log");
             WriteLog("--------------------");
         }

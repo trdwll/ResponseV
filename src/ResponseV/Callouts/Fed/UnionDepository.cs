@@ -16,7 +16,7 @@ namespace ResponseV.Callouts.Fed
     [CalloutInfo("UnionDepository", CalloutProbability.VeryHigh)]
     internal sealed class UnionDepository : Callout
     {
-        private readonly Logger m_Logger = new Logger();
+        private readonly ResponseVLib.Logger m_Logger = new ResponseVLib.Logger(Main.s_AppVersion);
 
         private readonly Vector3 m_SpawnPoint = new Vector3(-76.98f, -677.95f, 33.95f);//new Vector3(62.77f, -625.39f, 31.71f);//(17.51f, -655.52f, 31.48f);
 

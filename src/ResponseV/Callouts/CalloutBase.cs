@@ -11,7 +11,7 @@ namespace ResponseV.Callouts
 {
     internal abstract class CalloutBase : Callout
     {
-        protected Logger g_Logger = new Logger();
+        protected ResponseVLib.Logger g_Logger = new ResponseVLib.Logger(Main.s_AppVersion);
 
         protected Vector3 g_SpawnPoint;
 
@@ -121,7 +121,7 @@ namespace ResponseV.Callouts
             catch (Exception e)
             {
                 Utils.CrashNotify();
-                g_Logger.Log(e.StackTrace, Logger.ELogLevel.LL_TRACE);
+                g_Logger.Log(e.StackTrace, ResponseVLib.Logger.ELogLevel.LL_TRACE);
             }
         }
     }

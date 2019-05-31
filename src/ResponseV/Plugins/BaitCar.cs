@@ -432,7 +432,7 @@ namespace ResponseV.Plugins
                     }
                     catch (System.ArgumentNullException ex)
                     {
-                        Main.MainLogger.Log($"{ex.StackTrace}", Logger.ELogLevel.LL_TRACE);
+                        Main.MainLogger.Log($"{ex.StackTrace}", ResponseVLib.Logger.ELogLevel.LL_TRACE);
                         Utils.CrashNotify();
                     }
 
@@ -468,7 +468,7 @@ namespace ResponseV.Plugins
                         }
                         catch (System.ArgumentNullException ex)
                         {
-                            Main.MainLogger.Log($"{ex.StackTrace}", Logger.ELogLevel.LL_TRACE);
+                            Main.MainLogger.Log($"{ex.StackTrace}", ResponseVLib.Logger.ELogLevel.LL_TRACE);
                             Utils.CrashNotify();
                         }
                     }, "BaitCarPreviewVehicle");

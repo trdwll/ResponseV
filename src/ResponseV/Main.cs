@@ -12,7 +12,7 @@ namespace ResponseV
 {
     internal class Main : Plugin
     {
-        public static Logger MainLogger = new Logger();
+        public static Logger MainLogger = new Logger(Assembly.GetExecutingAssembly().GetName().Version);
 
         /** Plugin implementations */
         public static bool s_bBetterEMS;

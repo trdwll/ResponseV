@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="DamagePacks.cs" />
     <Compile Include="Extension.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Ped.cs" />

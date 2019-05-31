@@ -88,7 +88,7 @@ namespace ResponseV.Callouts.Any
                 catch (System.Exception e)
                 {
                     Utils.CrashNotify();
-                    g_Logger.Log(e.StackTrace, Logger.ELogLevel.LL_TRACE);
+                    g_Logger.Log(e.StackTrace, ResponseVLib.Logger.ELogLevel.LL_TRACE);
                     End();
                 }
             }, "RecklessDrivingFiber");

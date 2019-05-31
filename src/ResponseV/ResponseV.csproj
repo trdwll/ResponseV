@@ -155,7 +155,6 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="GTAV\SpawnPoints.cs" />
-    <Compile Include="Logger.cs" />
     <Compile Include="GTAV\LSPDFR.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Plugins\BaitCar.cs" />
