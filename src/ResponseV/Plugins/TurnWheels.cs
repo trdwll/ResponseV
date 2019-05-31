@@ -17,7 +17,7 @@ namespace ResponseV.Plugins
                     try
                     {
                         Vehicle LastVehicle = Game.LocalPlayer.Character.LastVehicle;
-                        if (LastVehicle && LastVehicle.Speed == 0f)
+                        if (LastVehicle && LastVehicle.Speed == 0f && LastVehicle.IsPoliceVehicle)
                         {
                             if (LastVehicle.SteeringAngle > 20f)
                             {

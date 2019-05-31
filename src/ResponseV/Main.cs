@@ -4,6 +4,7 @@ using System.Reflection;
 using ResponseV.Ambient;
 using Rage;
 using System.Collections.Generic;
+using System.Linq;
 
 using ResponseVLib;
 
@@ -74,17 +75,14 @@ namespace ResponseV
 
             //if (true)
             {
-                MainLogger.Log("Init repair 1");
                 GameFiber fiber = GameFiber.StartNew(delegate
                 {
-                    MainLogger.Log("Init repair");
                     for (;;)
                     {
                         GameFiber.Yield();
 
-                        if (ResponseVLib.Utils.IsKeyDown(System.Windows.Forms.Keys.T, System.Windows.Forms.Keys.Alt))
+                        if (ResponseVLib.Utils.IsKeyDown(System.Windows.Forms.Keys.T, System.Windows.Forms.Keys.None))
                         {
-                            Utils.Notify("Repairing vehicle");
                             ResponseVLib.Vehicle.RepairVehicle();
                         }
                     }

@@ -9,13 +9,16 @@ namespace ResponseVLib
 {
     public static class Vehicle
     {
+        private static readonly string[] s_BlacklistedVehiclesList = { };
+        // Model.VehicleModels.Where(model => !model.IsBicycle || !model.IsBlimp || !model.IsBoat || !model.IsJetski || !model.IsPlane || !model.IsSubmarine || !model.IsTrailer || !model.IsTrain).ToArray();
+
         /// <summary>
         /// Repair the vehicle nearby
         /// </summary>
         /// <param name="Radius"></param>
         /// <param name="bPlayAnimation"></param>
         /// <param name="CompletionTime"></param>
-        public static void RepairVehicle(float Radius = 5.0f, bool bPlayAnimation = true, uint CompletionTime = 20000)
+        public static void RepairVehicle(float Radius = 5.0f, bool bPlayAnimation = true, uint CompletionTime = 15000)
         {
             Rage.Vehicle vehicle = (Rage.Vehicle)Rage.World.GetClosestEntity(Game.LocalPlayer.Character.Position, Radius, GetEntitiesFlags.ConsiderAllVehicles);
 
@@ -31,7 +34,7 @@ namespace ResponseVLib
         /// <param name="vehicle"></param>
         /// <param name="bPlayAnimation"></param>
         /// <param name="CompletionTime"></param>
-        public static void RepairVehicle(this Rage.Vehicle vehicle, bool bPlayAnimation = true, uint CompletionTime = 20000)
+        public static void RepairVehicle(this Rage.Vehicle vehicle, bool bPlayAnimation = true, uint CompletionTime = 15000)
         {
             if (vehicle.Exists())
             {
@@ -42,28 +45,28 @@ namespace ResponseVLib
         internal static void RepairVehicle_Impl(Rage.Vehicle vehicle, bool bPlayAnimation, uint CompletionTime)
         {
             Rage.Ped ped = Game.LocalPlayer.Character;
-            if (!ped.Exists() || !ped.IsOnFoot || vehicle.EngineHealth < 400.0f) return;
 
-            if (vehicle.Exists())
+            if (Model.VehicleModels.Where(model => !model.IsAmphibious || !model.IsBicycle || !model.IsBlimp || !model.IsBoat || !model.IsJetski || !model.IsPlane || !model.IsSubmarine || !model.IsTrailer || !model.IsTrain).Contains(vehicle.Model)) return;
+
+            if (!ped.Exists() || !ped.IsOnFoot || vehicle.EngineHealth > 400.0f || !vehicle.Exists() || Vector3.Distance(ped.Position, vehicle.GetBonePosition("engine")) > 1.8f) return;
+
+            bool bHoodExists = vehicle.Doors[4].IsValid();
+
+            if (bHoodExists)
             {
-                bool bHoodExists = vehicle.Doors[4].IsValid();
+                vehicle.Doors[4].Open(false);
+            }
 
-                if (bHoodExists)
-                {
-                    vehicle.Doors[4].Open(false);
-                }
+            if (bPlayAnimation)
+            {
+                ped.Tasks.PlayAnimation(new AnimationDictionary("mini@repair"), "fixing_a_ped", 3.5f, AnimationFlags.None).WaitForCompletion((int)CompletionTime);
+            }
 
-                if (bPlayAnimation)
-                {
-                    Game.LocalPlayer.Character.Tasks.PlayAnimation(new AnimationDictionary("mini@repair"), "fixing_a_ped", 3.5f, AnimationFlags.None).WaitForCompletion((int)CompletionTime);
-                }
+            vehicle.EngineHealth = 1000.0f;
 
-                vehicle.EngineHealth = 1000.0f;
-
-                if (bHoodExists)
-                {
-                    vehicle.Doors[4].Close(false);
-                }
+            if (bHoodExists)
+            {
+                vehicle.Doors[4].Close(false);
             }
         }
 
