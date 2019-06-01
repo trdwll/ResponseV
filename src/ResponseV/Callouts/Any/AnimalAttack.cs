@@ -103,6 +103,7 @@ namespace ResponseV.Callouts.Any
         public override void End()
         {
             g_Logger.Log("AnimalAttack: Callout end");
+            Roles.AnimalControl.CleanupAnimalControl();
             m_Victim?.Dismiss();
             m_Animal?.Dismiss();
 

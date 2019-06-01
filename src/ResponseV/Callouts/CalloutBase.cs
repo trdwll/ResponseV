@@ -43,7 +43,7 @@ namespace ResponseV.Callouts
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            if (g_SpawnPoint == new Vector3(0.0f, 0.0f, 0.0f) && !g_bCustomSpawn)
+            if (/*g_SpawnPoint == new Vector3(0.0f, 0.0f, 0.0f) && */!g_bCustomSpawn)
             {
                 g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(MathHelper.GetRandomInteger(ResponseVLib.Configuration.config.Callouts.MinRadius, ResponseVLib.Configuration.config.Callouts.MaxRadius)));
             }

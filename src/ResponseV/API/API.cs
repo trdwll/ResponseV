@@ -25,6 +25,14 @@ namespace ResponseV
                 Callouts.Roles.AnimalControl.Request(location);
             }
 
+            /// <summary>
+            /// Force a cleanup of Animal Control
+            /// </summary>
+            public static void ForceCleanupAnimalControl()
+            {
+                Callouts.Roles.AnimalControl.CleanupAnimalControl();
+            }
+
             public static void Notify1099(Rage.Vector3 location)
             {
 

@@ -77,7 +77,7 @@ namespace ResponseV
                 // NOTE: This has to be above loading of plugins since we're in a forloop and yielding, else this won't load.
                 GameFiber fiber = GameFiber.StartNew(delegate
                 {
-                    for (; ; )
+                    for (;;)
                     {
                         GameFiber.Yield();
 
@@ -122,6 +122,16 @@ namespace ResponseV
             // I was thinking an array to iterate over, but what if someone wants to disable a callout? /shrug
 
             // Rage.GameFiber AmbientEvents = Rage.GameFiber.StartNew(new System.Threading.ThreadStart(AmbientEvent.Initialize), "AmbientEventsFiber");
+
+            // TODO: 
+            /*
+             * County:
+             * Chicken Fighting
+             * Cow Tipping
+             * 
+             * Any:
+             * Dog Fighting
+             */ 
 
             // Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash)); // needs more testing and work
             Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack)); // needs more testing and work
