@@ -92,7 +92,7 @@ namespace ResponseV.Callouts.Any
                 // this isn't ideal as it's constantly running
                 Roles.AnimalControl.Request(g_SpawnPoint, m_Animal, m_Animal2);
 
-                if (!m_Animal.Exists() && !m_Animal2.Exists() && 4 > 5)
+                if (!m_Animal.Exists() && !m_Animal2.Exists())
                 {
                     // TODO: take animal
                     End();
