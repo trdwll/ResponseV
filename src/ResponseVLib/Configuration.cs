@@ -1,11 +1,13 @@
 ﻿using System.Windows.Forms;
 
-namespace ResponseV
+namespace ResponseVLib
 {
-    internal class Configuration
+    public class Configuration
     {
-        /*private static readonly string ConfigFile = $"{Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.json";
-        public static Cfg.RootObject config = ResponseVLib.Serialization.JSON.Deserialize.GetFromFile<Cfg.RootObject>(ConfigFile);
+        public static readonly string ConfigPath = $"{Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV\\";
+        public static readonly string CustomAudioPath = $"{ConfigPath}\\custom_audio_files\\";
+        private static readonly string ConfigFile = $"{Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV\\ResponseV.json";
+        public static Cfg.RootObject config = Serialization.JSON.Deserialize.GetFromFile<Cfg.RootObject>(ConfigFile);
 
         public class Cfg
         {
@@ -101,6 +103,6 @@ namespace ResponseV
                 public bool OverKillLimit { get; set; }
                 public bool Poaching { get; set; }
             }
-        }*/
+        }
     }
 }

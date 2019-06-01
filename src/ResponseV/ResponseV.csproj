@@ -152,7 +152,6 @@
     <Compile Include="Callouts\Nature\OverKillLimit.cs" />
     <Compile Include="Callouts\Nature\Poaching.cs" />
     <Compile Include="Callouts\Roles\RoleBase.cs" />
-    <Compile Include="Configuration.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="GTAV\SpawnPoints.cs" />
     <Compile Include="GTAV\LSPDFR.cs" />

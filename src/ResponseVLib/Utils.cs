@@ -5,6 +5,7 @@ using Rage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,12 @@ namespace ResponseVLib
             array2.CopyTo(tmp, array1.Length);
 
             return tmp;
+        }
+
+        public static void PlaySound(string SoundFile)
+        {
+            SoundPlayer player = new SoundPlayer($"{Configuration.CustomAudioPath}{SoundFile}");
+            player.Play();
         }
 
         public static bool IsLSPDFRPluginRunning(string PluginName)

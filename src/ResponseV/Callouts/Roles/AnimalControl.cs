@@ -19,6 +19,11 @@ namespace ResponseV.Callouts.Roles
         private static Ped s_Officer;
         private static Blip s_VehicleBlip;
         private static bool s_bIsEnroute;
+        private static bool s_bOnScene;
+
+        private static GameFiber s_Fiber1;
+        private static GameFiber s_Fiber2;
+
         private static Model[] s_VehicleModels = { "DUBSTA3", "SPEEDO" };
         private static Model[] s_OfficerModels = { "s_m_m_paramedic_01", "s_m_m_scientist_01" };
 
@@ -52,7 +57,7 @@ namespace ResponseV.Callouts.Roles
             Main.MainLogger.Log("AnimalControl: Requested");
             Utils.NotifyDispatchTo("Player", "Animal Control en-route.");
 
-            Vector3 SpawnPoint = World.GetNextPositionOnStreet(location.AroundPosition(300.0f));
+            Vector3 SpawnPoint = World.GetNextPositionOnStreet(location.AroundPosition(225.0f));
             s_Vehicle = new Vehicle(ResponseVLib.Utils.GetRandValue(s_VehicleModels), SpawnPoint, SpawnPoint.GetClosestVehicleNodeHeading())
             {
                 LicensePlateStyle = LicensePlateStyle.BlueOnWhite3
@@ -74,7 +79,7 @@ namespace ResponseV.Callouts.Roles
                 s_Vehicle.IsSirenSilent = true;
             }
 
-            Ped s_Officer = new Ped(ResponseVLib.Utils.GetRandValue(s_OfficerModels), SpawnPoint, 0.0f)
+            s_Officer = new Ped(ResponseVLib.Utils.GetRandValue(s_OfficerModels), SpawnPoint, 0.0f)
             {
                 IsPersistent = true,
                 BlockPermanentEvents = true
@@ -95,8 +100,7 @@ namespace ResponseV.Callouts.Roles
             // s_VehicleBlip.Scale = 0.5f;
 
 
-
-            GameFiber fiber = GameFiber.StartNew(delegate
+            s_Fiber1 = GameFiber.StartNew(delegate
             {
                 s_bIsEnroute = true;
 
@@ -109,8 +113,11 @@ namespace ResponseV.Callouts.Roles
                 }
 
                 s_Officer.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion(10000);
-                
 
+                s_bOnScene = true;
+                Main.MainLogger.Log("AnimalControl: On Scene");
+
+                /** Sort through the animals. */
                 List<Ped> AliveAnimals = new List<Ped>();
                 List<Ped> DeadAnimals = new List<Ped>();
 
@@ -133,36 +140,35 @@ namespace ResponseV.Callouts.Roles
 
                 List<Ped> TranquilizedAnimals = new List<Ped>();
 
+                /** Iterate over the alive animals so we can tranquilize them first as they pose a threat. */
                 AliveAnimals.ForEach(animal =>
                 {
                     if (animal.Exists())
                     {
                         Blip b = animal.AttachBlip();
-                        b.Color = System.Drawing.Color.Yellow;
+                        //b.Color = System.Drawing.Color.Yellow;
+                        b.Sprite = BlipSprite.Chop;
 
-                        if (animal.Position.DistanceTo(SpawnPoint) < 100)
+                        if (animal.Position.DistanceTo(SpawnPoint) <= 100)
                         {
                             // Aim weapon 
                             s_Officer.Inventory.GiveNewWeapon(WeaponHash.SniperRifle, 1, true);
 
-                            // chase after the animal
-                            if (animal.Position.DistanceTo(s_Officer) > 10)
+                            // chase after the animal if it's > 10 && <= 100
+                            if (animal.Position.DistanceTo(s_Officer) > 10 && animal.Position.DistanceTo(s_Officer) <= 100)
                             {
                                 Main.MainLogger.Log("AnimalControl: Officer is > 10 away from the animal so go towards the animal (AliveAnimals)");
                                 s_Officer.Tasks.AimWeaponAt(animal, -1);
                                 s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 3.0f, 25.0f).WaitForCompletion(20000);
-                            }
-                            else
-                            {
-                                GameFiber.Sleep(500);
                             }
 
                             Main.MainLogger.Log("AnimalControl: Fire the weapon at the animal (AliveAnimals)");
 
                             // s_Officer.Tasks.FireWeaponAt(animal, -1, FiringPattern.SingleShot).WaitForCompletion(3000);
 
-                            GameFiber.Sleep(2000);
-                            // TODO: Play sound here
+                            GameFiber.Sleep(500);
+                            ResponseVLib.Utils.PlaySound("dart.03.wav");
+
                             Utils.Notify("Play sound for tranquilizer");
                             animal.Kill();
                             animal.ClearBlood();
@@ -187,17 +193,18 @@ namespace ResponseV.Callouts.Roles
                         }
 
                         b.Delete();
-                        animal.Delete();
-                        Main.MainLogger.Log("AnimalControl: Deleted the animal (AliveAnimals)");
+                        animal.IsVisible = false;
+                        Main.MainLogger.Log("AnimalControl: Hid the animal (AliveAnimals)");
                     }
                 });
 
                 // Wait before going to get the dead animals
                 GameFiber.Sleep(2000);
 
+                /** Iterate over the dead animals since they don't pose a risk we do them last. */
                 DeadAnimals.ForEach(animal =>
                 {
-                    if (animal.Exists() && animal.Position.DistanceTo(SpawnPoint) < 100)
+                    if (animal.Exists() && animal.Position.DistanceTo(SpawnPoint) <= 100)
                     {
                         Main.MainLogger.Log("AnimalControl: Officer walks towards animal (DeadAnimals)");
                         s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 2.0f, 1.0f).WaitForCompletion();
@@ -210,14 +217,12 @@ namespace ResponseV.Callouts.Roles
                             GameFiber.Sleep(3000);
                         }
 
-                        animal.Delete();
-                        Main.MainLogger.Log("AnimalControl: Deleted the animal (DeadAnimals)");
+                        animal.IsVisible = false;
+                        Main.MainLogger.Log("AnimalControl: Hid the animal (DeadAnimals)");
                     }
                 });
 
                 GameFiber.Sleep(1000);
-
-
 
                 Rage.Native.NativeFunction.Natives.TASK_GO_TO_ENTITY(s_Officer, s_Vehicle, -1, 5.0f, 2.5f, 0, 0);
                 Main.MainLogger.Log("AnimalControl: Officer is going to the vehicle.");
@@ -230,32 +235,54 @@ namespace ResponseV.Callouts.Roles
                 }
                 Main.MainLogger.Log("AnimalControl: Officer entered the vehicle.");
 
-                s_Vehicle.Driver.Tasks.CruiseWithVehicle(25.0f, VehicleDrivingFlags.Normal);
+                s_Vehicle.Driver.Tasks.CruiseWithVehicle(30.0f, VehicleDrivingFlags.Normal);
                 Main.MainLogger.Log("AnimalControl: Officer is cruising with the vehicle.");
-
 
                 s_VehicleBlip.Delete();
 
-                // Cleanup if the player position > 250 from the s_Officer
-                if (Game.LocalPlayer.Character.Position.DistanceTo(s_Officer) > 250)
+                GameFiber.Sleep(20000);
+
+                Main.MainLogger.Log("AnimalControl: Deleting all animals");
+                animals.ToList().ForEach(animal =>
                 {
-                    animals.ToList().ForEach(animal =>
+                    if (animal.Exists())
                     {
-                        if (animal.Exists())
-                        {
-                            animal.Delete();
-                        }
-                    });
-
-                    s_Officer.Delete();
-                    s_Vehicle.Delete();
-
-                    Main.MainLogger.Log("AnimalControl: Cleaned up");
-                }
+                        animal.Delete();
+                    }
+                });
 
             }, "AnimalControlFiber");
 
-            Main.s_GameFibers.Add(fiber);
+
+            {
+                s_Fiber2 = GameFiber.StartNew(delegate
+                {
+                    for (;;)
+                    {
+                        GameFiber.Yield();
+
+                        // Cleanup if the player position > 150 from the SpawnPoint
+                        if (Game.LocalPlayer.Character.Position.DistanceTo(SpawnPoint) > 150 && s_bIsEnroute && s_bOnScene)
+                        {
+                            CleanupAnimalControl();
+                        }
+                    }
+                }, "AnimalControlCheckFiber");
+            }
+        }
+
+        public static void CleanupAnimalControl()
+        {
+            if (s_bIsEnroute && s_bOnScene)
+            {
+                s_Fiber1.Abort();
+                s_Fiber2.Abort();
+
+                s_Officer?.Delete();
+                s_Vehicle?.Delete();
+
+                Main.MainLogger.Log("AnimalControl: Cleaned up");
+            }
         }
     }
 }

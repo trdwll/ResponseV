@@ -14,19 +14,19 @@ namespace ResponseVLib
 
         private readonly string m_LogFile = $"{System.Windows.Forms.Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.log";
 
-        public Logger(Version AppVersion)
+        public Logger(Version AppVersion, bool bDeleteLog = false)
         {
-            if (System.IO.File.Exists(m_LogFile))
+            if (System.IO.File.Exists(m_LogFile) && bDeleteLog)
             {
                 System.IO.File.Delete(m_LogFile);
             }
 
             // TODO: if m_AppVersion > what's in the log then delete the log
 
-            WriteLog("--------------------");
-            WriteLog($"ResponseV v{AppVersion}");
-            WriteLog("Initialized Log");
-            WriteLog("--------------------");
+            //WriteLog("--------------------");
+            //WriteLog($"ResponseV v{AppVersion}");
+            //WriteLog("Initialized Log");
+            //WriteLog("--------------------");
         }
 
         public void Log(string Message, ELogLevel LogLevel = ELogLevel.LL_INFO)

@@ -284,7 +284,7 @@ namespace ResponseV.Plugins
                 s_MenuPool = new MenuPool();
 
                 // Create our main menu
-                s_MainMenu = new UIMenu("Response~y~V~w~", "~r~Bait Car");
+                s_MainMenu = new UIMenu($"{Utils.PluginPrefix}", "~r~Bait Car");
 
                 // Add our main menu to the MenuPool
                 s_MenuPool.Add(s_MainMenu);
@@ -300,7 +300,7 @@ namespace ResponseV.Plugins
                 UIMenuItem BaitCarMenu = new UIMenuItem("Bait Car Settings");
                 s_MainMenu.AddItem(BaitCarMenu);
 
-                s_BaitCarMenu = new UIMenu("Response~y~V~w~", "~r~Bait Car ~s~Settings");
+                s_BaitCarMenu = new UIMenu($"{Utils.PluginPrefix}", "~r~Bait Car ~s~Settings");
                 s_BaitCarMenu.OnItemSelect += BaitCarMenu_OnItemSelect;
 
                 s_MenuPool.Add(s_BaitCarMenu);
@@ -324,7 +324,7 @@ namespace ResponseV.Plugins
                 UIMenuItem menuItem = new UIMenuItem("Vehicle Menu");
                 s_MainMenu.AddItem(menuItem);
 
-                s_VehicleMenu = new UIMenu("Response~y~V~w~", "~r~Bait Car ~s~Options");
+                s_VehicleMenu = new UIMenu($"{Utils.PluginPrefix}", "~r~Bait Car ~s~Options");
                 s_VehicleMenu.OnListChange += VehicleMenu_OnListChange;
                 s_VehicleMenu.OnItemSelect += VehicleMenu_OnItemSelect;
 

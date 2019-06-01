@@ -12,6 +12,9 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
+            g_bCustomSpawn = true;
+            g_SpawnPoint = new Vector3(1527.37f, -1541.09f, 76.02f);
+
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_ANIMALATTACK)}";
             CalloutPosition = g_SpawnPoint;
 
@@ -41,6 +44,7 @@ namespace ResponseV.Callouts.Any
                 IsPersistent = true
             };
 
+            // make the victim like us rather than attack us
             m_Victim.RelationshipGroup = new RelationshipGroup("VICTIM");
             Game.SetRelationshipBetweenRelationshipGroups("VICTIM", "PLAYER", Relationship.Like);
 
@@ -88,10 +92,10 @@ namespace ResponseV.Callouts.Any
                 // this isn't ideal as it's constantly running
                 Roles.AnimalControl.Request(g_SpawnPoint, m_Animal, m_Animal2);
 
-                if (!m_Animal.Exists())
+                if (!m_Animal.Exists() && !m_Animal2.Exists() && 4 > 5)
                 {
                     // TODO: take animal
-                   // End();
+                    End();
                 }
             }
         }

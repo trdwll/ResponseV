@@ -1,27 +1,26 @@
-﻿using System;
-using LSPD_First_Response.Mod.API;
-using System.Reflection;
-using ResponseV.Ambient;
+﻿using LSPD_First_Response.Mod.API;
 using Rage;
-using System.Collections.Generic;
-using System.Linq;
-
 using ResponseVLib;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace ResponseV
 {
     internal class Main : Plugin
     {
-        public static Logger MainLogger = new Logger(Assembly.GetExecutingAssembly().GetName().Version);
+        public static Version s_AppVersion = Assembly.GetExecutingAssembly().GetName().Version;
+        public static Logger MainLogger = new Logger(s_AppVersion);
 
         /** Plugin implementations */
         public static bool s_bBetterEMS;
         public static bool s_bArrestManager;
         public static bool s_bTrafficPolicer;
 
+        public static bool s_bRealismEnabled = Configuration.config.Roleplay.RealismEnabled;
+
         public static List<GameFiber> s_GameFibers = new List<GameFiber>();
 
-        public static readonly Version s_AppVersion = Assembly.GetExecutingAssembly().GetName().Version;
         private static bool s_UpdateAvailable;
         private static Version s_VersionAvailable;
         private static string s_UpdateChannel;
@@ -34,16 +33,16 @@ namespace ResponseV
             Game.RawFrameRender += OnRawFrameRender;
 
             /** If realism is enabled then we welcome the officer on duty and what not. */
-            if (Configuration.config.Roleplay.RealismEnabled)
+            if (s_bRealismEnabled)
             {
                 string Area = WorldZone.GetAreaName(WorldZone.GetArea(Game.LocalPlayer.Character.Position));
-                string WelcomeMessage = $"Welcome {Configuration.config.Roleplay.OfficerName}, to the " + (ResponseVLib.World.IsNight() ? "night" : "day") + $" shift in {Area}. Stay safe out there.";
+                string WelcomeMessage = $"Welcome {ResponseVLib.Configuration.config.Roleplay.OfficerName}, to the " + (ResponseVLib.World.IsNight() ? "night" : "day") + $" shift in {Area}. Stay safe out there.";
                 Game.DisplayNotification(WelcomeMessage);
             }
 
             /** Update handling */
-            s_UpdateChannel = Configuration.config.UpdateChannel.ToLower();
-            if (Configuration.config.CheckForUpdates)
+            s_UpdateChannel = ResponseVLib.Configuration.config.UpdateChannel.ToLower();
+            if (ResponseVLib.Configuration.config.CheckForUpdates)
             {
                 s_UpdateAvailable = Updater.CheckForUpdates($"https://trdwll.com/api/ResponseV/update/{s_UpdateChannel}/", s_AppVersion, out s_VersionAvailable);
 
@@ -73,17 +72,23 @@ namespace ResponseV
                 }
             }
 
-            //if (true)
+            /** Repair vehicles */
             {
+                // NOTE: This has to be above loading of plugins since we're in a forloop and yielding, else this won't load.
                 GameFiber fiber = GameFiber.StartNew(delegate
                 {
-                    for (;;)
+                    for (; ; )
                     {
                         GameFiber.Yield();
 
                         if (ResponseVLib.Utils.IsKeyDown(System.Windows.Forms.Keys.T, System.Windows.Forms.Keys.None))
                         {
                             ResponseVLib.Vehicle.RepairVehicle();
+                        }
+
+                        if (ResponseVLib.Utils.IsKeyDown(System.Windows.Forms.Keys.End, System.Windows.Forms.Keys.None))
+                        {
+                            Functions.StopCurrentCallout();
                         }
                     }
                 });
@@ -92,17 +97,19 @@ namespace ResponseV
             }
 
             /** Plugins */
-            if (Configuration.config.Plugins.TurnWheels)
             {
-                Plugins.TurnWheels.TurnWheelsImpl();
-            }
-            if (Configuration.config.Plugins.KeepDoorOpen)
-            {
-                Plugins.KeepDoorOpen.KeepDoorOpenImpl();
-            }
-            if (Configuration.config.Plugins.BaitCar)
-            {
-                Plugins.BaitCar.BaitCarImpl();
+                if (ResponseVLib.Configuration.config.Plugins.TurnWheels)
+                {
+                    Plugins.TurnWheels.TurnWheelsImpl();
+                }
+                if (ResponseVLib.Configuration.config.Plugins.KeepDoorOpen)
+                {
+                    Plugins.KeepDoorOpen.KeepDoorOpenImpl();
+                }
+                if (ResponseVLib.Configuration.config.Plugins.BaitCar)
+                {
+                    Plugins.BaitCar.BaitCarImpl();
+                }
             }
         }
 
@@ -180,7 +187,7 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Nature.AnimalCruelty));
             //Functions.RegisterCallout(typeof(Callouts.Nature.EndangeredSpecies));
 
-            Utils.Notify("Please wait around 30 seconds before going on patrol/receiving calls to allow Response~y~V~w~ to load fully.");
+            Utils.Notify($"Please wait around 30 seconds before going on patrol/receiving calls to allow {Utils.PluginPrefix} to load fully.");
             // So we put it on a new thread so we can sleep for 20 seconds to allow other plugins to be loaded fully before we start messing with them
             GameFiber fiber = GameFiber.StartNew(delegate
             {

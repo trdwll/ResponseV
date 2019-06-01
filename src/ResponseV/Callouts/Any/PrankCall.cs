@@ -35,7 +35,7 @@ namespace ResponseV.Callouts.Any
             m_CallTypeString = LSPDFR.Radio.GetCallStringFromEnum(m_CallType);
 
             Vector3 LocalPos = Game.LocalPlayer.Character.Position;
-            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(MathHelper.GetRandomInteger(Configuration.config.Callouts.MinRadius, Configuration.config.Callouts.MaxRadius)));
+            m_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(MathHelper.GetRandomInteger(ResponseVLib.Configuration.config.Callouts.MinRadius, ResponseVLib.Configuration.config.Callouts.MaxRadius)));
 
             string CallAudio = $"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} ";
 

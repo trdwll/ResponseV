@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration.cs" />
     <Compile Include="DamagePacks.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="Logger.cs" />
