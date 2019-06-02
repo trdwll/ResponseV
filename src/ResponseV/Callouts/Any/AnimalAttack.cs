@@ -12,8 +12,8 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            g_bCustomSpawn = true;
-            g_SpawnPoint = new Vector3(1527.37f, -1541.09f, 76.02f);
+            //g_bCustomSpawn = true;
+            //g_SpawnPoint = new Vector3(1527.37f, -1541.09f, 76.02f);
 
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_ANIMALATTACK)}";
             CalloutPosition = g_SpawnPoint;
@@ -46,7 +46,7 @@ namespace ResponseV.Callouts.Any
 
             // make the victim like us rather than attack us
             m_Victim.RelationshipGroup = new RelationshipGroup("VICTIM");
-            Game.SetRelationshipBetweenRelationshipGroups("VICTIM", "PLAYER", Relationship.Like);
+            Game.SetRelationshipBetweenRelationshipGroups("VICTIM", "PLAYER", Relationship.Neutral);
 
             return base.OnCalloutAccepted();
         }
@@ -67,34 +67,11 @@ namespace ResponseV.Callouts.Any
 
             if (g_bOnScene)
             {
-                // this runs forever
-                //if (m_Victim.IsInjured || m_Victim.IsDead)
-                //{
-                //    LSPDFR.RequestEMS(g_SpawnPoint);
-
-                //    g_Logger.Log("AnimalAttack: On scene and victim is injured/dead so call EMS");
-                //    if (!Utils.m_bCheckingEMS)
-                //    {
-                //        g_Logger.Log("AnimalAttack: Checking for EMS");
-                //        Utils.CheckEMSOnScene(g_SpawnPoint, "AnimalAttack");
-                //    }
-
-                //    if (Utils.m_bEMSOnScene)
-                //    {
-                //        g_Logger.Log("AnimalAttack: EMS on Scene, end call.");
-                //        if (m_Victim.IsDead)
-                //        {
-                //            LSPDFR.RequestCoroner(g_SpawnPoint);
-                //        }
-                //    }
-                //}
-
-                // this isn't ideal as it's constantly running
+                // this isn't ideal as it's constantly running /shrug
                 Roles.AnimalControl.Request(g_SpawnPoint, m_Animal, m_Animal2);
 
                 if (!m_Animal.Exists() && !m_Animal2.Exists())
                 {
-                    // TODO: take animal
                     End();
                 }
             }
@@ -102,12 +79,12 @@ namespace ResponseV.Callouts.Any
 
         public override void End()
         {
+            base.End();
             g_Logger.Log("AnimalAttack: Callout end");
-            Roles.AnimalControl.CleanupAnimalControl();
+            //Roles.AnimalControl.CleanupAnimalControl();
             m_Victim?.Dismiss();
             m_Animal?.Dismiss();
 
-            base.End();
         }
     }
 }

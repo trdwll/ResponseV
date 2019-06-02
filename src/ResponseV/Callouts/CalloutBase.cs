@@ -115,8 +115,6 @@ namespace ResponseV.Callouts
                 g_bOnScene = false;
                 g_bIsPursuit = false;
                 g_bCustomSpawn = false;
-
-                
             }
             catch (Exception e)
             {

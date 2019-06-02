@@ -56,7 +56,6 @@ namespace ResponseV.Callouts.Roles
 
         private static void Request_Impl(Vector3 location, params Ped[] animals)
         {
-
             if (s_Vehicle.Exists() || s_bIsEnroute)
             {
                 // Main.MainLogger.Log("AnimalControl: Exists or they're already enroute.");
@@ -177,8 +176,8 @@ namespace ResponseV.Callouts.Roles
                             if (animal.Position.DistanceTo(s_Officer) > 10 && animal.Position.DistanceTo(s_Officer) <= 200)
                             {
                                 Main.MainLogger.Log("AnimalControl: Officer is > 10 away from the animal so go towards the animal (AliveAnimals)");
-                                s_Officer.Tasks.AimWeaponAt(animal, -1);
                                 s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 3.0f, 25.0f).WaitForCompletion(20000);
+                                s_Officer.Tasks.AimWeaponAt(animal, 500);
                             }
 
                             Main.MainLogger.Log("AnimalControl: Fire the weapon at the animal (AliveAnimals)");
@@ -266,6 +265,9 @@ namespace ResponseV.Callouts.Roles
 
                 s_Officer = null;
                 s_Vehicle = null;
+
+                s_bIsEnroute = false;
+                s_bOnScene = false;
 
                 animals.ToList().ForEach(animal =>
                 {
