@@ -175,10 +175,10 @@ namespace ResponseV.Callouts.Roles
                             // Aim weapon 
                             s_Officer.Inventory.GiveNewWeapon(WeaponHash.SniperRifle, 1, true);
 
-                            // chase after the animal if it's > 10 && <= 200
-                            if (animal.Position.DistanceTo(s_Officer) > 10 && animal.Position.DistanceTo(s_Officer) <= 200)
+                            // chase after the animal if it's <= 200
+                            if (animal.Position.DistanceTo(s_Officer) <= 200)
                             {
-                                Main.MainLogger.Log("AnimalControl: Officer is > 10 away from the animal so go towards the animal (AliveAnimals)");
+                                Main.MainLogger.Log("AnimalControl: Officer is <= 200 away from the animal so go towards the animal (AliveAnimals)");
                                 s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 3.0f, 25.0f).WaitForCompletion(20000);
                                 s_Officer.Tasks.AimWeaponAt(animal, 500);
                             }
@@ -228,13 +228,9 @@ namespace ResponseV.Callouts.Roles
                         Main.MainLogger.Log("AnimalControl: Officer walks towards animal (DeadAnimals)");
                         s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 2.0f, 1.0f).WaitForCompletion();
 
-                        // Kind of redundant to check if they're dead or not, but might as well be thorough
-                        if (animal.IsDead)
-                        {
-                            Main.MainLogger.Log("AnimalControl: Animal is dead so lets pick it up");
-                            s_Officer.Tasks.PlayAnimation(new AnimationDictionary("amb@medic@standing@tendtodead@idle_a"), "idle_a", 1.0f, AnimationFlags.None);
-                            GameFiber.Sleep(3000);
-                        }
+                        Main.MainLogger.Log("AnimalControl: Animal is dead so lets pick it up");
+                        s_Officer.Tasks.PlayAnimation(new AnimationDictionary("amb@medic@standing@tendtodead@idle_a"), "idle_a", 1.0f, AnimationFlags.None);
+                        GameFiber.Sleep(3000);
 
                         animal.IsVisible = false;
                         animal.Position = new Vector3(0f, 0f, 0f);

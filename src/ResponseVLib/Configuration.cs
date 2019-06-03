@@ -41,6 +41,15 @@ namespace ResponseVLib
                 public bool BaitCar { get; set; }
             }
 
+            public struct Customization
+            {
+                public string AnimalControlPedModels { get; set; }
+                public string AnimalControlVehicleModels { get; set; }
+
+                public string GameWardenPedModels { get; set; }
+                public string GameWardenVehicleModels { get; set; }
+            }
+
             public class RootObject
             {
                 public bool CheckForUpdates { get; set; }
@@ -49,6 +58,7 @@ namespace ResponseVLib
                 public Ambient AmbientEvents;
                 public Plugins Plugins;
                 public Callouts Callouts = new Callouts();
+                public Customization Customization;
             }
 
             public class Callouts

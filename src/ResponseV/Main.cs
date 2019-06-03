@@ -153,7 +153,7 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.Loitering));
             //Functions.RegisterCallout(typeof(Callouts.Any.MVA));
             // Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
-            // Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
+            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
             //Functions.RegisterCallout(typeof(Callouts.Any.Paparazzi));
             // Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
             //Functions.RegisterCallout(typeof(Callouts.Any.Party));
