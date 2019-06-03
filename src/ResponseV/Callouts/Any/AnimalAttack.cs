@@ -84,7 +84,6 @@ namespace ResponseV.Callouts.Any
             //Roles.AnimalControl.CleanupAnimalControl();
             m_Victim?.Dismiss();
             m_Animal?.Dismiss();
-
         }
     }
 }

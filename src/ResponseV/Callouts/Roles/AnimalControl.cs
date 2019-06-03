@@ -62,8 +62,13 @@ namespace ResponseV.Callouts.Roles
                 return;
             }
 
+            string UnitPrefix = $"{ResponseVLib.Utils.GetRandValue("AC", "Animal Control")}-{MathHelper.GetRandomInteger(100)}";
+
             Main.MainLogger.Log("AnimalControl: Requested");
-            Utils.NotifyDispatchTo("Player", "Animal Control en-route.");
+            Utils.NotifyDispatchTo("Player", ResponseVLib.Utils.GetRandValue("Animal Control en-route.", "Animal Control has been notified."));
+
+            GameFiber.Sleep(2500);
+            Game.DisplayNotification($"{UnitPrefix} to Dispatch: I'll be en-route to the scene.");
 
             Vector3 SpawnPoint = World.GetNextPositionOnStreet(location.AroundPosition(200.0f));
             s_Vehicle = new Vehicle(ResponseVLib.Utils.GetRandValue(s_VehicleModels), SpawnPoint, SpawnPoint.GetClosestVehicleNodeHeading())
@@ -102,13 +107,31 @@ namespace ResponseV.Callouts.Roles
             // TODO: Check if the officer is dead
 
             // just to prevent our officer from being killed...
-            /*s_Officer.MaxHealth = int.MaxValue;
-            s_Officer.Health = int.MaxValue;*/
+            s_Officer.MaxHealth = int.MaxValue;
+            s_Officer.Health = int.MaxValue;
 
             s_VehicleBlip = s_Vehicle.AttachBlip();
             s_VehicleBlip.Color = System.Drawing.Color.Orange;
             // s_VehicleBlip.Scale = 0.5f;
 
+/*            s_Fiber2 = GameFiber.StartNew(delegate
+            {
+                for (;;)
+                {
+                    GameFiber.Yield();
+
+                    if (s_Officer.Exists() && s_Officer.IsDead)
+                    {
+                        CleanupAnimalControl();
+                        break;
+                    }
+
+                    GameFiber.Sleep(1000);
+                }
+            }, "AnimalControlCheckAliveFiber");
+
+
+            if (s_Officer.Exists() && s_Officer.IsDead) return;*/
 
             s_Fiber1 = GameFiber.StartNew(delegate
             {
@@ -134,6 +157,7 @@ namespace ResponseV.Callouts.Roles
 
                 s_bOnScene = true;
                 Main.MainLogger.Log("AnimalControl: On Scene");
+                Game.DisplayNotification($"{UnitPrefix} to Dispatch: I'll be on scene.");
 
                 /** Sort through the animals. */
                 List<Ped> AliveAnimals = new List<Ped>();
@@ -161,7 +185,7 @@ namespace ResponseV.Callouts.Roles
                 /** Iterate over the alive animals so we can tranquilize them first as they pose a threat. */
                 AliveAnimals.ForEach(animal =>
                 {
-                    if (animal.Exists())
+                    if (animal.Exists() && animal.IsVisible)
                     {
                         Blip b = animal.AttachBlip();
                         //b.Color = System.Drawing.Color.Yellow;
@@ -210,6 +234,7 @@ namespace ResponseV.Callouts.Roles
 
                         b.Delete();
                         animal.IsVisible = false;
+                        animal.Position = new Vector3(0f, 0f, 0f);
                         Main.MainLogger.Log("AnimalControl: Hid the animal (AliveAnimals)");
                     }
                 });
@@ -220,7 +245,7 @@ namespace ResponseV.Callouts.Roles
                 /** Iterate over the dead animals since they don't pose a risk we do them last. */
                 DeadAnimals.ForEach(animal =>
                 {
-                    if (animal.Exists() && animal.Position.DistanceTo(SpawnPoint) <= 200)
+                    if (animal.Exists() && animal.Position.DistanceTo(SpawnPoint) <= 200 && animal.IsVisible)
                     {
                         Main.MainLogger.Log("AnimalControl: Officer walks towards animal (DeadAnimals)");
                         s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 2.0f, 1.0f).WaitForCompletion();
@@ -234,11 +259,16 @@ namespace ResponseV.Callouts.Roles
                         }
 
                         animal.IsVisible = false;
+                        animal.Position = new Vector3(0f, 0f, 0f);
                         Main.MainLogger.Log("AnimalControl: Hid the animal (DeadAnimals)");
                     }
                 });
 
                 GameFiber.Sleep(1000);
+
+                Game.DisplaySubtitle("Animal Control Officer: See you later.", 2000);
+                GameFiber.Sleep(500);
+                Game.DisplayNotification($"{UnitPrefix} to Dispatch: I'll be clear and en-route back to the station.");
 
                 Rage.Native.NativeFunction.Natives.TASK_GO_TO_ENTITY(s_Officer, s_Vehicle, 30000, 5.0f, 2.5f, 0, 0);
                 Main.MainLogger.Log("AnimalControl: Officer is going to the vehicle.");
