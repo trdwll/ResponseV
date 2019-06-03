@@ -114,25 +114,6 @@ namespace ResponseV.Callouts.Roles
             s_VehicleBlip.Color = System.Drawing.Color.Orange;
             // s_VehicleBlip.Scale = 0.5f;
 
-/*            s_Fiber2 = GameFiber.StartNew(delegate
-            {
-                for (;;)
-                {
-                    GameFiber.Yield();
-
-                    if (s_Officer.Exists() && s_Officer.IsDead)
-                    {
-                        CleanupAnimalControl();
-                        break;
-                    }
-
-                    GameFiber.Sleep(1000);
-                }
-            }, "AnimalControlCheckAliveFiber");
-
-
-            if (s_Officer.Exists() && s_Officer.IsDead) return;*/
-
             s_Fiber1 = GameFiber.StartNew(delegate
             {
                 s_bIsEnroute = true;
@@ -180,8 +161,6 @@ namespace ResponseV.Callouts.Roles
                 });
 
 
-                List<Ped> TranquilizedAnimals = new List<Ped>();
-
                 /** Iterate over the alive animals so we can tranquilize them first as they pose a threat. */
                 AliveAnimals.ForEach(animal =>
                 {
@@ -222,7 +201,6 @@ namespace ResponseV.Callouts.Roles
                             // We kill the animal to act like it was tranquilized
                             if (animal.IsDead)
                             {
-                                TranquilizedAnimals.Add(animal);
                                 Main.MainLogger.Log("AnimalControl: Animal has been tranquilized (AliveAnimals)");
 
                                 s_Officer.Tasks.FollowNavigationMeshToPosition(animal.Position, animal.GetHeadingTowards(animal), 2.0f, 1.0f).WaitForCompletion();
