@@ -4,6 +4,13 @@ namespace ResponseV.GTAV
 {
     internal class SpawnPoints
     {
+        public static readonly Vector3[] s_LosSantosBarFightSpawnPoints =
+        {
+            new Vector3(126.9968f, -1285.4f, 29.28253f), // strip club
+            new Vector3(-556.5281f, 272.0713f, 83.02271f), // top (tequi-la-la)
+            new Vector3(251.1228f, -1010.28f, 29.27015f), // legion square (shenanigans)
+        };
+
         // TODO: Add spawnpoints on the lake near Trevor's house
         public static readonly Vector3[] BlaineDrowningSpawnPoints =
         {

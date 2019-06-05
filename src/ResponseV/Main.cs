@@ -131,15 +131,18 @@ namespace ResponseV
              * 
              * Any:
              * Dog Fighting
-             */ 
+             * BOLO
+             * Stolen bicycle 
+             */
 
             // Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash)); // needs more testing and work
-            Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack)); // needs more testing and work
+            // Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack));
             //Functions.RegisterCallout(typeof(Callouts.Any.Assault));
             //Functions.RegisterCallout(typeof(Callouts.Any.AssaultOnOfficer));
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedMurder));
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedSuicide));
-            //Functions.RegisterCallout(typeof(Callouts.Any.BarFight));
+            Functions.RegisterCallout(typeof(Callouts.Any.BarFight));
+            //Functions.RegisterCallout(typeof(Callouts.Any.BeachFight));
             //Functions.RegisterCallout(typeof(Callouts.Any.BeachParty));
             // Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
             //Functions.RegisterCallout(typeof(Callouts.Any.Drowning));
@@ -153,14 +156,14 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.Loitering));
             //Functions.RegisterCallout(typeof(Callouts.Any.MVA));
             // Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
-            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
+            // Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
             //Functions.RegisterCallout(typeof(Callouts.Any.Paparazzi));
             // Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
             //Functions.RegisterCallout(typeof(Callouts.Any.Party));
             //Functions.RegisterCallout(typeof(Callouts.Any.PedHitByVehicle));
             //Functions.RegisterCallout(typeof(Callouts.Any.PedMissing));
             // Functions.RegisterCallout(typeof(Callouts.Any.PedOnFire));
-            //Functions.RegisterCallout(typeof(Callouts.Any.PedWithWeapon));
+            // Functions.RegisterCallout(typeof(Callouts.Any.PedWithWeapon));
             // Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
             //Functions.RegisterCallout(typeof(Callouts.Any.Pursuit));
             //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
@@ -172,10 +175,6 @@ namespace ResponseV
             //Functions.RegisterCallout(typeof(Callouts.Any.Trespassing));
             //Functions.RegisterCallout(typeof(Callouts.Any.Vandalism));
             // Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
-
-            // TODO: Add a BOLO callout
-            // TODO: Add a bicycle stolen callout (near right side of map in the small community/mirror park)
-
 
             // Fed - These require more work than other callouts as we spawn specific vehicles in specific places etc
             //Functions.RegisterCallout(typeof(Callouts.Fed.TerroristPlot));

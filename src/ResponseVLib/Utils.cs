@@ -21,7 +21,7 @@ namespace ResponseVLib
 
         public static bool GetRandBool()
         {
-            return MathHelper.GetRandomDouble(0.0, 1.0) >= 0.5;
+            return new Random().Next(0, 1) == 1;
         }
 
         public static T[] MergeArrays<T>(T[] array1, T[] array2)

@@ -1,6 +1,7 @@
 ﻿using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 using Rage;
+using WorldZone = ResponseVLib.WorldZone;
 
 namespace ResponseV.Callouts.Any
 {
@@ -9,6 +10,7 @@ namespace ResponseV.Callouts.Any
     {
         private Ped m_Animal;
         private Ped m_Victim;
+        private string[] AnimalModels = { "a_c_husky", "a_c_rottweiler", "a_c_poodle", "a_c_shepherd", "a_c_westy", "a_c_retriever" };
 
         public override bool OnBeforeCalloutDisplayed()
         {
@@ -17,6 +19,12 @@ namespace ResponseV.Callouts.Any
 
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_ANIMALATTACK)}";
             CalloutPosition = g_SpawnPoint;
+
+            // Could check if the g_SpawnPoint is also in Blaine, but whatever
+            if (WorldZone.GetArea(Game.LocalPlayer.Character.Position) == WorldZone.EWorldArea.Blaine_County)
+            {
+                AnimalModels = ResponseVLib.Utils.MergeArrays(AnimalModels, new string[] { "a_c_coyote", "a_c_deer", "a_c_mtlion", "a_c_boar" });
+            }
 
             g_Logger.Log($"AnimalAttack: {g_SpawnPoint.ToString()}");
 
@@ -29,7 +37,7 @@ namespace ResponseV.Callouts.Any
         {
             g_Logger.Log("AnimalAttack: Callout accepted");
 
-            m_Animal = new Ped(ResponseVLib.Utils.GetRandValue("a_c_husky", "a_c_rottweiler", "a_c_poodle", "a_c_shepherd", "a_c_westy", "a_c_retriever"), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360))
+            m_Animal = new Ped(ResponseVLib.Utils.GetRandValue(AnimalModels), g_SpawnPoint, MathHelper.GetRandomInteger(1, 360))
             {
                 IsPersistent = true
             };
@@ -39,9 +47,19 @@ namespace ResponseV.Callouts.Any
                 IsPersistent = true
             };
 
-            // make the victim like us rather than attack us
             m_Victim.RelationshipGroup = new RelationshipGroup("VICTIM");
-            Game.SetRelationshipBetweenRelationshipGroups("VICTIM", "PLAYER", Relationship.Neutral);
+            
+            if (ResponseVLib.Utils.GetRandBool())
+            {
+                // make the victim like us rather than attack us
+                Game.SetRelationshipBetweenRelationshipGroups("VICTIM", "PLAYER", Relationship.Companion);
+            }
+            
+            if (ResponseVLib.Utils.GetRandBool())
+            {
+                Game.SetRelationshipBetweenRelationshipGroups("VICTIM", "COP", Relationship.Like);
+                Game.SetRelationshipBetweenRelationshipGroups("COP", "VICTIM", Relationship.Like);
+            }
 
             return base.OnCalloutAccepted();
         }

@@ -41,6 +41,8 @@ namespace ResponseV.Callouts
             WeaponHash.APPistol, WeaponHash.Pistol, WeaponHash.CombatPistol, WeaponHash.Pistol50 // Pistols
         };
 
+        public virtual void SetSpawnPoint(Vector3 SpawnPoint) { g_SpawnPoint = SpawnPoint; }
+
         public override bool OnBeforeCalloutDisplayed()
         {
             if (/*g_SpawnPoint == new Vector3(0.0f, 0.0f, 0.0f) && */!g_bCustomSpawn)
@@ -105,6 +107,7 @@ namespace ResponseV.Callouts
 
             try
             {
+                Utils.NotifyPlayerTo("Dispatch", ResponseVLib.Utils.GetRandValue("I'll be code 4.", "I'm code 4 dispatch.", "I'm code 4 and back on patrol."));
                 g_Logger.Log("CalloutBase: Callout ended");
 
                 g_CallBlip?.Delete();
