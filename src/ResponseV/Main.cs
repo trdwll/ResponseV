@@ -135,6 +135,8 @@ namespace ResponseV
              * Stolen bicycle 
              */
 
+            Functions.RegisterCallout(typeof(Callouts.TestCallout));
+
             // Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash)); // needs more testing and work
             // Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack));
             // Functions.RegisterCallout(typeof(Callouts.Any.Assault));
