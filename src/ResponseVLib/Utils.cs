@@ -14,9 +14,25 @@ namespace ResponseVLib
 {
     public static class Utils
     {
+        public static Vector3[] GetClosestVector3(Vector3[] ArrayOfVectors, Vector3 Position, float Radius = 100.0f, int MaxCount = 5)
+        {
+            List<Tuple<float, Vector3>> tmpVectors = new List<Tuple<float, Vector3>>();
+            foreach (Vector3 vec in ArrayOfVectors)
+            {
+                float Distance = (Position - vec).Length();
+
+                if (Distance <= Radius)
+                {
+                    tmpVectors.Add(new Tuple<float, Vector3>(Distance, vec));
+                }
+            }
+
+            return tmpVectors.OrderBy(v => v.Item1).Select(v => v.Item2).Take(MaxCount).ToArray();
+        }
+
         public static T GetRandValue<T>(params T[] args)
         {
-            return args[MathHelper.GetRandomInteger(args.Length - 1)];
+            return args[new Random().Next(0, args.Length)];
         }
 
         public static bool GetRandBool()

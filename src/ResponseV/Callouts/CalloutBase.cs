@@ -24,7 +24,7 @@ namespace ResponseV.Callouts
         protected List<Ped> g_Victims = new List<Ped>();
         protected List<Ped> g_Suspects = new List<Ped>();
 
-        protected Model[] g_PedModels = Model.PedModels.Where(p => !p.Name.StartsWith("A_C_")).ToArray();
+        protected Model[] g_PedModels = Model.PedModels.Where(p => !p.Name.StartsWith("A_C_")).ToArray(); // TODO: filter out EMS/FD/PD/MIL/etc
         protected Model[] g_Vehicles = Model.VehicleModels.Where(v => v.IsCar && !v.IsLawEnforcementVehicle && !v.IsEmergencyVehicle && !v.IsBigVehicle).ToArray();
 
         protected Model[] g_LosSantosPoliceVehicles = { "police", "police2", "police3", "police4" };
@@ -41,11 +41,9 @@ namespace ResponseV.Callouts
             WeaponHash.APPistol, WeaponHash.Pistol, WeaponHash.CombatPistol, WeaponHash.Pistol50 // Pistols
         };
 
-        public virtual void SetSpawnPoint(Vector3 SpawnPoint) { g_SpawnPoint = SpawnPoint; }
-
         public override bool OnBeforeCalloutDisplayed()
         {
-            if (/*g_SpawnPoint == new Vector3(0.0f, 0.0f, 0.0f) && */!g_bCustomSpawn)
+            if (!g_bCustomSpawn)
             {
                 g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(MathHelper.GetRandomInteger(ResponseVLib.Configuration.config.Callouts.MinRadius, ResponseVLib.Configuration.config.Callouts.MaxRadius)));
             }
@@ -118,6 +116,8 @@ namespace ResponseV.Callouts
                 g_bOnScene = false;
                 g_bIsPursuit = false;
                 g_bCustomSpawn = false;
+
+                g_SpawnPoint = new Vector3();
             }
             catch (Exception e)
             {

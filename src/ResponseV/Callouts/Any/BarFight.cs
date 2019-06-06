@@ -4,7 +4,7 @@ using LSPD_First_Response.Mod.Callouts;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("BarFight", CalloutProbability.Always)]
+    [CalloutInfo("BarFight", CalloutProbability.Medium)]
     internal sealed class BarFight : CalloutBase
     {
         private Ped m_Suspect1;
@@ -16,7 +16,9 @@ namespace ResponseV.Callouts.Any
 
             g_bCustomSpawn = true;
 
-            g_SpawnPoint = ResponseVLib.Utils.GetRandValue(GTAV.SpawnPoints.s_LosSantosBarFightSpawnPoints);
+            Vector3 Location = ResponseVLib.Utils.GetRandValue(ResponseVLib.Utils.GetClosestVector3(GTAV.SpawnPoints.s_LosSantosBarFightSpawnPoints, Game.LocalPlayer.Character.Position, 1000.0f));
+
+            g_SpawnPoint = Location;
 
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_BARFIGHT)}";
             CalloutPosition = g_SpawnPoint;

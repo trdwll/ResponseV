@@ -419,7 +419,7 @@ namespace ResponseV
                 case ECallType.CT_ASSAULTONOFFICER: ret += (bool)args[0] ? $"{GetRandomSound(ASSAULT_ON_OFFICER_KNIFE)}" : $"{GetRandomSound(ASSAULT_ON_OFFICER)}"; break;
                 case ECallType.CT_ATTEMPTEDMUDER: ret += $"{GetRandomSound(ATTEMPTED_MURDER)}"; break;
                 case ECallType.CT_ATTEMPTEDSUICIDE: ret += $"{GetRandomSound(ATTEMPTED_SUICIDE)}"; break;
-                case ECallType.CT_BARFIGHT: ret += $""; break;
+                case ECallType.CT_BARFIGHT: ret += $"{GetRandomSound(ASSAULT)}"; break;
                 case ECallType.CT_BEACHPARTY: ret += $""; break;
                 case ECallType.CT_DEADBODY: ret += $"{GetRandomSound(DEADBODY)}"; break;
                 case ECallType.CT_DROWNING: ret += $""; break;

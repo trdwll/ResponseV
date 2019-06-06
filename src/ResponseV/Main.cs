@@ -137,11 +137,11 @@ namespace ResponseV
 
             // Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash)); // needs more testing and work
             // Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack));
-            //Functions.RegisterCallout(typeof(Callouts.Any.Assault));
+            // Functions.RegisterCallout(typeof(Callouts.Any.Assault));
             //Functions.RegisterCallout(typeof(Callouts.Any.AssaultOnOfficer));
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedMurder));
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedSuicide));
-            Functions.RegisterCallout(typeof(Callouts.Any.BarFight));
+            // Functions.RegisterCallout(typeof(Callouts.Any.BarFight));
             //Functions.RegisterCallout(typeof(Callouts.Any.BeachFight));
             //Functions.RegisterCallout(typeof(Callouts.Any.BeachParty));
             // Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
