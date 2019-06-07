@@ -21,22 +21,14 @@ namespace ResponseV.Callouts.Any
 
             if (m_bMultiple)
             {
-                CalloutMessage = "Reports of multiple people with weapons";
+                CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_PEDWITHWEAPON, true)}";
             }
             else
             {
                 CalloutMessage = "Reports of a person with a " + (ResponseVLib.Utils.GetRandBool() ? m_Weapon.ToString() : "weapon");
             }
-            CalloutPosition = g_SpawnPoint;
 
-            if (m_Weapon == WeaponHash.Knife)
-            {
-                Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_PEDWITHWEAPON, Enums.EResponse.R_RANDOM, false, m_Weapon)}", g_SpawnPoint);
-            }
-            else
-            {
-                Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_PEDWITHWEAPON, Enums.EResponse.R_RANDOM, true, m_Weapon)}", g_SpawnPoint);
-            }
+            Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_PEDWITHWEAPON, Enums.EResponse.R_RANDOM, m_Weapon == WeaponHash.Knife, m_Weapon)}", g_SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }

@@ -48,6 +48,8 @@ namespace ResponseV.Callouts
                 g_SpawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(MathHelper.GetRandomInteger(ResponseVLib.Configuration.config.Callouts.MinRadius, ResponseVLib.Configuration.config.Callouts.MaxRadius)));
             }
 
+            CalloutPosition = g_SpawnPoint;
+
             // if (g_SpawnPoint.DistanceTo(Game.LocalPlayer.Character.Position) <= 500)
             {
                 ShowCalloutAreaBlipBeforeAccepting(g_SpawnPoint, 25f);

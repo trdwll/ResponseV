@@ -7,13 +7,12 @@ using Ped = Rage.Ped;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("DeadBody", CalloutProbability.VeryHigh)]
+    [CalloutInfo("DeadBody", CalloutProbability.Medium)]
     internal sealed class DeadBody : CalloutBase
     {
         public override bool OnBeforeCalloutDisplayed()
         {
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_DEADBODY)}";
-            CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_DEADBODY, Enums.EResponse.R_CODE2)}", g_SpawnPoint);
 

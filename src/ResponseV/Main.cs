@@ -135,48 +135,48 @@ namespace ResponseV
              * Stolen bicycle 
              */
 
-            Functions.RegisterCallout(typeof(Callouts.TestCallout));
+            // Functions.RegisterCallout(typeof(Callouts.TestCallout));
 
             // Functions.RegisterCallout(typeof(Callouts.Any.AircraftCrash)); // needs more testing and work
-            // Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack));
-            // Functions.RegisterCallout(typeof(Callouts.Any.Assault));
+            Functions.RegisterCallout(typeof(Callouts.Any.AnimalAttack));
+            Functions.RegisterCallout(typeof(Callouts.Any.Assault));
             //Functions.RegisterCallout(typeof(Callouts.Any.AssaultOnOfficer));
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedMurder));
             //Functions.RegisterCallout(typeof(Callouts.Any.AttemptedSuicide));
-            // Functions.RegisterCallout(typeof(Callouts.Any.BarFight));
+            Functions.RegisterCallout(typeof(Callouts.Any.BarFight));
             //Functions.RegisterCallout(typeof(Callouts.Any.BeachFight));
             //Functions.RegisterCallout(typeof(Callouts.Any.BeachParty));
-            // Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
+            Functions.RegisterCallout(typeof(Callouts.Any.DeadBody));
             //Functions.RegisterCallout(typeof(Callouts.Any.Drowning));
             //Functions.RegisterCallout(typeof(Callouts.Any.DrugBust));
-            // Functions.RegisterCallout(typeof(Callouts.Any.DUI));
+            Functions.RegisterCallout(typeof(Callouts.Any.DUI));
             //Functions.RegisterCallout(typeof(Callouts.Any.GangActivity));
             //Functions.RegisterCallout(typeof(Callouts.Any.GraffitiArtist));
-            // Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
+            Functions.RegisterCallout(typeof(Callouts.Any.IndecentExposure));
             //Functions.RegisterCallout(typeof(Callouts.Any.Kidnapping));
             //Functions.RegisterCallout(typeof(Callouts.Any.Littering));
             //Functions.RegisterCallout(typeof(Callouts.Any.Loitering));
             //Functions.RegisterCallout(typeof(Callouts.Any.MVA));
-            // Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
-            // Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
+            Functions.RegisterCallout(typeof(Callouts.Any.OfficerDown));
+            Functions.RegisterCallout(typeof(Callouts.Any.Overdose));
             //Functions.RegisterCallout(typeof(Callouts.Any.Paparazzi));
-            // Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
+            Functions.RegisterCallout(typeof(Callouts.Any.ParkingViolation));
             //Functions.RegisterCallout(typeof(Callouts.Any.Party));
             //Functions.RegisterCallout(typeof(Callouts.Any.PedHitByVehicle));
             //Functions.RegisterCallout(typeof(Callouts.Any.PedMissing));
-            // Functions.RegisterCallout(typeof(Callouts.Any.PedOnFire));
-            // Functions.RegisterCallout(typeof(Callouts.Any.PedWithWeapon));
-            // Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
+            Functions.RegisterCallout(typeof(Callouts.Any.PedOnFire));
+            Functions.RegisterCallout(typeof(Callouts.Any.PedWithWeapon));
+            Functions.RegisterCallout(typeof(Callouts.Any.PrankCall));
             //Functions.RegisterCallout(typeof(Callouts.Any.Pursuit));
             //Functions.RegisterCallout(typeof(Callouts.Any.Robbery));
             //Functions.RegisterCallout(typeof(Callouts.Any.SearchWarrant));
             //Functions.RegisterCallout(typeof(Callouts.Any.SexOffender));
-            // Functions.RegisterCallout(typeof(Callouts.Any.SpeedingVehicle));
+            Functions.RegisterCallout(typeof(Callouts.Any.SpeedingVehicle));
             //Functions.RegisterCallout(typeof(Callouts.Any.StreetPerformerFight));
             //Functions.RegisterCallout(typeof(Callouts.Any.SuspiciousItem));
             //Functions.RegisterCallout(typeof(Callouts.Any.Trespassing));
             //Functions.RegisterCallout(typeof(Callouts.Any.Vandalism));
-            // Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
+            Functions.RegisterCallout(typeof(Callouts.Any.VehicleFire));
 
             // Fed - These require more work than other callouts as we spawn specific vehicles in specific places etc
             //Functions.RegisterCallout(typeof(Callouts.Fed.TerroristPlot));

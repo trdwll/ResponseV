@@ -11,7 +11,6 @@ namespace ResponseV.Callouts.Any
         public override bool OnBeforeCalloutDisplayed()
         {
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_INDECENTEXPOSURE)}";
-            CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_INDECENTEXPOSURE, Enums.EResponse.R_CODE2)}", g_SpawnPoint);
 

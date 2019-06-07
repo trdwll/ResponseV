@@ -4,15 +4,14 @@ using LSPD_First_Response.Mod.Callouts;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("ParkingViolation", CalloutProbability.VeryLow)]
+    [CalloutInfo("ParkingViolation", CalloutProbability.Medium)]
     internal sealed class ParkingViolation : CalloutBase
     {
         private Vehicle m_Vehicle;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = "Reports of an Illegally Parked Vehicle";
-            CalloutPosition = g_SpawnPoint;
+            CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_PARKINGVIOLATION)}";
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.WE_HAVE)} {LSPDFR.Radio.GetRandomSound(LSPDFR.Radio.ILLEGALLY_PARKED_VEHICLE)} IN_OR_ON_POSITION", g_SpawnPoint);
 

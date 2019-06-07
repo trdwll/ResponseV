@@ -5,7 +5,7 @@ using WorldZone = ResponseVLib.WorldZone;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("AnimalAttack", CalloutProbability.Always)]
+    [CalloutInfo("AnimalAttack", CalloutProbability.Medium)]
     internal sealed class AnimalAttack : CalloutBase
     {
         private Ped m_Animal;
@@ -14,11 +14,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            //g_bCustomSpawn = true;
-            //g_SpawnPoint = new Vector3(1527.37f, -1541.09f, 76.02f);
-
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_ANIMALATTACK)}";
-            CalloutPosition = g_SpawnPoint;
 
             // Could check if the g_SpawnPoint is also in Blaine, but whatever
             if (WorldZone.GetArea(Game.LocalPlayer.Character.Position) == WorldZone.EWorldArea.Blaine_County)

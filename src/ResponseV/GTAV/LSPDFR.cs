@@ -492,9 +492,9 @@ namespace ResponseV
                 case ECallType.CT_PARKINGVIOLATION: ret += $"{GetRandomSound(ILLEGALLY_PARKED_VEHICLE)}"; break;
                 case ECallType.CT_PARTY: ret += $""; break;
                 case ECallType.CT_PEDHITBYVEHICLE: ret += $"{GetRandomSound(PED_HIT_BY_VEHICLE)}"; break;
-                case ECallType.CT_PEDMISSING: ret += $""; break;
+                case ECallType.CT_PEDMISSING: ret += $"GetRandomSound(CIV_ON_FIRE)"; break;
                 case ECallType.CT_PEDONFIRE: ret += $""; break;
-                case ECallType.CT_PEDWITHWEAPON: ret += ((bool)args[0] ? $"{GetRandomSound(PED_WITH_FIREARM)}" : $"{GetRandomSound(PED_WITH_KNIFE)}") + $"{LSPDFR.Radio.GetWeaponSound((WeaponHash)args[1])}"; break;
+                case ECallType.CT_PEDWITHWEAPON: ret += ((bool)args[0] ? $"{GetRandomSound(PED_WITH_FIREARM)}" : $"{GetRandomSound(PED_WITH_KNIFE)}") + $"{GetWeaponSound((WeaponHash)args[1])}"; break;
                 case ECallType.CT_PRANKCALL: ret += $""; break;
                 case ECallType.CT_PURSUIT: ret += $""; break;
                 case ECallType.CT_ROBBERY: ret += $"{GetRandomSound(ROBBERY)}"; break;
@@ -601,7 +601,7 @@ namespace ResponseV
                 case ECallType.CT_PEDHITBYVEHICLE: return "a person hit by vehicle";
                 case ECallType.CT_PEDMISSING: return "a person missing";
                 case ECallType.CT_PEDONFIRE: return "a Person on Fire";
-                case ECallType.CT_PEDWITHWEAPON: return "a person with a weapon";
+                case ECallType.CT_PEDWITHWEAPON: return (bool)args[0] ? ResponseVLib.Utils.GetRandValue("multiple people with weapons", "possibly multiple people with weapons") : "a person with a weapon";
                 case ECallType.CT_PRANKCALL: return GetCallStringFromEnum(Enums.RandomEnumValue<ECallType>());
                 case ECallType.CT_PURSUIT: return "a pursuit";
                 case ECallType.CT_RECKLESSDRIVING: return "a reckless driver";

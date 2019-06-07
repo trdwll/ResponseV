@@ -12,7 +12,7 @@ namespace ResponseVLib
             LL_TRACE
         }
 
-        private readonly string m_LogFile = $"{System.Windows.Forms.Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV.log";
+        private readonly string m_LogFile = $"{System.Windows.Forms.Application.StartupPath}\\Plugins\\LSPDFR\\ResponseV\\ResponseV.log";
 
         public Logger(Version AppVersion, bool bDeleteLog = false)
         {

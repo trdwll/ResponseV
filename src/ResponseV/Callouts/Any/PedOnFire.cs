@@ -9,7 +9,7 @@ using Ped = Rage.Ped;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("PedOnFire", CalloutProbability.VeryHigh)]
+    [CalloutInfo("PedOnFire", CalloutProbability.Medium)]
     internal sealed class PedOnFire : CalloutBase
     {
         private bool m_bCallPursuit = ResponseVLib.Utils.GetRandBool();
@@ -19,8 +19,7 @@ namespace ResponseV.Callouts.Any
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            CalloutMessage = "Reports of a Person on Fire";
-            CalloutPosition = g_SpawnPoint;
+            CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_PEDONFIRE)}";
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_PEDONFIRE, Enums.EResponse.R_CODE3)}", g_SpawnPoint);
 

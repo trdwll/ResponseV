@@ -13,7 +13,7 @@ using WorldZone = ResponseVLib.WorldZone;
 
 namespace ResponseV.Callouts.Any
 {
-    [CalloutInfo("PrankCall", CalloutProbability.VeryHigh)]
+    [CalloutInfo("PrankCall", CalloutProbability.Medium)]
     internal sealed class PrankCall : Callout
     {
         private Vector3 m_SpawnPoint;

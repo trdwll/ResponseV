@@ -48,7 +48,6 @@ namespace ResponseV.Callouts.Any
             m_CalloutType = (ECall)choice;
 
             CalloutMessage = $"Reports of {LSPDFR.Radio.GetCallStringFromEnum(Enums.ECallType.CT_OFFICERDOWN, choice)}";
-            CalloutPosition = g_SpawnPoint;
 
             Functions.PlayScannerAudioUsingPosition($"{LSPDFR.Radio.GetCalloutAudio(Enums.ECallType.CT_OFFICERDOWN, ResponseVLib.Utils.GetRandValue(Enums.EResponse.R_CODE3EMERGENCY, Enums.EResponse.R_CODE3_99), choice)}", g_SpawnPoint);
 
